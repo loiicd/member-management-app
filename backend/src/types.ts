@@ -3,3 +3,8 @@ export type User = {
   firstname: string,
   lastname: string,
 }
+
+export type UserFormData = {
+  firstname: string,
+  lastname: string,
+}
