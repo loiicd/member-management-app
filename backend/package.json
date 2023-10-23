@@ -6,6 +6,7 @@
     "start": "ts-node src/api/index.ts"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "pg": "^8.11.3",
     "ts-node": "^10.9.1",
@@ -14,6 +15,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.15",
     "@types/express": "^4.17.20",
     "@types/pg": "^8.10.7",
     "@types/uuid": "^9.0.6"

@@ -7,7 +7,6 @@ export class UserEntityService {
     const pool = await connect()
     const query = 'SELECT * FROM public."user"'
     const result = await pool.query(query)
-    console.log(result)
     const users = result.rows
     return users
   }
