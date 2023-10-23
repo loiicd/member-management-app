@@ -5,8 +5,8 @@ export const connect = async () => {
     user: 'postgres',
     host: 'localhost',
     database: 'postgres',
-    password: 'postgres',
-    port: 5438
+    password: 'docker',
+    port: 5432
   })
   await pool.connect()
   return pool
