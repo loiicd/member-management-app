@@ -1,0 +1,11 @@
+{
+  "name": "member-management-app-backend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/knex": "^0.16.1",
+    "knex": "^3.0.1",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {}
+}
