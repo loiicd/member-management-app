@@ -23,8 +23,9 @@ export class UserEntityService {
 
   async insert(user: UserFormData): Promise<void> {
     const pool = await connect()
-    const query = `INSERT INTO public."user" (id, firstname, lastname) VALUES (${uuidv4()}, ${user.firstname}, ${user.lastname})`
-    await pool.query(query)
+    const query = `INSERT INTO public."user" (id, firstname, lastname) VALUES ($1, $2, $3)`
+    const values = [uuidv4(), user.firstname, user.lastname]
+    await pool.query(query, values)
     pool.end()
   }
 

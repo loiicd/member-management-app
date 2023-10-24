@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import Header from '../components/header'
 import { User } from '../types/user'
 import { getUser } from '../services/getUser'
 import { useParams } from 'react-router-dom'
+import Header from '../components/header'
 
 const UserPage = () => {
   const { id } = useParams()
