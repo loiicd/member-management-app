@@ -1,18 +1,19 @@
 import { ChangeEvent, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { User } from '../types/user'
 import { getUsers } from '../services/getUsers'
+import { postUser } from '../services/postUser'
 import Table from '../components/table/table'
 import TableHead from '../components/table/tableHead'
 import TableBody from '../components/table/tableBody'
 import TableCell from '../components/table/tableCell'
-import { useNavigate } from 'react-router-dom'
 import Header from '../components/header'
 import Modal from '../components/modal'
-import { postUser } from '../services/postUser'
+import Input from '../components/input'
 
 type Test = {
-  firstname: string,
-  lastname: string
+  firstname: string | null,
+  lastname: string | null
 }
 
 const DashboardPage = () => {
@@ -29,7 +30,7 @@ const DashboardPage = () => {
   const openModal = () => setIsModalOpen(true)
   const closeModal = () => setIsModalOpen(false)
 
-  const [formData, setFormData] = useState<Test>({firstname: '', lastname: ''})
+  const [formData, setFormData] = useState<Test>({firstname: null, lastname: null})
 
   const handleChange = (field: keyof Test) => (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -39,7 +40,14 @@ const DashboardPage = () => {
   }
 
   const handleSave = () => {
-    postUser(formData)
+    if (formData.firstname != null && formData.lastname !== null) {
+      // @ts-ignore
+      postUser(formData)
+        .then(closeModal)
+        .catch((error) => alert(error))
+    } else {
+      alert('Da fehlt noch was!')
+    }
   }
 
   return (
@@ -66,14 +74,14 @@ const DashboardPage = () => {
             ))}
           </TableBody>
         </Table>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <Modal open={isModalOpen} onClose={closeModal}>
           <h2 className="text-xl font-semibold">Neuer User</h2>
           <div className='grid grid-cols-2'>
             <div className='col-1'>
-              <input className='w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500' type='text' placeholder='Vorname' onChange={handleChange('firstname')} />
+              <Input placeholder='Vorname' error={false} required={false} onChange={handleChange('firstname')} />
             </div>
             <div className='col-1'>
-              <input className='w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500' type='text' placeholder='Nachname' onChange={handleChange('lastname')} />
+              <Input placeholder='Nachname' error={false} required={false} onChange={handleChange('lastname')} />
             </div>
           </div>
           <button onClick={handleSave}>Speichern</button>
