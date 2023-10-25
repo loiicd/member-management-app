@@ -6,7 +6,7 @@ interface TableBodyProps {
 
 const TableBody: FC<TableBodyProps> = ({ children }) => {
   return ( 
-    <tbody>
+    <tbody className='hover:cursor-pointer'>
       {children}
     </tbody>
   )
