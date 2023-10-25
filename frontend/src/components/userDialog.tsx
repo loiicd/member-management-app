@@ -1,21 +1,40 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FC, useEffect, useState } from 'react'
 import Button from './base/button'
 import Modal from './base/modal'
 import Input from './base/input'
 import { postUser } from '../services/postUser'
+import { updateUser } from '../services/updateUser'
+import { getUser } from '../services/getUser'
 
 type Test = {
   firstname: string | null,
   lastname: string | null
 }
 
-const UserDialog = () => {
+interface UserDialogProps {
+  type: 'insert' | 'update'
+  userId?: string
+}
+
+const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const [formData, setFormData] = useState<Test>({firstname: null, lastname: null})
 
   const [firstnameInputError, setFirstnameInputError] = useState<boolean>(false)
   const [lastnameInputError, setLastnameInputError] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (type === 'update' && userId) {
+      // @ts-ignore
+      getUser(userId)
+        .then((data) => {
+          console.log(data)
+          setFormData(data)
+        })
+        .catch((error) => alert(error))
+    }
+  }, [type, userId])
 
   const handleOpen = () =>  setOpen(true)
   const handleClose = () =>  setOpen(false)
@@ -29,10 +48,19 @@ const UserDialog = () => {
 
   const handleSave = () => {
     if (formData.firstname != null && formData.lastname !== null) {
-      // @ts-ignore
-      postUser(formData)
-        .then(handleClose)
-        .catch((error) => alert(error))
+      if (type === 'insert') {
+        // @ts-ignore
+        postUser(formData)
+          .then(handleClose)
+          .catch((error) => alert(error))
+      } else {
+        if (userId) {
+          // @ts-ignore
+          updateUser({id: userId, ...formData})
+            .then(handleClose)
+            .catch((error) => alert(error))
+        }
+      }
     } else {
       if (formData.firstname == null) { setFirstnameInputError(true) }
       if (formData.lastname == null) { setLastnameInputError(true) } 
@@ -41,15 +69,15 @@ const UserDialog = () => {
 
   return (
     <>
-      <Button onClick={handleOpen}>Neu</Button>
+      <Button onClick={handleOpen}>{type === 'insert' ? 'Neu' : 'Bearbeiten'}</Button>
       <Modal open={open} onClose={handleClose}>
-        <h2 className="text-xl font-semibold">Neuer User</h2>
+        <h2 className="text-xl font-semibold">{type === 'insert' ? 'Insert User' : 'Update User'}</h2>
         <div className='grid grid-cols-2'>
           <div className='col-1'>
-            <Input placeholder='Vorname' error={firstnameInputError} required={false} onChange={handleChange('firstname')} />
+            <Input placeholder='Vorname' value={formData.firstname === null ? undefined : formData.firstname} error={firstnameInputError} required={false} onChange={handleChange('firstname')} />
           </div>
           <div className='col-1'>
-            <Input placeholder='Nachname' error={lastnameInputError} required={false} onChange={handleChange('lastname')} />
+            <Input placeholder='Nachname' value={formData.lastname === null ? undefined : formData.lastname} error={lastnameInputError} required={false} onChange={handleChange('lastname')} />
           </div>
         </div>
         <button onClick={handleSave}>Speichern</button>

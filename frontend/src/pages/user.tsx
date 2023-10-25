@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../components/header'
 import { deleteUser } from '../services/deleteUser'
 import Button from '../components/base/button'
+import UserDialog from '../components/userDialog'
 
 const UserPage = () => {
   const navigate = useNavigate()
@@ -27,16 +28,16 @@ const UserPage = () => {
   }
 
   return (
-    <div>
+    <>
       <Header />
       <div className='container mx-auto'>
         <div className='flex justify-between'>
           <h2 className='text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>{user?.firstname} {user?.lastname}</h2>
+          <UserDialog type='update' userId={user?.id} />
           <Button onClick={handleClick}>Löschen</Button>
-          {/* <button type='button' className='border rounded-xl px-4 bg-slate-500' onClick={handleClick}>Löschen</button> */}
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

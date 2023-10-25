@@ -31,8 +31,9 @@ export class UserEntityService {
 
   async update(user: User): Promise<void> {
     const pool = await connect()
-    const query = `UPDATE public."user" SET firstname = ${user.firstname}, lastname = ${user.lastname} WHERE id = '${user.id}'`
-    await pool.query(query)
+    const query = `UPDATE public."user" SET firstname = $1, lastname = $2 WHERE id = $3`
+    const values = [user.firstname, user.lastname, user.id]
+    await pool.query(query, values)
     pool.end()
   }
 

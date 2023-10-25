@@ -19,12 +19,12 @@ const DashboardPage = () => {
   }, [])
 
   return (
-    <div>
+    <>
       <Header />
       <div className='container mx-auto'>
         <div className='flex justify-between'>
           <p className='text-sm'>User</p>
-          <UserDialog />
+          <UserDialog type='insert' />
         </div>
         <Table>
           <TableHead>
@@ -43,7 +43,7 @@ const DashboardPage = () => {
           </TableBody>
         </Table>
       </div>
-    </div>
+    </>
   )
 }
 
