@@ -1,6 +1,8 @@
 CREATE TABLE user (
-  id text,
-  firstname text,
-  lastname text,
+  id text NOT NULL,
+  firstname text NOT NULL,
+  lastname text NOT NULL,
+  birthdate date,
+  adress text,
   PRIMARY KEY (id)
 )

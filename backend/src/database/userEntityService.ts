@@ -23,16 +23,16 @@ export class UserEntityService {
 
   async insert(user: UserFormData): Promise<void> {
     const pool = await connect()
-    const query = `INSERT INTO public."user" (id, firstname, lastname) VALUES ($1, $2, $3)`
-    const values = [uuidv4(), user.firstname, user.lastname]
+    const query = `INSERT INTO public."user" (id, firstname, lastname, birthdate, address) VALUES ($1, $2, $3, $4, $5)`
+    const values = [uuidv4(), user.firstname, user.lastname, user.birthdate, user.address]
     await pool.query(query, values)
     pool.end()
   }
 
   async update(user: User): Promise<void> {
     const pool = await connect()
-    const query = `UPDATE public."user" SET firstname = $1, lastname = $2 WHERE id = $3`
-    const values = [user.firstname, user.lastname, user.id]
+    const query = `UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4 WHERE id = $5`
+    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.id]
     await pool.query(query, values)
     pool.end()
   }
