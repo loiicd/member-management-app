@@ -72,8 +72,8 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
   return (
     <>
       <Button onClick={handleOpen}>{type === 'insert' ? 'Neu' : 'Bearbeiten'}</Button>
-      <Modal open={open} onClose={handleClose}>
-        <h2 className="text-xl font-semibold">{type === 'insert' ? 'Insert User' : 'Update User'}</h2>
+      <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert User' : 'Update User'}>
+        {/* <h2 className="text-xl font-semibold">{type === 'insert' ? 'Insert User' : 'Update User'}</h2> */}
         <div className='grid grid-cols-2 gap-2'>
           <div className='col-1'>
             <Input type='text' label='Vorname' value={formData.firstname === null ? undefined : formData.firstname} error={firstnameInputError} required={false} onChange={handleChange('firstname')} />

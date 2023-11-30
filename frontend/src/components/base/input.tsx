@@ -11,14 +11,17 @@ interface InputProps {
 }
 
 const Input: FC<InputProps> = ({ label, placeholder, type, required, value, error, onChange }) => {
-
-  const styleOne = 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-  const styleTwo = 'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500'
-
   return (
     <div>
-      <label className="block text-sm font-medium leading-6 text-gray-900">{ label }</label>
-      <input type={type} value={typeof value === 'object' ? value.toString() : value} className={ error ? styleTwo : styleOne} placeholder={placeholder} required={required} onChange={onChange} />
+      <label className='block text-sm font-medium leading-6 text-black dark:text-white'>{ label }</label>
+      <input 
+        type={type}
+        value={typeof value === 'object' ? value.toString() : value} 
+        placeholder={placeholder} 
+        required={required} 
+        onChange={onChange}
+        className={`bg-zinc-100 border ${error ? 'border-red-500 dark:border-red500' : 'border-zinc-300 dark:border-gray-600'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-3 dark:bg-zinc-800 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+      />
     </div>
   )
 }
