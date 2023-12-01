@@ -1,13 +1,13 @@
-import { Pool } from 'pg'
+import { Client } from 'pg'
 
 export const connect = async () => {
-  const pool = new Pool({
+  const client = new Client({
     user: 'postgres',
     host: 'localhost',
     database: 'postgres',
     password: 'docker',
     port: 5432
   })
-  await pool.connect()
-  return pool
+  await client.connect()
+  return client
 }
