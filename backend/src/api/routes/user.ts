@@ -1,13 +1,14 @@
 import express, { Request, Response } from 'express'
 import { UserEntityService } from '../../database/userEntityService'
 import { tryCatchMiddleware } from '../tryCatchMiddleware'
-import { validateUUID, validateUser } from '../validate'
+import { validateSearchTerm, validateUUID, validateUser } from '../validate'
 
 const router = express.Router()
 const userEntityService = new UserEntityService
 
 router.get('/', tryCatchMiddleware(async (req: Request, res: Response) => {
-  const users = await userEntityService.getAll()
+  const searchTerm = validateSearchTerm(req.query.searchTerm)
+  const users = await userEntityService.getAll(searchTerm)
   res.status(200).send(users)
 }))
 
@@ -18,7 +19,7 @@ router.get('/:id', tryCatchMiddleware(async (req: Request, res: Response) => {
 }))
 
 router.post('/',tryCatchMiddleware(async (req: Request, res: Response) => {
-  const {firstname, lastname } = req.body
+  const { firstname, lastname } = req.body
   const user = { firstname, lastname }
   await userEntityService.insert(user)
   res.status(200).send('User created')

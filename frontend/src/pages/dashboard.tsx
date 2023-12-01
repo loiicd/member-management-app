@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from '../types/user'
 import { getUsers } from '../services/getUsers'
@@ -9,23 +9,35 @@ import TableCell from '../components/base/table/tableCell'
 import Header from '../components/header'
 import UserDialog from '../components/userDialog'
 import Typography from '../components/base/typography'
+import Button from '../components/base/button'
+import Input from '../components/base/input'
 
 const DashboardPage = () => {
   const navigate = useNavigate()
   const [users, setUsers] = useState<User[]>([])
+  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
 
   useEffect(() => {
-    getUsers()
+    getUsers(searchTerm)
       .then((result) => setUsers(result) ) 
-  }, [])
+  }, [searchTerm])
+
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = e.target.value.toLowerCase()
+    setSearchTerm(searchTerm)
+  }
 
   return (
     <>
       <Header />
       <div className='container mx-auto'>
-        <div className='flex justify-between'>
+        <div className='flex justify-between pb-2'>
           <Typography variant='header'>User</Typography>
-          <UserDialog type='insert' />
+          <div className='flex space-x-2'>
+            <Input type='text' placeholder='Suche ...' onChange={handleSearch}/>
+            <Button variant='outlined'>Filter</Button>
+            <UserDialog type='insert' />
+          </div>
         </div>
         <Table>
           <TableHead>

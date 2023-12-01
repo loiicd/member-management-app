@@ -3,9 +3,15 @@ import { connect } from './db'
 import { v4 as uuidv4 } from 'uuid'
 
 export class UserEntityService {
-  async getAll(): Promise<User[]> {
+  async getAll(searchTerm: string | undefined): Promise<User[]> {
     const pool = await connect()
-    const query = 'SELECT * FROM public."user"'
+    let query: string
+    if (searchTerm) {
+      query = `SELECT * FROM public."user" WHERE firstname ILIKE '%${searchTerm}%' OR lastname ILIKE '%${searchTerm}%'`
+    } else {
+      query = 'SELECT * FROM public."user"'
+    }
+    console.log(query)
     const result = await pool.query(query)
     const users = result.rows
     pool.end()

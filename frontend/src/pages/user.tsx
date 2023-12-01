@@ -34,13 +34,11 @@ const UserPage = () => {
       <div className='container mx-auto'>
         <div className='flex justify-between'>
           <Typography variant='header'>{user?.firstname} {user?.lastname}</Typography>
-          <UserDialog type='update' userId={user?.id} />
-          <Button onClick={handleClick}>Löschen</Button>
+          <div className='grid gap-2 grid-cols-2'>
+            <UserDialog type='update' userId={user?.id} />
+            <Button onClick={handleClick} variant='outlined'>Löschen</Button>
+          </div>
         </div>
-
-        <Button size='sm' color='red'>Small</Button>
-        <Button color='red'>Medium</Button>
-        <Button size='lg' color='green'>Large</Button>
       </div>
     </>
   )
