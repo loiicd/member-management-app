@@ -29,7 +29,6 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
       // @ts-ignore
       getUser(userId)
         .then((data) => {
-          console.log(data)
           setFormData(data)
         })
         .catch((error) => alert(error))

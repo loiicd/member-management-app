@@ -19,8 +19,8 @@ router.get('/:id', tryCatchMiddleware(async (req: Request, res: Response) => {
 }))
 
 router.post('/',tryCatchMiddleware(async (req: Request, res: Response) => {
-  const { firstname, lastname } = req.body
-  const user = { firstname, lastname }
+  const { firstname, lastname, birthdate, address } = req.body
+  const user = { firstname, lastname, birthdate, address }
   await userEntityService.insert(user)
   res.status(200).send('User created')
 }))
