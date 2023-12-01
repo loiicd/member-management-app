@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from '../types/user'
-import { getUsers } from '../services/getUsers'
+import { getUsers } from '../services/user'
 import Table from '../components/base/table/table'
 import TableHead from '../components/base/table/tableHead'
 import TableBody from '../components/base/table/tableBody'

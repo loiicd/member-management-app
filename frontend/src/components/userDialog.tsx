@@ -2,9 +2,7 @@ import { ChangeEvent, FC, useEffect, useState } from 'react'
 import Button from './base/button'
 import Modal from './base/modal'
 import Input from './base/input'
-import { postUser } from '../services/postUser'
-import { updateUser } from '../services/updateUser'
-import { getUser } from '../services/getUser'
+import { getUser, postUser, updateUser } from '../services/user'
 
 type Test = {
   firstname: string | null,
