@@ -29,10 +29,7 @@ export class UserEntityService {
   async insert(user: UserFormData): Promise<void> {
     const client = await connect()
     const query = `INSERT INTO public."user" (id, firstname, lastname, birthdate, address) VALUES ($1, $2, $3, $4, $5)`
-
     const values = [uuidv4(), user.firstname, user.lastname, user.birthdate, user.address]
-
-    console.log(values)
     await client.query(query, values)
     client.end()
   }

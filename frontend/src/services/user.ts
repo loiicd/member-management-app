@@ -3,7 +3,9 @@ import { User } from '../types/user'
 
 type test = {
   firstname: string,
-  lastname: string
+  lastname: string,
+  birthdate: Date,
+  address: string
 }
 
 export const getUser = async (id: string) => {
@@ -25,12 +27,12 @@ export const getUsers = async (searchTerm: string | undefined) => {
 
 export const postUser = async (user: test) => {
   const url = `http://localhost:3002/user`
-  console.log(user)
   await axios.post(url, user)
 }
 
 export const updateUser = async (user: User) => {
   const url = `http://localhost:3002/user`
+  console.log(user)
   await axios.put(url, user)
 }
 

@@ -16,7 +16,7 @@ const Input: FC<InputProps> = ({ label, placeholder, type = 'text', required = f
       <label className='block text-sm font-medium leading-6 text-black dark:text-white'>{ label }</label>
       <input 
         type={type}
-        value={typeof value === 'object' ? value.toString() : value} 
+        value={value === null ? undefined : typeof value === 'object' ? value.toString() : value} 
         placeholder={placeholder} 
         required={required} 
         onChange={onChange}

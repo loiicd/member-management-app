@@ -4,6 +4,6 @@ export const UserShema = z.object({
   id:             z.string(),
   firstname:      z.string(),
   lastname:       z.string(),
-  birthdate:      z.date().optional(),
-  address:        z.string().optional(),
+  birthdate:      z.coerce.date().optional().nullable(),
+  address:        z.string().optional().nullable(),
 })

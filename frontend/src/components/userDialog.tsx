@@ -5,10 +5,10 @@ import Input from './base/input'
 import { getUser, postUser, updateUser } from '../services/user'
 
 type Test = {
-  firstname: string | null,
-  lastname: string | null,
-  birthdate: Date | null,
-  address: string | null
+  firstname: string | undefined,
+  lastname: string | undefined,
+  birthdate: Date | undefined,
+  address: string | undefined
 }
 
 interface UserDialogProps {
@@ -19,7 +19,7 @@ interface UserDialogProps {
 const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
   const [open, setOpen] = useState<boolean>(false)
 
-  const [formData, setFormData] = useState<Test>({firstname: null, lastname: null, birthdate: null, address: null})
+  const [formData, setFormData] = useState<Test>({firstname: undefined, lastname: undefined, birthdate: undefined, address: undefined})
 
   const [firstnameInputError, setFirstnameInputError] = useState<boolean>(false)
   const [lastnameInputError, setLastnameInputError] = useState<boolean>(false)
@@ -46,7 +46,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
   }
 
   const handleSave = () => {
-    if (formData.firstname != null && formData.lastname !== null) {
+    if (formData.firstname && formData.lastname) {
       if (type === 'insert') {
         // @ts-ignore
         postUser(formData)
@@ -61,8 +61,8 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
         }
       }
     } else {
-      if (formData.firstname == null) { setFirstnameInputError(true) }
-      if (formData.lastname == null) { setLastnameInputError(true) } 
+      if (!formData.firstname) { setFirstnameInputError(true) }
+      if (!formData.lastname) { setLastnameInputError(true) } 
     }
   }
 
@@ -72,16 +72,16 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
       <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert User' : 'Update User'}>
         <div className='grid grid-cols-2 gap-2'>
           <div className='col-1'>
-            <Input type='text' label='Vorname' value={formData.firstname === null ? undefined : formData.firstname} error={firstnameInputError} required={false} onChange={handleChange('firstname')} />
+            <Input type='text' label='Vorname' value={formData.firstname} error={firstnameInputError} required={false} onChange={handleChange('firstname')} />
           </div>
           <div className='col-1'>
-            <Input type='text' label='Nachname' value={formData.lastname === null ? undefined : formData.lastname} error={lastnameInputError} required={false} onChange={handleChange('lastname')} />
+            <Input type='text' label='Nachname' value={formData.lastname} error={lastnameInputError} required={false} onChange={handleChange('lastname')} />
           </div>
           <div className='col-1'>
-            <Input type='date' label='Geburtstag' value={formData.birthdate === null ? undefined : formData.birthdate} error={firstnameInputError} required={false} onChange={handleChange('birthdate')} />
+            <Input type='date' label='Geburtstag' value={formData.birthdate} error={firstnameInputError} required={false} onChange={handleChange('birthdate')} />
           </div>
           <div className='col-1'>
-            <Input type='text' label='Adresse' value={formData.address === null ? undefined : formData.address} error={lastnameInputError} required={false} onChange={handleChange('address')} />
+            <Input type='text' label='Adresse' value={formData.address} error={lastnameInputError} required={false} onChange={handleChange('address')} />
           </div>
         </div>
         <Button onClick={handleSave}>Speichern</Button>
