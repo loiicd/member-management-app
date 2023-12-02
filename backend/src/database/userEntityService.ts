@@ -1,9 +1,9 @@
-import { User, UserFormData } from '../types'
+import { UserType, UserFormDataType } from '../types'
 import { connect } from './db'
 import { v4 as uuidv4 } from 'uuid'
 
 export class UserEntityService {
-  async getAll(searchTerm: string | undefined): Promise<User[]> {
+  async getAll(searchTerm: string | undefined): Promise<UserType[]> {
     const client = await connect()
     let query: string
     if (searchTerm) {
@@ -17,7 +17,7 @@ export class UserEntityService {
     return users
   }
 
-  async getOneById(id: string): Promise<User> {
+  async getOneById(id: string): Promise<UserType> {
     const client = await connect()
     const query = `SELECT * FROM public."user" WHERE id = '${id}'`
     const result = await client.query(query)
@@ -26,7 +26,7 @@ export class UserEntityService {
     return user
   }
 
-  async insert(user: UserFormData): Promise<void> {
+  async insert(user: UserFormDataType): Promise<void> {
     const client = await connect()
     const query = `INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone) VALUES ($1, $2, $3, $4, $5, $6, $7)`
     const values = [uuidv4(), user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone]
@@ -34,7 +34,7 @@ export class UserEntityService {
     client.end()
   }
 
-  async update(user: User): Promise<void> {
+  async update(user: UserType): Promise<void> {
     const client = await connect()
     const query = `UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6 WHERE id = $7`
     const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.id]

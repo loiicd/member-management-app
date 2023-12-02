@@ -1,18 +1,5 @@
-export type User = {
-  id: string,
-  firstname: string,
-  lastname: string,
-  birthdate?: Date | null,
-  address?: string | null,
-  email?: string | null,
-  phone?: string | null,
-}
+import { UserShema, UserFormDataShema } from './models/userShema'
+import { z } from 'zod'
 
-export type UserFormData = {
-  firstname: string,
-  lastname: string,
-  birthdate?: Date | null,
-  address?: string | null,
-  email?: string | null,
-  phone?: string | null,
-}
+export type UserType = z.infer<typeof UserShema>
+export type UserFormDataType = z.infer<typeof UserFormDataShema>
