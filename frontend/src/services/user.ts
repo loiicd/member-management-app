@@ -4,8 +4,10 @@ import { User } from '../types/user'
 type test = {
   firstname: string,
   lastname: string,
-  birthdate: Date,
-  address: string
+  birthdate?: Date,
+  address?: string,
+  email?: string,
+  phone?: string
 }
 
 export const getUser = async (id: string) => {

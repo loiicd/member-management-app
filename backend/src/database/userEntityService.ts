@@ -7,7 +7,7 @@ export class UserEntityService {
     const client = await connect()
     let query: string
     if (searchTerm) {
-      query = `SELECT * FROM public."user" WHERE firstname ILIKE '%${searchTerm}%' OR lastname ILIKE '%${searchTerm}%'`
+      query = `SELECT * FROM public."user" WHERE firstname ILIKE '%${searchTerm}%' OR lastname ILIKE '%${searchTerm}%' OR address ILIKE '%${searchTerm}%'`
     } else {
       query = 'SELECT * FROM public."user"'
     }
@@ -28,16 +28,16 @@ export class UserEntityService {
 
   async insert(user: UserFormData): Promise<void> {
     const client = await connect()
-    const query = `INSERT INTO public."user" (id, firstname, lastname, birthdate, address) VALUES ($1, $2, $3, $4, $5)`
-    const values = [uuidv4(), user.firstname, user.lastname, user.birthdate, user.address]
+    const query = `INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone) VALUES ($1, $2, $3, $4, $5, $6, $7)`
+    const values = [uuidv4(), user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone]
     await client.query(query, values)
     client.end()
   }
 
   async update(user: User): Promise<void> {
     const client = await connect()
-    const query = `UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4 WHERE id = $5`
-    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.id]
+    const query = `UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6 WHERE id = $7`
+    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.id]
     await client.query(query, values)
     client.end()
   }

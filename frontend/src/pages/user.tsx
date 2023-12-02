@@ -38,6 +38,14 @@ const UserPage = () => {
             <Button onClick={handleClick} variant='outlined'>Löschen</Button>
           </div>
         </div>
+
+        <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
+          <Typography variant='text'>Geburstdatum: {user?.birthdate?.toLocaleString()}</Typography>
+          <Typography variant='text'>Addresse: {user?.address}</Typography>
+          <Typography variant='text'>Email: {user?.email}</Typography>
+          <Typography variant='text'>Telefon: {user?.phone}</Typography>
+        </div>
+
       </div>
     </>
   )

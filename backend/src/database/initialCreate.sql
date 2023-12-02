@@ -4,5 +4,7 @@ CREATE TABLE user (
   lastname text NOT NULL,
   birthdate date,
   adress text,
+  email text,
+  phone text,
   PRIMARY KEY (id)
 )

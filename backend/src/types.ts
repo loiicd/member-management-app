@@ -3,12 +3,16 @@ export type User = {
   firstname: string,
   lastname: string,
   birthdate?: Date | null,
-  address?: string | null
+  address?: string | null,
+  email?: string | null,
+  phone?: string | null,
 }
 
 export type UserFormData = {
   firstname: string,
   lastname: string,
   birthdate?: Date | null,
-  address?: string | null
+  address?: string | null,
+  email?: string | null,
+  phone?: string | null,
 }

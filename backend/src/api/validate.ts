@@ -1,7 +1,8 @@
 import { z } from 'zod'
-import { UserShema } from '../models/userShema'
+import { UserShema, UserFormDataShema } from '../models/userShema'
 
 export const validateUser = (user: any) => UserShema.parse(user)
+export const validateUserFormData = (formData: any) => UserFormDataShema.parse(formData)
 
 const IDShema = z.string().uuid()
 export const validateUUID = (id: any): string => {

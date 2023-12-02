@@ -8,7 +8,9 @@ type Test = {
   firstname: string | undefined,
   lastname: string | undefined,
   birthdate: Date | undefined,
-  address: string | undefined
+  address: string | undefined,
+  email: string | undefined,
+  phone: string | undefined,
 }
 
 interface UserDialogProps {
@@ -19,7 +21,7 @@ interface UserDialogProps {
 const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
   const [open, setOpen] = useState<boolean>(false)
 
-  const [formData, setFormData] = useState<Test>({firstname: undefined, lastname: undefined, birthdate: undefined, address: undefined})
+  const [formData, setFormData] = useState<Test>({firstname: undefined, lastname: undefined, birthdate: undefined, address: undefined, email: undefined, phone: undefined})
 
   const [firstnameInputError, setFirstnameInputError] = useState<boolean>(false)
   const [lastnameInputError, setLastnameInputError] = useState<boolean>(false)
@@ -82,6 +84,12 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
           </div>
           <div className='col-1'>
             <Input type='text' label='Adresse' value={formData.address} error={lastnameInputError} required={false} onChange={handleChange('address')} />
+          </div>
+          <div className='col-1'>
+            <Input type='text' label='Email' value={formData.email} error={lastnameInputError} required={false} onChange={handleChange('email')} />
+          </div>
+          <div className='col-1'>
+            <Input type='text' label='Telefon' value={formData.phone} error={lastnameInputError} required={false} onChange={handleChange('phone')} />
           </div>
         </div>
         <Button onClick={handleSave}>Speichern</Button>

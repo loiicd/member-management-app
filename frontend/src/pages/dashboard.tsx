@@ -35,7 +35,7 @@ const DashboardPage = () => {
           <Typography variant='header'>User</Typography>
           <div className='flex space-x-2'>
             <Input type='text' placeholder='Suche ...' onChange={handleSearch}/>
-            <Button variant='outlined'>Filter</Button>
+            <Button variant='outlined'>Export</Button>
             <UserDialog type='insert' />
           </div>
         </div>
@@ -44,6 +44,8 @@ const DashboardPage = () => {
             <tr>
               <TableCell>Vorname</TableCell>
               <TableCell>Nachname</TableCell>
+              <TableCell>Geburtsdatum</TableCell>
+              <TableCell>Adresse</TableCell>
             </tr>
           </TableHead>
           <TableBody>
@@ -51,6 +53,8 @@ const DashboardPage = () => {
               <tr key={user.id} className='bg-white border-b dark:bg-zinc-800 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600' onClick={() => navigate(`/user/${user.id}`)}>
                 <TableCell>{user.firstname}</TableCell>
                 <TableCell>{user.lastname}</TableCell>
+                <TableCell>{user.birthdate?.toLocaleString('de-DE')}</TableCell>
+                <TableCell>{user.address}</TableCell>
               </tr> 
             ))}
           </TableBody>

@@ -4,4 +4,6 @@ export type User = {
   lastname: string
   birthdate?: Date,
   address?: string
+  email?: string,
+  phone?: string,
 }

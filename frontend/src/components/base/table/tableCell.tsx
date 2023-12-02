@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
 interface TableCellProps {
-  children: string
+  children?: string
 }
 
 const TableCell: FC<TableCellProps> = ({ children }) => {
