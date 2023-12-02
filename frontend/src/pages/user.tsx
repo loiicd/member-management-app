@@ -6,6 +6,8 @@ import { getUser, deleteUser } from '../services/user'
 import Button from '../components/base/button'
 import UserDialog from '../components/userDialog'
 import Typography from '../components/base/typography'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 const UserPage = () => {
   const navigate = useNavigate()
@@ -32,8 +34,16 @@ const UserPage = () => {
       <Header />
       <div className='container mx-auto'>
         <div className='flex justify-between'>
-          <Typography variant='header'>{user?.firstname} {user?.lastname}</Typography>
-          <div className='grid gap-2 grid-cols-2'>
+          <div className='flex space-x-2'>
+            <button
+              onClick={() => navigate('/dashboard')}
+              className='px-3 text-gray-500 rounded-full hover:bg-zinc-700'
+            >
+              <FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} size='xl'/>
+            </button>
+            <Typography variant='header'>{user?.firstname} {user?.lastname}</Typography>
+          </div>
+          <div className='flex space-x-2'>
             <UserDialog type='update' userId={user?.id} />
             <Button onClick={handleClick} variant='outlined'>Löschen</Button>
           </div>
