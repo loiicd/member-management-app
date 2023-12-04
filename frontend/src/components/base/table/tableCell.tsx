@@ -1,7 +1,7 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 
 interface TableCellProps {
-  children?: string
+  children?: string | ReactNode
 }
 
 const TableCell: FC<TableCellProps> = ({ children }) => {
