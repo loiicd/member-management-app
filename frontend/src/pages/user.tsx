@@ -73,8 +73,7 @@ const UserPage = () => {
           </div>
           <div className='grid gap-2 grid-cols-4'>
             <Typography variant='text'>Passwort:</Typography>
-            <Typography variant='text'>{user?.webaccess ? '**********' : null} </Typography>
-            { user ? <PasswordDialog userId={user?.id} /> : null}
+            <Typography variant='text'>********** { user ? <PasswordDialog userId={user?.id} /> : null}</Typography>
           </div>
         </div>
 

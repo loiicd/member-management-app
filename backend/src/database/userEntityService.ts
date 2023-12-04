@@ -13,11 +13,13 @@ export class UserEntityService {
         FROM public."user" 
         WHERE firstname ILIKE '%${searchTerm}%' 
         OR lastname ILIKE '%${searchTerm}%' 
-        OR address ILIKE '%${searchTerm}%'`
+        OR address ILIKE '%${searchTerm}%'
+        ORDER BY lastname`
     } else {
       query = `
         SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
-        FROM public."user"`
+        FROM public."user"
+        ORDER BY lastname`
     }
     const result = await client.query(query)
     const users = result.rows

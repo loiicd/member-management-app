@@ -2,6 +2,8 @@ import { FC, useRef, useState } from 'react'
 import Modal from './base/modal'
 import Button from './base/button'
 import { putPassword } from '../services/user'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 interface PasswordDialogProps {
   userId: string
@@ -39,10 +41,15 @@ const PasswordDialog: FC<PasswordDialogProps> = ({ userId }) => {
 
   return (
     <>
-      <button onClick={handleOpen}>passwort bearbeiten</button>
+      <button
+        onClick={handleOpen}
+        className='px-2 text-gray-500 rounded-full hover:bg-zinc-700'
+      >
+        <FontAwesomeIcon icon={icon({ name: 'pen', style: 'solid' })}/>
+      </button>
       <Modal open={open} onClose={handleClose} title='Passwort bearbeiten'>
         <div>
-          <label className='block text-sm font-medium leading-6 text-black dark:text-white'>Password</label>
+          <label className='block text-sm font-medium leading-6 text-black dark:text-white'>Passwort</label>
           <input 
             type='password'
             ref={password1InputRef}
@@ -51,7 +58,7 @@ const PasswordDialog: FC<PasswordDialogProps> = ({ userId }) => {
         </div>
 
         <div>
-          <label className='block text-sm font-medium leading-6 text-black dark:text-white'>Password wiederholen</label>
+          <label className='block text-sm font-medium leading-6 text-black dark:text-white'>Passwort wiederholen</label>
           <input 
             type='password'
             ref={password2InputRef}
