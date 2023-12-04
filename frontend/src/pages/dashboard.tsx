@@ -34,7 +34,7 @@ const DashboardPage = () => {
       <Header />
       <div className='container mx-auto'>
         <div className='flex justify-between pb-2'>
-          <Typography variant='header'>User</Typography>
+          <Typography variant='h3'>User</Typography>
           <div className='flex space-x-2'>
             <Input type='text' placeholder='Suche ...' onChange={handleSearch}/>
             <Button variant='outlined'>Export</Button>

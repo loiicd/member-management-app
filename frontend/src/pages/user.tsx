@@ -41,7 +41,7 @@ const UserPage = () => {
             >
               <FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} size='xl'/>
             </button>
-            <Typography variant='header'>{user?.firstname} {user?.lastname}</Typography>
+            <Typography variant='h3'>{user?.firstname} {user?.lastname}</Typography>
           </div>
           <div className='flex space-x-2'>
             <UserDialog type='update' userId={user?.id} />
