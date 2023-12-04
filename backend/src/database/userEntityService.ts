@@ -1,6 +1,7 @@
 import { UserType, UserFormDataType } from '../types'
 import { connect } from './db'
 import { v4 as uuidv4 } from 'uuid'
+import bcryptjs from 'bcryptjs'
 
 export class UserEntityService {
   async getAll(searchTerm: string | undefined): Promise<UserType[]> {
@@ -48,6 +49,16 @@ export class UserEntityService {
     const client = await connect()
     const query = `UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, webaccess = $7 WHERE id = $8`
     const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.webaccess, user.id]
+    await client.query(query, values)
+    client.end()
+  }
+
+  async updatePassword(userId: string, password: string): Promise<void> {
+    const salt = bcryptjs.genSaltSync()
+    const hashedPassword = bcryptjs.hashSync(password, salt)
+    const client = await connect()
+    const query = 'UPDATE public."user" SET password = $1, passwordsalt = $2 WHERE id = $3'
+    const values = [hashedPassword, salt, userId]
     await client.query(query, values)
     client.end()
   }

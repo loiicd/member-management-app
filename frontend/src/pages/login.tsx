@@ -42,6 +42,7 @@ const LoginPage = () => {
         <div>
           <label className='block text-sm font-medium leading-6 text-black dark:text-white'>Password</label>
           <input 
+            type='password'
             ref={passwordInputRef}
             className={`bg-zinc-100 border border-zinc-200 dark:border-zinc-600 hover:border-zinc-400 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-3 dark:bg-zinc-800 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500  dark:focus:border-blue-500`}
           />

@@ -11,3 +11,6 @@ export const validateUUID = (id: any): string => IDShema.parse(id)
 
 const SearchTermShema = z.string().optional()
 export const validateSearchTerm = (string: any): string | undefined => SearchTermShema.parse(string)
+
+const StringShema = z.string()
+export const validateString = (string: any): string => StringShema.parse(string)

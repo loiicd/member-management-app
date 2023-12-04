@@ -33,6 +33,11 @@ export const postUser = async (user: test) => {
   await axios.post(url, user)
 }
 
+export const putPassword = async (userId: string, password: string) => {
+  const url = `http://localhost:3002/user/password/${userId}?password=${password}`
+  await axios.put(url)
+}
+
 export const updateUser = async (user: User) => {
   const url = `http://localhost:3002/user`
   console.log(user)

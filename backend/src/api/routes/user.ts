@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import { UserEntityService } from '../../database/userEntityService'
 import { tryCatchMiddleware } from '../tryCatchMiddleware'
-import { validateSearchTerm, validateUUID, validateUser, validateUserFormData } from '../validate'
+import { validateSearchTerm, validateString, validateUUID, validateUser, validateUserFormData } from '../validate'
 
 const router = express.Router()
 const userEntityService = new UserEntityService
@@ -28,6 +28,13 @@ router.put('/',tryCatchMiddleware(async (req: Request, res: Response) => {
   const user = validateUser(req.body)
   await userEntityService.update(user)
   res.status(200).send('User updated')
+}))
+
+router.put('/password/:id',tryCatchMiddleware(async (req: Request, res: Response) => {
+  const userId = validateUUID(req.params.id)
+  const password = validateString(req.query.password)
+  await userEntityService.updatePassword(userId, password)
+  res.status(200).send('Password updated')
 }))
 
 router.delete('/:id', tryCatchMiddleware(async (req: Request, res: Response) => {

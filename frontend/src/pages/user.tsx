@@ -8,6 +8,7 @@ import UserDialog from '../components/userDialog'
 import Typography from '../components/base/typography'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
+import PasswordDialog from '../components/passwordDialog'
 
 const UserPage = () => {
   const navigate = useNavigate()
@@ -72,7 +73,8 @@ const UserPage = () => {
           </div>
           <div className='grid gap-2 grid-cols-4'>
             <Typography variant='text'>Passwort:</Typography>
-            <Typography variant='text'>{user?.webaccess ? '**********' : null}</Typography>
+            <Typography variant='text'>{user?.webaccess ? '**********' : null} </Typography>
+            { user ? <PasswordDialog userId={user?.id} /> : null}
           </div>
         </div>
 
