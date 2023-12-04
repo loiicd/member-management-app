@@ -20,3 +20,8 @@ export const UserFormDataShema = z.object({
   phone:          z.string().optional().nullable(),
   webaccess:      z.boolean(),
 })
+
+export const UserLoginShema = z.object({
+  email:          z.string().email(),
+  password:       z.string(),
+})

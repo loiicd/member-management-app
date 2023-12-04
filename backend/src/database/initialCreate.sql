@@ -7,6 +7,7 @@ CREATE TABLE user (
   email text,
   phone text,
   password text,
+  passwordsalt text, 
   webaccess boolean NOT NULL,
   PRIMARY KEY (id)
 )

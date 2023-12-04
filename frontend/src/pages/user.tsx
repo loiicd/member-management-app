@@ -70,6 +70,10 @@ const UserPage = () => {
             <Typography variant='text'>Online Zugang:</Typography>
             <Typography variant='text'>{user?.webaccess ? 'Ja' : 'Nein'}</Typography>
           </div>
+          <div className='grid gap-2 grid-cols-4'>
+            <Typography variant='text'>Passwort:</Typography>
+            <Typography variant='text'>{user?.webaccess ? '**********' : null}</Typography>
+          </div>
         </div>
 
       </div>
