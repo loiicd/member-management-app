@@ -1,7 +1,14 @@
 import { useNavigate } from 'react-router-dom'
+import { useSignOut } from 'react-auth-kit'
 
 const Header = () => {
   const navigate = useNavigate()
+  const signOut = useSignOut()
+
+  const handleSignOut = () => {
+      signOut()
+      navigate('/login')  
+  }
 
   return (
     <header className='bg-zinc-100 dark:bg-zinc-800 border-b dark:border-zinc-600 mb-4'>
@@ -22,7 +29,7 @@ const Header = () => {
           <button className='text-sm font-semibold leading-6 text-black dark:text-white' onClick={() => navigate('/')}>Einstellungen</button>
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <button className="text-sm font-semibold leading-6 text-gray-900">Log in <span aria-hidden="true">&rarr;</span></button>
+          <button className="text-sm font-semibold leading-6 text-black dark:text-white" onClick={handleSignOut}>Abmelden <span aria-hidden="true">&rarr;</span></button>
         </div>
       </nav>
     </header>

@@ -3,9 +3,11 @@ import Button from "../components/base/button"
 import Typography from "../components/base/typography"
 import { login } from "../services/authenticate"
 import { useNavigate } from "react-router-dom"
+import { useSignIn } from 'react-auth-kit'
 
 const LoginPage = () => {
   const navigate = useNavigate()
+  const signIn = useSignIn()
   const emailInputRef = useRef<HTMLInputElement>(null)
   const passwordInputRef = useRef<HTMLInputElement>(null)
 
@@ -15,7 +17,14 @@ const LoginPage = () => {
 
     if (email && password) {
       const response = await login(email, password)
+      console.log(response.status)
       if (response.status === 200) {
+        signIn({
+          token: response.data.token,
+          expiresIn: 3600,
+          tokenType: 'Bearer',
+          authState: { email: response.data.email }
+        })
         navigate('/dashboard')
       } else {
         alert('Nicht Authorisiert')
