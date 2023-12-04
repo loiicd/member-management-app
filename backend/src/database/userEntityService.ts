@@ -1,4 +1,4 @@
-import { UserType, UserFormDataType } from '../types'
+import { UserType, UserFormDataType } from '../models/userShema'
 import { connect } from './db'
 import { v4 as uuidv4 } from 'uuid'
 import bcryptjs from 'bcryptjs'
