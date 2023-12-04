@@ -57,7 +57,7 @@ export class UserEntityService {
 
   async updatePassword(userId: string, password: string): Promise<void> {
     const salt = bcryptjs.genSaltSync()
-    const hashedPassword = bcryptjs.hashSync(password, salt)
+    const hashedPassword = bcryptjs.hashSync(password+salt)
     const client = await connect()
     const query = 'UPDATE public."user" SET password = $1, passwordsalt = $2 WHERE id = $3'
     const values = [hashedPassword, salt, userId]

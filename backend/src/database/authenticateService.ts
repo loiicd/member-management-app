@@ -17,8 +17,7 @@ export class AuthenticateService {
     if (!userFound) false
     if (!user.webaccess) false
 
-    const response = bcryptjs.compareSync(password, user.password)
-
+    const response = bcryptjs.compareSync(password+user.passwordsalt, user.password)
 
     if (response) {
       const token = generateJsonWebToken(user.id, user.email)
@@ -33,7 +32,7 @@ const generateJsonWebToken = (userId: string, email: string): string => {
   const secretKey = 'your-secret-key'
   const payload = { userId, email }
   const options: jwt.SignOptions = {
-    expiresIn: '1h',
+    expiresIn: '1m',
   }
   return jwt.sign(payload, secretKey, options)
 }
