@@ -50,11 +50,26 @@ const UserPage = () => {
         </div>
 
         <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
-          <Typography variant='text'>Geburstdatum: {user?.birthdate?.toLocaleString()}</Typography>
-          <Typography variant='text'>Addresse: {user?.address}</Typography>
-          <Typography variant='text'>Email: {user?.email}</Typography>
-          <Typography variant='text'>Telefon: {user?.phone}</Typography>
-          <Typography variant='text'>Online Zugang: {user?.webaccess ? 'Ja' : 'Nein'}</Typography>
+          <div className='grid gap-2 grid-cols-4'>
+            <Typography variant='text'>Geburstdatum:</Typography>
+            <Typography variant='text'>{user?.birthdate?.toLocaleString()}</Typography>
+          </div>
+          <div className='grid gap-2 grid-cols-4'>
+            <Typography variant='text'>Addresse:</Typography>
+            <Typography variant='text'>{user?.address}</Typography>
+          </div>
+          <div className='grid gap-2 grid-cols-4'>
+            <Typography variant='text'>Email:</Typography>
+            <Typography variant='text'>{user?.email}</Typography>
+          </div>
+          <div className='grid gap-2 grid-cols-4'>
+            <Typography variant='text'>Telefon:</Typography>
+            <Typography variant='text'>{user?.phone}</Typography>
+          </div>
+          <div className='grid gap-2 grid-cols-4'>
+            <Typography variant='text'>Online Zugang:</Typography>
+            <Typography variant='text'>{user?.webaccess ? 'Ja' : 'Nein'}</Typography>
+          </div>
         </div>
 
       </div>
