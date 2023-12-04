@@ -7,7 +7,8 @@ type test = {
   birthdate?: Date,
   address?: string,
   email?: string,
-  phone?: string
+  phone?: string,
+  webaccess: boolean,
 }
 
 export const getUser = async (id: string) => {

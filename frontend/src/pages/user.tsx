@@ -54,6 +54,7 @@ const UserPage = () => {
           <Typography variant='text'>Addresse: {user?.address}</Typography>
           <Typography variant='text'>Email: {user?.email}</Typography>
           <Typography variant='text'>Telefon: {user?.phone}</Typography>
+          <Typography variant='text'>Online Zugang: {user?.webaccess ? 'Ja' : 'Nein'}</Typography>
         </div>
 
       </div>

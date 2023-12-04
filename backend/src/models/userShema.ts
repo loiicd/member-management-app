@@ -8,6 +8,7 @@ export const UserShema = z.object({
   address:        z.string().optional().nullable(),
   email:          z.string().optional().nullable(),
   phone:          z.string().optional().nullable(),
+  webaccess:      z.boolean(),
 })
 
 export const UserFormDataShema = z.object({
@@ -17,4 +18,5 @@ export const UserFormDataShema = z.object({
   address:        z.string().optional().nullable(),
   email:          z.string().optional().nullable(),
   phone:          z.string().optional().nullable(),
+  webaccess:      z.boolean(),
 })

@@ -7,9 +7,16 @@ export class UserEntityService {
     const client = await connect()
     let query: string
     if (searchTerm) {
-      query = `SELECT * FROM public."user" WHERE firstname ILIKE '%${searchTerm}%' OR lastname ILIKE '%${searchTerm}%' OR address ILIKE '%${searchTerm}%'`
+      query = `
+        SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
+        FROM public."user" 
+        WHERE firstname ILIKE '%${searchTerm}%' 
+        OR lastname ILIKE '%${searchTerm}%' 
+        OR address ILIKE '%${searchTerm}%'`
     } else {
-      query = 'SELECT * FROM public."user"'
+      query = `
+        SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
+        FROM public."user"`
     }
     const result = await client.query(query)
     const users = result.rows
@@ -19,7 +26,10 @@ export class UserEntityService {
 
   async getOneById(id: string): Promise<UserType> {
     const client = await connect()
-    const query = `SELECT * FROM public."user" WHERE id = '${id}'`
+    const query = `
+      SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
+      FROM public."user" 
+      WHERE id = '${id}'`
     const result = await client.query(query)
     const user = result.rows[0]
     client.end()
@@ -28,16 +38,16 @@ export class UserEntityService {
 
   async insert(user: UserFormDataType): Promise<void> {
     const client = await connect()
-    const query = `INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone) VALUES ($1, $2, $3, $4, $5, $6, $7)`
-    const values = [uuidv4(), user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone]
+    const query = `INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, webaccess) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
+    const values = [uuidv4(), user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.webaccess]
     await client.query(query, values)
     client.end()
   }
 
   async update(user: UserType): Promise<void> {
     const client = await connect()
-    const query = `UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6 WHERE id = $7`
-    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.id]
+    const query = `UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, webaccess = $7 WHERE id = $8`
+    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.webaccess, user.id]
     await client.query(query, values)
     client.end()
   }

@@ -6,4 +6,5 @@ export type User = {
   address?: string
   email?: string,
   phone?: string,
+  webaccess: boolean,
 }

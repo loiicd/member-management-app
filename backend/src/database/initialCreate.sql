@@ -3,8 +3,10 @@ CREATE TABLE user (
   firstname text NOT NULL,
   lastname text NOT NULL,
   birthdate date,
-  adress text,
+  address text,
   email text,
   phone text,
+  password text,
+  webaccess boolean NOT NULL,
   PRIMARY KEY (id)
 )
