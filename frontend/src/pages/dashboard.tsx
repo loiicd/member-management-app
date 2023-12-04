@@ -11,6 +11,8 @@ import UserDialog from '../components/userDialog'
 import Typography from '../components/base/typography'
 import Button from '../components/base/button'
 import Input from '../components/base/input'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 const DashboardPage = () => {
   const navigate = useNavigate()
@@ -46,6 +48,7 @@ const DashboardPage = () => {
               <TableCell>Nachname</TableCell>
               <TableCell>Geburtsdatum</TableCell>
               <TableCell>Adresse</TableCell>
+              <TableCell>Online Zugang</TableCell>
             </tr>
           </TableHead>
           <TableBody>
@@ -55,6 +58,7 @@ const DashboardPage = () => {
                 <TableCell>{user.lastname}</TableCell>
                 <TableCell>{user.birthdate?.toLocaleString('de-DE')}</TableCell>
                 <TableCell>{user.address}</TableCell>
+                <TableCell>{user.webaccess ? <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} size='xl' className='text-lime-600' /> : <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} size='xl' className='text-red-600' />}</TableCell>
               </tr> 
             ))}
           </TableBody>
