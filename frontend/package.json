@@ -2,6 +2,7 @@
   "name": "member-management-app-frontend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.0",
     "@fortawesome/free-brands-svg-icons": "^6.5.0",
@@ -51,5 +52,8 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.3.3"
+  },
+  "jest": {
+    "type": "module"
   }
 }

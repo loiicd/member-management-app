@@ -8,13 +8,11 @@ export class UserEntityService {
     const client = await connect()
     let query: string
     if (searchTerm) {
+      const newSearchTerm = searchTerm.split(' ').join(' & ')
       query = `
         SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
-        FROM public."user" 
-        WHERE firstname ILIKE '%${searchTerm}%' 
-        OR lastname ILIKE '%${searchTerm}%' 
-        OR address ILIKE '%${searchTerm}%'
-        ORDER BY lastname`
+        FROM public."user"
+        WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '${searchTerm}:*')`
     } else {
       query = `
         SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
