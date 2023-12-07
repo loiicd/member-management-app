@@ -4,7 +4,6 @@ import UserPage from './pages/user'
 import LoginPage from './pages/login'
 import { RequireAuth } from 'react-auth-kit'
 
-
 const App = () => {
   return (
     <BrowserRouter>

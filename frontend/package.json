@@ -1,30 +1,32 @@
 {
-  "name": "member-management-app-frontend",
+  "name": "newfrontend",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.5.0",
-    "@fortawesome/free-brands-svg-icons": "^6.5.0",
-    "@fortawesome/free-regular-svg-icons": "^6.5.0",
-    "@fortawesome/free-solid-svg-icons": "^6.5.0",
-    "@fortawesome/react-fontawesome": "^0.2.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.59",
-    "@types/react": "^18.2.31",
-    "@types/react-dom": "^18.2.14",
-    "axios": "^1.5.1",
-    "babel-plugin-macros": "^3.1.0",
-    "react": "^18.2.0",
+    "@fortawesome/fontawesome-svg-core": "6.5.0",
+    "@fortawesome/free-brands-svg-icons": "6.5.0",
+    "@fortawesome/free-regular-svg-icons": "6.5.0",
+    "@fortawesome/free-solid-svg-icons": "6.5.0",
+    "@fortawesome/react-fontawesome": "0.2.0",
+    "@testing-library/jest-dom": "5.17.0",
+    "@testing-library/react": "13.4.0",
+    "@testing-library/user-event": "13.5.0",
+    "@types/jest": "27.5.2",
+    "@types/node": "16.18.67",
+    "@types/react": "18.2.42",
+    "@types/react-dom": "18.2.17",
+    "axios": "1.6.2",
+    "react": "18.2.0",
     "react-auth-kit": "2.12.5",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.17.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "6.20.1",
     "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "ts-jest": "29.1.1",
+    "typescript": "4.9.5",
+    "web-vitals": "2.1.4"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.3.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -49,8 +51,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "tailwindcss": "^3.3.3"
   }
 }
