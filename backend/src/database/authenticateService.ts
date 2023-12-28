@@ -14,8 +14,8 @@ export class AuthenticateService {
     const userFound = !!user
     client.end()
 
-    if (!userFound) false
-    if (!user.webaccess) false
+    if (!userFound) return null
+    if (!user.webaccess) return null
 
     const response = bcryptjs.compareSync(password+user.passwordsalt, user.password)
 

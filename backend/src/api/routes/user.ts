@@ -13,8 +13,8 @@ router.get('/', tryCatchMiddleware(async (req: Request, res: Response) => {
 }))
 
 router.get('/:id', tryCatchMiddleware(async (req: Request, res: Response) => {
-  const id = validateUUID(req.params.id)
-  const user = await userEntityService.getOneById(id)
+  // const id = validateUUID(req.params.id)
+  const user = await userEntityService.getOneById(req.params.id)
   res.status(200).send(user)
 }))
 

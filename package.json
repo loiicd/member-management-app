@@ -1,0 +1,15 @@
+{
+  "name": "member-management-app",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "start:frontend": "cd frontend && npm start",
+    "start:backend": "cd backend && npm start",
+    "start": "concurrently 'npm run start:frontend' 'npm run start:backend'"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "8.2.0"
+  }
+}
