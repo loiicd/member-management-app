@@ -32,7 +32,6 @@ const SettingsPage = () => {
           <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
             <div className='flex justify-between'>
               <Typography variant='h5'>Funktionen</Typography>
-              <Button variant='contained' size='sm'>Neue Funktion</Button>
               <OperationalQualificationDialog type='insert' />
             </div>
             <Table>
