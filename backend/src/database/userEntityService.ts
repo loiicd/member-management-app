@@ -10,9 +10,9 @@ export class UserEntityService {
     if (searchTerm) {
       const newSearchTerm = searchTerm.split(' ').join(' & ')
       query = `
-        SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
+        SELECT user.id, firstname, lastname, birthdate, address, email, phone, webaccess
         FROM public."user"
-        WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '${searchTerm}:*')`
+        WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '${newSearchTerm}:*')`
     } else {
       query = `
         SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
@@ -21,6 +21,26 @@ export class UserEntityService {
     }
     const result = await client.query(query)
     const users = result.rows
+
+    for(const user of users) {
+      const client2 = await connect()
+      try {
+        const query2 = `
+        SELECT id, name 
+        FROM public."operational_qualification" 
+        LEFT JOIN public."user_operational_qualification"
+        ON operational_qualification_id = id
+        WHERE user_id = $1`
+
+      const test = await client2.query(query2, [user.id])
+      user.operationalQualifications = test.rows
+      } catch(err) {
+        console.log(err)
+      } finally {
+        client2.end()
+      }
+    }
+
     client.end()
     return users
   }
@@ -33,6 +53,24 @@ export class UserEntityService {
       WHERE id = '${id}'`
     const result = await client.query(query)
     const user = result.rows[0]
+
+    const client2 = await connect()
+    try {
+      const query2 = `
+      SELECT id, name 
+      FROM public."operational_qualification" 
+      LEFT JOIN public."user_operational_qualification"
+      ON operational_qualification_id = id
+      WHERE user_id = $1`
+
+    const test = await client2.query(query2, [user.id])
+    user.operationalQualifications = test.rows
+    } catch(err) {
+      console.log(err)
+    } finally {
+      client2.end()
+    }
+
     client.end()
     return user
   }

@@ -7,4 +7,8 @@ export type User = {
   email?: string,
   phone?: string,
   webaccess: boolean,
+  operationalQualifications: {
+    id: string,
+    name: string
+  }[]
 }

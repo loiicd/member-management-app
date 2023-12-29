@@ -9,6 +9,10 @@ export const UserShema = z.object({
   email:          z.string().optional().nullable(),
   phone:          z.string().optional().nullable(),
   webaccess:      z.boolean(),
+  operationalQualifications: z.array(z.object({
+    id:   z.string(),
+    name: z.string(),
+})),
 })
 export type UserType = z.infer<typeof UserShema>
 
