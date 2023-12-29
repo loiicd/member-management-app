@@ -8,6 +8,7 @@ import Typography from "../components/base/typography"
 import Header from "../components/header"
 import { getOperationalQualifications } from "../services/operationalQualification"
 import { OperationalQualification } from "../types/operationalQualification"
+import OperationalQualificationDialog from "../components/operationalQualificationDialog"
 
 const SettingsPage = () => {
   const [operationalQualifications, setOperationalQualifications] = useState<OperationalQualification[]>([])
@@ -32,6 +33,7 @@ const SettingsPage = () => {
             <div className='flex justify-between'>
               <Typography variant='h5'>Funktionen</Typography>
               <Button variant='contained' size='sm'>Neue Funktion</Button>
+              <OperationalQualificationDialog type='insert' />
             </div>
             <Table>
               <TableHead>
@@ -45,18 +47,6 @@ const SettingsPage = () => {
                     <TableCell>{operationalQualification.name}</TableCell>
                   </tr>
                 ))}
-                {/* <tr key='1' className='bg-white border-b dark:bg-zinc-800 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600'>
-                  <TableCell>Gruppenführer</TableCell>
-                </tr> 
-                <tr key='2' className='bg-white border-b dark:bg-zinc-800 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600'>
-                  <TableCell>Zugführer</TableCell>
-                </tr> 
-                <tr key='3' className='bg-white border-b dark:bg-zinc-800 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600'>
-                  <TableCell>Verbandsführer</TableCell>
-                </tr> 
-                <tr key='4' className='bg-white border-b dark:bg-zinc-800 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600'>
-                  <TableCell>Atemschutzträger</TableCell>
-                </tr>  */}
               </TableBody>
             </Table>
           </div>

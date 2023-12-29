@@ -42,7 +42,6 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
   const handleClose = () =>  setOpen(false)
 
   const handleChange = (field: keyof Test) => (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value)
     setFormData({
       ...formData,
       [field]: event.target.value,
