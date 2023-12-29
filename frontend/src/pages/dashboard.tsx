@@ -48,6 +48,7 @@ const DashboardPage = () => {
               <TableCell>Nachname</TableCell>
               <TableCell>Geburtsdatum</TableCell>
               <TableCell>Adresse</TableCell>
+              <TableCell>Einsatzqualifikation</TableCell>
               <TableCell>Online Zugang</TableCell>
             </tr>
           </TableHead>
@@ -58,6 +59,7 @@ const DashboardPage = () => {
                 <TableCell>{user.lastname}</TableCell>
                 <TableCell>{user.birthdate?.toLocaleString('de-DE')}</TableCell>
                 <TableCell>{user.address}</TableCell>
+                <TableCell>{user.operationalQualifications.map((qualification) => qualification.abbreviation + ' ')}</TableCell>
                 <TableCell>{user.webaccess ? <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} size='xl' className='text-lime-600' /> : <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} size='xl' className='text-red-600' />}</TableCell>
               </tr> 
             ))}
