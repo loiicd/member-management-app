@@ -6,73 +6,69 @@ import bcryptjs from 'bcryptjs'
 export class UserEntityService {
   async getAll(searchTerm: string | undefined): Promise<UserType[]> {
     const client = await connect()
-    let query: string
-    if (searchTerm) {
-      const newSearchTerm = searchTerm.split(' ').join(' & ')
-      query = `
-        SELECT user.id, firstname, lastname, birthdate, address, email, phone, webaccess
-        FROM public."user"
-        WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '${newSearchTerm}:*')`
-    } else {
-      query = `
-        SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
-        FROM public."user"
-        ORDER BY lastname`
-    }
-    const result = await client.query(query)
-    const users = result.rows
-
-    for(const user of users) {
-      const client2 = await connect()
-      try {
+    try {
+      await client.query('BEGIN')
+      let query: string
+      if (searchTerm) {
+        const newSearchTerm = searchTerm.split(' ').join(' & ')
+        query = `
+          SELECT user.id, firstname, lastname, birthdate, address, email, phone, webaccess
+          FROM public."user"
+          WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '${newSearchTerm}:*')`
+      } else {
+        query = `
+          SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
+          FROM public."user"
+          ORDER BY lastname`
+      }
+      const result = await client.query(query)
+      const users = result.rows
+      for(const user of users) {
         const query2 = `
         SELECT id, name, abbreviation
         FROM public."operational_qualification" 
         LEFT JOIN public."user_operational_qualification"
         ON operational_qualification_id = id
         WHERE user_id = $1`
-
-      const test = await client2.query(query2, [user.id])
-      user.operationalQualifications = test.rows
-      } catch(err) {
-        console.log(err)
-      } finally {
-        client2.end()
+        const test = await client.query(query2, [user.id])
+        user.operationalQualifications = test.rows
       }
+      await client.query('COMMIT')
+      return users
+    } catch(error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally {
+      await client.end()
     }
-
-    client.end()
-    return users
   }
 
   async getOneById(id: string): Promise<UserType> {
     const client = await connect()
-    const query = `
-      SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
-      FROM public."user" 
-      WHERE id = '${id}'`
-    const result = await client.query(query)
-    const user = result.rows[0]
-
-    const client2 = await connect()
     try {
+      await client.query('BEGIN')
+      const query = `
+        SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
+        FROM public."user" 
+        WHERE id = '${id}'`
+      const result = await client.query(query)
+      const user = result.rows[0]
       const query2 = `
       SELECT id, name, abbreviation
       FROM public."operational_qualification" 
       LEFT JOIN public."user_operational_qualification"
       ON operational_qualification_id = id
       WHERE user_id = $1`
-
-    const test = await client2.query(query2, [user.id])
-    user.operationalQualifications = test.rows
-    } catch(err) {
-      console.log(err)
+      const test = await client.query(query2, [user.id])
+      user.operationalQualifications = test.rows
+      await client.query('COMMIT')
+      return user
+    } catch (error) {
+      await client.query('ROLLBACK')
+      throw error
     } finally {
-      client2.end()
+      await client.end()
     }
-
-    client.end()
-    return user
   }
 
   async insert(user: UserFormDataType): Promise<void> {
