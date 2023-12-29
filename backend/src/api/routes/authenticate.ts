@@ -17,4 +17,3 @@ router.get('/login', tryCatchMiddleware(async (req: Request, res: Response) => {
 }))
 
 export default router
-

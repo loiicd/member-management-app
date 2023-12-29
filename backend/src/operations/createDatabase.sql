@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS "user";
+DROP TABLE IF EXISTS "operational_qualification";
+DROP TABLE IF EXISTS "user_operational_qualification";
+
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 CREATE TABLE "user" (
@@ -13,6 +17,20 @@ CREATE TABLE "user" (
   webaccess boolean NOT NULL,
   searchvector tsvector,
   PRIMARY KEY (id)
+);
+
+CREATE TABLE "operational_qualification" (
+  id text NOT NULL,
+  name text NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE "user_operational_qualification" (
+  user_id text NOT NULL,
+  operational_qualification_id text NOT NULL,
+  PRIMARY KEY (user_id, operational_qualification_id),
+  FOREIGN KEY (user_id) REFERENCES "user" (id),
+  FOREIGN KEY (operational_qualification_id) REFERENCES "operational_qualification" (id)
 );
 
 CREATE INDEX searchvectorindex ON "user" USING gin(searchvector);

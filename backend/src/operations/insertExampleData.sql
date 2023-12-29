@@ -21,3 +21,41 @@ VALUES
   ('07db9b80-b9cf-4639-94cb-22da1f7edbdf', 'Benjamin', 'Lopez', '1986-06-18', 'Lopez Lane 777, 67890 Lopeztown', 'benjamin.lopez@example.com', '+1 917 5556789', null, null, false, to_tsvector('german', 'Benjamin Lopez 1986-06-18 Lopez Lane 777, 67890 Lopeztown benjamin.lopez@example.com +1 917 5556789')),
   ('4c3d7edb-dab2-4228-a033-a90b8582ef47', 'Mia', 'Baker', '1999-02-10', 'Baker Avenue 444, 34567 Bakerville', 'mia.baker@example.com', '+61 2 12345678', null, null, false, to_tsvector('german', 'Mia Baker 1999-02-10 Baker Avenue 444, 34567 Bakerville mia.baker@example.com +61 2 12345678')),
   ('5ecf4875-1311-4157-9af4-847581439690', 'Admin', 'Admin', null, null, 'admin@example.com', null, '$2a$10$DOyVPpgyw2zUxyPl4I4Kpu5Dg73QcaimXXhHFBjd15qxzc2WPOzYW', '$2a$10$jR5kyQ2QHqtYYs2ZGD7bGO', true, to_tsvector('german', 'Admin Admin admin@example.com'));
+
+INSERT INTO "operational_qualification" (id, name)
+VALUES
+('02408990-10f5-4921-a874-d24c2ec682d4', 'Truppmann'),
+('f4c6b77f-bba3-4e2a-9c78-0ea52e148d88', 'Truppführer'),
+('2052c1bd-3c0f-4e86-aa7e-c3aff95085ef', 'Gruppenführer'),
+('e096f52a-0af3-4897-a158-a10b60db79fe', 'Zugführer'),
+('4b495910-6480-424c-8b7d-408d04063afa', 'Atemschutzträger'),
+('5dfe839f-94dc-4dfd-a3b0-81b265f7d0c8', 'Maschinist');
+
+INSERT INTO "user_operational_qualification" (user_id, operational_qualification_id)
+VALUES
+  ('54be0d0d-9fc5-4f40-8c06-7509e219c1f8', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('6d948233-aa3c-4d3d-a9ed-7dafb2d8d454', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('081b3705-45cd-42c4-ac7e-f39a134625f1', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('8e82de9c-3031-4174-afb1-e4d8faa0b8e8', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('a72aaca2-6691-4637-987d-ca48ed041543', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('199fe9f8-249d-41c1-b217-7e093371de61', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('1b075520-c26c-4d31-9dba-1a22fa5ada3c', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('0eb8a59f-42ee-41ea-9dd8-897cbc6e6399', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('5ba021b7-b89f-4b51-b0ef-4bcffd746654', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('97c9a9fd-7da6-4741-b5b2-2e95a5dec2fb', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('9ec2b4a1-ebbc-4c49-ba56-fe37ac035fc', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('1df6f7b4-b145-4ac5-a494-7c2efed48cb0', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('05cf4055-50a8-41c6-9907-1ef12d5a45ff', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('6dc0c8b3-fb7b-4dce-9454-e225e60d4673', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('a8e3c3d7-cd4e-48b2-9e85-70a64f0e7e0f', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('ca8f96ce-7666-4707-b6f6-cca9af13f387', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('a5b5837c-e518-4e7a-9189-f40c4e76aec2', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('3b56aa5d-445c-4110-b27b-f37c4d9a6ac1', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('07db9b80-b9cf-4639-94cb-22da1f7edbdf', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('4c3d7edb-dab2-4228-a033-a90b8582ef47', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('5ecf4875-1311-4157-9af4-847581439690', '02408990-10f5-4921-a874-d24c2ec682d4'),
+  ('6dc0c8b3-fb7b-4dce-9454-e225e60d4673', 'f4c6b77f-bba3-4e2a-9c78-0ea52e148d88'),
+  ('199fe9f8-249d-41c1-b217-7e093371de61', '2052c1bd-3c0f-4e86-aa7e-c3aff95085ef'),
+  ('97c9a9fd-7da6-4741-b5b2-2e95a5dec2fb', 'e096f52a-0af3-4897-a158-a10b60db79fe'),
+  ('05cf4055-50a8-41c6-9907-1ef12d5a45ff', '4b495910-6480-424c-8b7d-408d04063afa'),
+  ('54be0d0d-9fc5-4f40-8c06-7509e219c1f8', '5dfe839f-94dc-4dfd-a3b0-81b265f7d0c8');

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useSignOut } from 'react-auth-kit'
+import Input from './base/input'
 
 const Header = () => {
   const navigate = useNavigate()
@@ -26,9 +27,11 @@ const Header = () => {
         <div className="hidden lg:flex lg:gap-x-12">
           <button className='text-sm font-semibold leading-6 text-black dark:text-white' onClick={() => navigate('/')}>Dashboard</button>
           <button className='text-sm font-semibold leading-6 text-black dark:text-white' onClick={() => navigate('/')}>User</button>
-          <button className='text-sm font-semibold leading-6 text-black dark:text-white' onClick={() => navigate('/')}>Einstellungen</button>
+          <button className='text-sm font-semibold leading-6 text-black dark:text-white' onClick={() => navigate('/settings')}>Einstellungen</button>
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          <Input />
+          <div className='mr-4'></div>
           <button className="text-sm font-semibold leading-6 text-black dark:text-white" onClick={handleSignOut}>Abmelden <span aria-hidden="true">&rarr;</span></button>
         </div>
       </nav>
