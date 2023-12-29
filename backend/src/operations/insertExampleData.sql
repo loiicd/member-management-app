@@ -22,14 +22,14 @@ VALUES
   ('4c3d7edb-dab2-4228-a033-a90b8582ef47', 'Mia', 'Baker', '1999-02-10', 'Baker Avenue 444, 34567 Bakerville', 'mia.baker@example.com', '+61 2 12345678', null, null, false, to_tsvector('german', 'Mia Baker 1999-02-10 Baker Avenue 444, 34567 Bakerville mia.baker@example.com +61 2 12345678')),
   ('5ecf4875-1311-4157-9af4-847581439690', 'Admin', 'Admin', null, null, 'admin@example.com', null, '$2a$10$DOyVPpgyw2zUxyPl4I4Kpu5Dg73QcaimXXhHFBjd15qxzc2WPOzYW', '$2a$10$jR5kyQ2QHqtYYs2ZGD7bGO', true, to_tsvector('german', 'Admin Admin admin@example.com'));
 
-INSERT INTO "operational_qualification" (id, name)
+INSERT INTO "operational_qualification" (id, name, abbreviation)
 VALUES
-('02408990-10f5-4921-a874-d24c2ec682d4', 'Truppmann'),
-('f4c6b77f-bba3-4e2a-9c78-0ea52e148d88', 'Truppführer'),
-('2052c1bd-3c0f-4e86-aa7e-c3aff95085ef', 'Gruppenführer'),
-('e096f52a-0af3-4897-a158-a10b60db79fe', 'Zugführer'),
-('4b495910-6480-424c-8b7d-408d04063afa', 'Atemschutzträger'),
-('5dfe839f-94dc-4dfd-a3b0-81b265f7d0c8', 'Maschinist');
+('02408990-10f5-4921-a874-d24c2ec682d4', 'Truppmann', 'TM'),
+('f4c6b77f-bba3-4e2a-9c78-0ea52e148d88', 'Truppführer', 'TF'),
+('2052c1bd-3c0f-4e86-aa7e-c3aff95085ef', 'Gruppenführer', 'GF'),
+('e096f52a-0af3-4897-a158-a10b60db79fe', 'Zugführer', 'ZF'),
+('4b495910-6480-424c-8b7d-408d04063afa', 'Atemschutzträger', 'AGT'),
+('5dfe839f-94dc-4dfd-a3b0-81b265f7d0c8', 'Maschinist', 'MA');
 
 INSERT INTO "user_operational_qualification" (user_id, operational_qualification_id)
 VALUES

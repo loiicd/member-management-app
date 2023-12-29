@@ -1,6 +1,6 @@
+DROP TABLE IF EXISTS "user_operational_qualification";
 DROP TABLE IF EXISTS "user";
 DROP TABLE IF EXISTS "operational_qualification";
-DROP TABLE IF EXISTS "user_operational_qualification";
 
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
@@ -22,6 +22,7 @@ CREATE TABLE "user" (
 CREATE TABLE "operational_qualification" (
   id text NOT NULL,
   name text NOT NULL,
+  abbreviation text,
   PRIMARY KEY (id)
 );
 

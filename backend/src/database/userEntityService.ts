@@ -26,7 +26,7 @@ export class UserEntityService {
       const client2 = await connect()
       try {
         const query2 = `
-        SELECT id, name 
+        SELECT id, name, abbreviation
         FROM public."operational_qualification" 
         LEFT JOIN public."user_operational_qualification"
         ON operational_qualification_id = id
@@ -57,7 +57,7 @@ export class UserEntityService {
     const client2 = await connect()
     try {
       const query2 = `
-      SELECT id, name 
+      SELECT id, name, abbreviation
       FROM public."operational_qualification" 
       LEFT JOIN public."user_operational_qualification"
       ON operational_qualification_id = id

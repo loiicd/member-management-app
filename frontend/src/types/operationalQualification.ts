@@ -1,4 +1,5 @@
 export type OperationalQualification = {
   id: string,
-  name: string
+  name: string,
+  abbreviation?: string
 }
