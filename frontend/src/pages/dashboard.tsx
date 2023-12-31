@@ -21,7 +21,7 @@ const DashboardPage = () => {
 
   useEffect(() => {
     getUsers(searchTerm)
-      .then((result) => setUsers(result) ) 
+      .then((data) => setUsers(data)) 
   }, [searchTerm])
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {

@@ -11,3 +11,13 @@ export type User = {
   webaccess: boolean,
   operationalQualifications: OperationalQualification[]
 }
+
+export type UserFormData = {
+  firstname: string,
+  lastname: string
+  birthdate?: Date,
+  address?: string
+  email?: string,
+  phone?: string,
+  webaccess: boolean
+}

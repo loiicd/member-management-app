@@ -18,7 +18,7 @@ const UserPage = () => {
   useEffect(() => {
     if (id) {
       getUser(id)
-        .then((data: User) => setUser(data))
+        .then((data) => setUser(data))
     }
   }, [id])
 

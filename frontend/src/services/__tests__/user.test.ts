@@ -68,7 +68,7 @@ describe('postUser', () => {
   }
   const expectedUrl = 'http://localhost:3002/user'
 
-  it('call postUser with right url', async () => {
+  it('call postUser with right url & data', async () => {
     axiosPostMock.mockResolvedValueOnce(goodResponse)
     await postUser(user)
     expect(axiosPostMock).toHaveBeenCalledTimes(1)
@@ -101,7 +101,7 @@ describe('updateUser', () => {
   }
   const expectedUrl = 'http://localhost:3002/user'
 
-  it('call updateUser with right url', async () => {
+  it('call updateUser with right url & data', async () => {
     axiosPutMock.mockResolvedValueOnce(goodResponse)
     await updateUser(user)
     expect(axiosPutMock).toHaveBeenCalledTimes(1)
