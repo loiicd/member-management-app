@@ -28,7 +28,7 @@ export const getUsers = async (searchTerm: string | undefined) => {
   return response.data
 }
 
-export const postUser = async (user: test) => {
+export const postUser = async (user: test): Promise<void> => {
   const url = `http://localhost:3002/user`
   await axios.post(url, user)
 }
