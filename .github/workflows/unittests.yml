@@ -19,7 +19,9 @@ jobs:
         node-version: 14
 
     - name: Install Dependencies
-      run: npm install
+      run: |
+        cd frontend
+        npm install
 
     - name: Run Jest Tests
       run: npm run test --prefix frontend
