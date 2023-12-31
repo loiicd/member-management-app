@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import Button from "../components/base/button"
 import Table from "../components/base/table/table"
 import TableBody from "../components/base/table/tableBody"
 import TableCell from "../components/base/table/tableCell"
