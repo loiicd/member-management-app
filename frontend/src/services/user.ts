@@ -4,7 +4,7 @@ import { User, UserFormData } from '../types/user'
 export const getUser = async (id: string): Promise<User> => {
   const url = `http://localhost:3002/user/${id}`
   const response = await axios.get(url)
-  return response.data
+  return { ...response.data, birthdate: new Date(response.data.birthdate) }
 }
 
 export const getUsers = async (searchTerm: string | undefined): Promise<User[]> => {
@@ -15,6 +15,10 @@ export const getUsers = async (searchTerm: string | undefined): Promise<User[]> 
     url = 'http://localhost:3002/user'
   }
   const response = await axios.get(url)
+  response.data.forEach((user: any) => {
+    user.birthdate = new Date(user.birthdate)
+  })
+
   return response.data
 }
 

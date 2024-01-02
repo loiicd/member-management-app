@@ -53,7 +53,7 @@ const UserPage = () => {
         <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
           <div className='grid gap-2 grid-cols-4'>
             <Typography variant='text'>Geburstdatum:</Typography>
-            <Typography variant='text'>{user?.birthdate?.toLocaleString()}</Typography>
+            <Typography variant='text'>{user?.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Typography>
           </div>
           <div className='grid gap-2 grid-cols-4'>
             <Typography variant='text'>Addresse:</Typography>

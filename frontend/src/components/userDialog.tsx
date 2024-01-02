@@ -5,12 +5,12 @@ import Input from './base/input'
 import { getUser, postUser, updateUser } from '../services/user'
 
 type Test = {
-  firstname: string | undefined,
-  lastname: string | undefined,
-  birthdate: Date | undefined,
-  address: string | undefined,
-  email: string | undefined,
-  phone: string | undefined,
+  firstname?: string,
+  lastname?: string,
+  birthdate?: Date,
+  address?: string,
+  email?: string,
+  phone?: string,
   webaccess: boolean
 }
 

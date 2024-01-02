@@ -3,13 +3,67 @@ import { getUser, getUsers, postUser, putPassword, updateUser, deleteUser } from
 
 jest.mock('axios')
 
-const goodResponse = {
-  data: 'mocked data',
+const resultDataOne = {
+  id: '123',
+    firstname: 'Max',
+    lastname: 'Mustermann',
+    birthdate: '1981-05-08',
+    address: 'Musterstraße 1, 12345 Musterstadt',
+    email: 'max.mustermann@example.com',
+    phone: '1234567890',
+    webaccess: true,
+    operationalQualifications: []
+}
+const resultDataMany = [
+  {
+    id: '123',
+    firstname: 'Max',
+    lastname: 'Mustermann',
+    birthdate: '1981-05-08',
+    address: 'Musterstraße 1, 12345 Musterstadt',
+    email: 'max.mustermann@example.com',
+    phone: '1234567890',
+    webaccess: true,
+    operationalQualifications: []
+  },
+  {
+    id: '456',
+    firstname: 'Erika',
+    lastname: 'Musterfrau',
+    birthdate: '1990-10-04',
+    address: 'Musterstraße 2, 12345 Musterstadt',
+    email: 'erika.musterfrau@example.com',
+    phone: '0987654321',
+    webaccess: true,
+    operationalQualifications: []
+  }
+]
+
+const goodResponseOne = {
+  data: resultDataOne,
   status: 200,
   statusText: 'OK',
   headers: {},
   config: {},
 }
+
+const goodResponseMany = {
+  data: resultDataMany,
+  status: 200,
+  statusText: 'OK',
+  headers: {},
+  config: {},
+}
+
+const goodResponse = {
+  status: 200,
+  statusText: 'OK',
+  headers: {},
+  config: {},
+}
+
+const expectedResponseData = {"address": "Musterstraße 1, 12345 Musterstadt", "birthdate": new Date('1981-05-08'), "email": "max.mustermann@example.com", "firstname": "Max", "id": "123", "lastname": "Mustermann", "operationalQualifications": [], "phone": "1234567890", "webaccess": true}
+const expectedResponseDataMany = [{"address": "Musterstraße 1, 12345 Musterstadt", "birthdate": new Date ('1981-05-08'), "email": "max.mustermann@example.com", "firstname": "Max", "id": "123", "lastname": "Mustermann", "operationalQualifications": [], "phone": "1234567890", "webaccess": true}, {"address": "Musterstraße 2, 12345 Musterstadt", "birthdate": new Date ('1990-10-04'), "email": "erika.musterfrau@example.com", "firstname": "Erika", "id": "456", "lastname": "Musterfrau", "operationalQualifications": [], "phone": "0987654321", "webaccess": true}]
 
 describe('getUser', () => {
   const axiosGetMock = axios.get as jest.Mock
@@ -17,16 +71,16 @@ describe('getUser', () => {
   const expectedUrl = `http://localhost:3002/user/${id}`
 
   it('call getUser with right url', async () => {
-    axiosGetMock.mockResolvedValueOnce(goodResponse)
+    axiosGetMock.mockResolvedValueOnce(goodResponseOne)
     await getUser(id)
     expect(axiosGetMock).toHaveBeenCalledTimes(1)
     expect(axiosGetMock).toHaveBeenCalledWith(expectedUrl)
   })
 
   it('return data from response', async () => {
-    axiosGetMock.mockResolvedValueOnce(goodResponse)
+    axiosGetMock.mockResolvedValueOnce(goodResponseOne)
     const data = await getUser(id)
-    expect(data).toEqual('mocked data')
+    expect(data).toEqual(expectedResponseData)
   })
 })
 
@@ -37,7 +91,7 @@ describe('getUsers', () => {
 
   it('call getUsers with right url with search term', async () => {
     const searchTerm = 'test'
-    axiosGetMock.mockResolvedValueOnce(goodResponse)
+    axiosGetMock.mockResolvedValueOnce(goodResponseMany)
     await getUsers(searchTerm)
     expect(axiosGetMock).toHaveBeenCalledTimes(1)
     expect(axiosGetMock).toHaveBeenCalledWith(expectedUrlWithSearchTerm)
@@ -45,7 +99,7 @@ describe('getUsers', () => {
 
   it('call getUsers with right url without search term', async () => {
     const searchTerm = undefined
-    axiosGetMock.mockResolvedValueOnce(goodResponse)
+    axiosGetMock.mockResolvedValueOnce(goodResponseMany)
     await getUsers(searchTerm)
     expect(axiosGetMock).toHaveBeenCalledTimes(1)
     expect(axiosGetMock).toHaveBeenCalledWith(expectedUrlWithoutSearchTerm)
@@ -53,9 +107,9 @@ describe('getUsers', () => {
 
   it('return data from response', async () => {
     const searchTerm = undefined
-    axiosGetMock.mockResolvedValueOnce(goodResponse)
+    axiosGetMock.mockResolvedValueOnce(goodResponseMany)
     const data = await getUsers(searchTerm)
-    expect(data).toEqual('mocked data')
+    expect(data).toEqual(expectedResponseDataMany)
   })
 })
 

@@ -57,7 +57,7 @@ const DashboardPage = () => {
               <tr key={user.id} className='bg-white border-b dark:bg-zinc-800 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600' onClick={() => navigate(`/user/${user.id}`)}>
                 <TableCell>{user.firstname}</TableCell>
                 <TableCell>{user.lastname}</TableCell>
-                <TableCell>{user.birthdate?.toLocaleString('de-DE')}</TableCell>
+                <TableCell>{user.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</TableCell>
                 <TableCell>{user.address}</TableCell>
                 <TableCell>{user.operationalQualifications.map((qualification) => qualification.abbreviation + ' ')}</TableCell>
                 <TableCell>{user.webaccess ? <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} size='xl' className='text-lime-600' /> : <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} size='xl' className='text-red-600' />}</TableCell>
