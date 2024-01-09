@@ -61,24 +61,26 @@ const LoginPage = () => {
             <div className='space-y-4 md:space-y-6'>
               <InputElement label='E-Mail' type='email' error={error} ref={emailInputRef} />
               <InputElement label='Passwort' type='password' error={error} ref={passwordInputRef} />
+              { error ? <p className='text-sm text-red-600'>E-Mail oder Passwort falsch!</p> : null }
               <div className="flex items-center justify-between">
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
-                    <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required></input>
+                    <input id="remember" aria-describedby="remember" type="checkbox" className="cursor-pointer w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required></input>
                   </div>
                   <div className="ml-3 text-sm">
                     <label className="text-gray-500 dark:text-gray-300">Angemeldet bleiben</label>
                   </div>
                 </div>
-                <p className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500" onClick={() => alert('Nicht implementiert!')}>Passwort vergessen?</p>
+                <p className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500 cursor-pointer" onClick={() => alert('Nicht implementiert!')}>Passwort vergessen?</p>
               </div>
-              <button type="submit" onClick={handleLogin} className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Anmelden</button>
+              <button onClick={handleLogin} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Anmelden</button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Kein Account? <a onClick={() => navigate('/register')} className="font-medium text-primary-600 hover:underline dark:text-primary-500">Registrieren</a>
+                Kein Account? <a onClick={() => navigate('/register')} className="cursor-pointer font-medium text-primary-600 hover:underline dark:text-primary-500">Registrieren</a>
               </p>
             </div>
           </div>
         </div>
+        <p className='pt-4 text-sm font-light text-center text-gray-500 dark:text-gray-400'>Impressum - Datenschutz</p>
       </div>
     </main>
   )

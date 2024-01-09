@@ -30,7 +30,7 @@ const DashboardPage = () => {
   }
 
   return (
-    <>
+    <main>
       <Header />
       <div className='container mx-auto'>
         <div className='flex justify-between pb-2'>
@@ -66,7 +66,7 @@ const DashboardPage = () => {
           </TableBody>
         </Table>
       </div>
-    </>
+    </main>
   )
 }
 

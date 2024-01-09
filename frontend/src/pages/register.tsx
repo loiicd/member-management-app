@@ -71,53 +71,17 @@ const RegisterPage = () => {
               <InputElement label='Organisationsname' type='text' error={organisationsNameError} ref={organisationsNameRef} />
               <InputElement label='E-Mail' type='email' error={emailInputError} ref={emailInputRef} />
               <InputElement label='Passwort' type='password' error={passwordInputError} ref={passwordInputRef} />
-              <button type="submit" onClick={handleRegister} className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Registrieren</button>
+              { error ? <p className='text-red-600'>Fehler beim Registrieren</p> : null }
+              <button onClick={handleRegister} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrieren</button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Breits ein Account? <a onClick={() => navigate('/login')} className="font-medium text-primary-600 hover:underline dark:text-primary-500">Anmelden</a>
+                Breits ein Account? <a onClick={() => navigate('/login')} className="cursor-pointer font-medium text-primary-600 hover:underline dark:text-primary-500">Anmelden</a>
               </p>
             </div>
           </div>
         </div>
+        <p className='pt-4 text-sm font-light text-center text-gray-500 dark:text-gray-400'>Impressum - Datenschutz</p>
       </div>
     </main>
-
-
-    // <main className="grid min-h-screen place-items-center px-6 py-24 sm:py-32 lg:px-8">
-    //   <div className="text-center">
-    //     <Typography variant='h5'>Hier steht irgendwas</Typography>
-    //     <Typography variant='h1'>Registrieren</Typography>
-    //     <div className='grid gap-4 grid-cols-1 mt-4'> 
-    //     <div>
-    //       <label className='block text-sm font-medium leading-6 text-black dark:text-white'>Organisationsname</label>
-    //       <input 
-    //         ref={organisationsNameRef}
-    //         className='bg-zinc-100 border border-zinc-200 dark:border-zinc-600 hover:border-zinc-400 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-3 dark:bg-zinc-800 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500  dark:focus:border-blue-500'
-    //       />
-    //     </div>
-
-    //     <div>
-    //       <label className='block text-sm font-medium leading-6 text-black dark:text-white'>E-Mail</label>
-    //       <input 
-    //         ref={emailInputRef}
-    //         className={`bg-zinc-100 border border-zinc-200 dark:border-zinc-600 hover:border-zinc-400 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-3 dark:bg-zinc-800 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500  dark:focus:border-blue-500`}
-    //       />
-    //     </div>
-
-    //     <div>
-    //       <label className='block text-sm font-medium leading-6 text-black dark:text-white'>Password</label>
-    //       <input 
-    //         type='password'
-    //         ref={passwordInputRef}
-    //         className={`bg-zinc-100 border border-zinc-200 dark:border-zinc-600 hover:border-zinc-400 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-3 dark:bg-zinc-800 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500  dark:focus:border-blue-500`}
-    //       />
-    //     </div>
-
-    //     </div>
-    //     <div className="mt-10 flex items-center justify-center gap-x-6">
-    //       <Button variant='contained' size='lg' onClick={handleRegister}>Registrieren</Button>
-    //     </div>
-    //   </div>
-    // </main>
   )
 }
 
