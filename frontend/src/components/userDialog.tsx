@@ -88,16 +88,16 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
             <Input type='text' label='Nachname' value={formData.lastname} error={lastnameInputError} required={false} onChange={handleChange('lastname')} />
           </div>
           <div className='col-1'>
-            <Input type='date' label='Geburtstag' value={formData.birthdate} error={firstnameInputError} required={false} onChange={handleChange('birthdate')} />
+            <Input type='date' label='Geburtstag' value={formData.birthdate} error={false} required={false} onChange={handleChange('birthdate')} />
           </div>
           <div className='col-1'>
-            <Input type='text' label='Adresse' value={formData.address} error={lastnameInputError} required={false} onChange={handleChange('address')} />
+            <Input type='text' label='Adresse' value={formData.address} error={false} required={false} onChange={handleChange('address')} />
           </div>
           <div className='col-1'>
-            <Input type='text' label='Email' value={formData.email} error={lastnameInputError} required={false} onChange={handleChange('email')} />
+            <Input type='text' label='Email' value={formData.email} error={false} required={false} onChange={handleChange('email')} />
           </div>
           <div className='col-1'>
-            <Input type='text' label='Telefon' value={formData.phone} error={lastnameInputError} required={false} onChange={handleChange('phone')} />
+            <Input type='text' label='Telefon' value={formData.phone} error={false} required={false} onChange={handleChange('phone')} />
           </div>
           <div className='col-1'>
             <label className="relative inline-flex items-center cursor-pointer">

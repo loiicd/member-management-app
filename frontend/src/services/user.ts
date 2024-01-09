@@ -15,10 +15,7 @@ export const getUsers = async (searchTerm: string | undefined): Promise<User[]> 
     url = 'http://localhost:3002/user'
   }
   const response = await axios.get(url)
-  response.data.forEach((user: any) => {
-    user.birthdate = new Date(user.birthdate)
-  })
-
+  response.data.forEach((user: any) => user.birthdate = new Date(user.birthdate))
   return response.data
 }
 
