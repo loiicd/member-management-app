@@ -5,3 +5,11 @@ export const login = async (email: string, password: string): Promise<AxiosRespo
   const response = await axios.get(url)
   return response
 }
+
+export const register = async (organisationName: string, email: string, password: string): Promise<AxiosResponse> => {
+  console.log('register function called')
+  const url = 'http://localhost:3002/registration'
+  const response = await axios.post(url, { organisationName, email, password })
+  console.log('api called')
+  return response
+}

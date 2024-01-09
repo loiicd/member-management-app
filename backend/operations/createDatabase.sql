@@ -19,6 +19,14 @@ CREATE TABLE "user" (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE "account" (
+  id text NOT NULL,
+  organisation_name text NOT NULL,
+  admin_user_id text NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (admin_user_id) REFERENCES "user" (id)
+);
+
 CREATE TABLE "operational_qualification" (
   id text NOT NULL,
   name text NOT NULL,

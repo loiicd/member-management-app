@@ -4,6 +4,7 @@ import UserPage from './pages/user'
 import LoginPage from './pages/login'
 import { RequireAuth } from 'react-auth-kit'
 import SettingsPage from './pages/settings'
+import RegisterPage from './pages/register'
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path='/settings' element={<RequireAuth loginPath='/login'><SettingsPage /></RequireAuth>} />
         <Route path='/user/:id' element={<RequireAuth loginPath='/login'><UserPage /></RequireAuth>} />
         <Route path='/login' element={<LoginPage />} />
+        <Route path='/register' element={<RegisterPage />} />
       </Routes>
     </BrowserRouter>
   )
