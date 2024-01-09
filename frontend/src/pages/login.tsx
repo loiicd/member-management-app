@@ -24,10 +24,9 @@ const InputElement = forwardRef<HTMLInputElement, InputElementProps>(({label, ty
 const LoginPage = () => {
   const navigate = useNavigate()
   const signIn = useSignIn()
+  const [error, setError] = useState(false)
   const emailInputRef = useRef<HTMLInputElement>(null)
   const passwordInputRef = useRef<HTMLInputElement>(null)
-  
-  const [error, setError] = useState(false)
 
   const handleLogin = async () => {
     const email = emailInputRef.current?.value
@@ -41,7 +40,7 @@ const LoginPage = () => {
         authState: { email: response.data.email }
       })
       navigate('/dashboard')
-    } catch (error) {
+    } catch {
       setError(true)
       if (passwordInputRef.current) passwordInputRef.current.value = ''
     }
