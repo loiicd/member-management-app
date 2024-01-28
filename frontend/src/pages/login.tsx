@@ -39,7 +39,7 @@ const LoginPage = () => {
         tokenType: 'Bearer',
         authState: { email: response.data.email }
       })
-      navigate('/dashboard')
+      navigate('/')
     } catch {
       setError(true)
       if (passwordInputRef.current) passwordInputRef.current.value = ''

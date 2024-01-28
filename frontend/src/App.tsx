@@ -5,13 +5,15 @@ import LoginPage from './pages/login'
 import { RequireAuth } from 'react-auth-kit'
 import SettingsPage from './pages/settings'
 import RegisterPage from './pages/register'
+import LandingPage from './pages/landing'
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<RequireAuth loginPath='/login'><DashboardPage /></RequireAuth>} />
-        <Route path='*' element={<RequireAuth loginPath='/login'><DashboardPage /></RequireAuth>} />
+        <Route path='/' element={<RequireAuth loginPath='/login'><LandingPage /></RequireAuth>} />
+        <Route path='*' element={<RequireAuth loginPath='/login'><LandingPage /></RequireAuth>} />
+        <Route path='/dashboard' element={<RequireAuth loginPath='/login'><DashboardPage /></RequireAuth>} />
         <Route path='/settings' element={<RequireAuth loginPath='/login'><SettingsPage /></RequireAuth>} />
         <Route path='/user/:id' element={<RequireAuth loginPath='/login'><UserPage /></RequireAuth>} />
         <Route path='/login' element={<LoginPage />} />
