@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getOperationalQualifications, postOperationalQualification } from '../operationalQualification'
+import { getqualifications, postqualification } from '../qualification'
 
 jest.mock('axios')
 
@@ -11,32 +11,32 @@ const goodResponse = {
   config: {},
 }
 
-describe('getOperationalQualifications', () => {
+describe('getqualifications', () => {
   const axiosGetMock = axios.get as jest.Mock
-  const expectedUrl = 'http://localhost:3002/operationalQualification/'
+  const expectedUrl = 'http://localhost:3002/qualification/'
 
-  it('call getOperationalQualifications with right url', async () => {
+  it('call getqualifications with right url', async () => {
     axiosGetMock.mockResolvedValueOnce(goodResponse)
-    await getOperationalQualifications()
+    await getqualifications()
     expect(axiosGetMock).toHaveBeenCalledTimes(1)
     expect(axiosGetMock).toHaveBeenCalledWith(expectedUrl)
   })
 
   it('return data from response', async () => {
     axiosGetMock.mockResolvedValueOnce(goodResponse)
-    const data = await getOperationalQualifications()
+    const data = await getqualifications()
     expect(data).toEqual('mocked data')
   })
 })
 
-describe('postOperationalQualification', () => {
+describe('postqualification', () => {
   const axiosPostMock = axios.post as jest.Mock
   const qualification = {name: 'test', abbreviation: 'tt'}
-  const expectedUrl = 'http://localhost:3002/operationalQualification/'
+  const expectedUrl = 'http://localhost:3002/qualification/'
 
-  it('call postOperationalQualification with right url & data', async () => {
+  it('call postqualification with right url & data', async () => {
     axiosPostMock.mockResolvedValueOnce(goodResponse)
-    await postOperationalQualification(qualification)
+    await postqualification(qualification)
     expect(axiosPostMock).toHaveBeenCalledTimes(1)
     expect(axiosPostMock).toHaveBeenCalledWith(expectedUrl, qualification)
   })

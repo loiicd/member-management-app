@@ -1,4 +1,4 @@
-import { OperationalQualification } from './operationalQualification'
+import { qualification } from './qualification'
 
 export type User = {
   id: string,
@@ -9,7 +9,7 @@ export type User = {
   email?: string,
   phone?: string,
   webaccess: boolean,
-  operationalQualifications: OperationalQualification[]
+  qualifications: qualification[]
 }
 
 export type UserFormData = {

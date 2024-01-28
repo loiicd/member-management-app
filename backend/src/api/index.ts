@@ -2,7 +2,7 @@ import express from 'express'
 import userRoutes from './routes/user'
 import authenticateRoutes from './routes/authenticate'
 import registrationRoutes from './routes/registration'
-import operationalQualificationRoute from './routes/operationalQualification'
+import qualificationRoute from './routes/qualification'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 
@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 app.use('/user', userRoutes)
 app.use('/authenticate', authenticateRoutes)
 app.use('/registration', registrationRoutes)
-app.use('/operationalQualification', operationalQualificationRoute)
+app.use('/qualification', qualificationRoute)
 
 app.listen(port, async () => {
   console.log(`API Handler listening on port ${port}`)

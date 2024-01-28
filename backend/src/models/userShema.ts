@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { OperationalQualificationShema } from './operationalQualificationShema'
+import { qualificationShema } from './qualificationShema'
 
 export const UserShema = z.object({
   id:             z.string(),
@@ -10,7 +10,7 @@ export const UserShema = z.object({
   email:          z.string().optional().nullable(),
   phone:          z.string().optional().nullable(),
   webaccess:      z.boolean(),
-  operationalQualifications: z.array(OperationalQualificationShema),
+  qualifications: z.array(qualificationShema),
 })
 export type UserType = z.infer<typeof UserShema>
 

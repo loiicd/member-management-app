@@ -79,7 +79,7 @@ const UserPage = () => {
 
         <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
           <Typography variant='h4'>Einsatzqualifikationen</Typography>
-          {user?.operationalQualifications.map((qualification) => (
+          {user?.qualifications.map((qualification) => (
             <Typography variant='text'>{qualification.name}</Typography>
           ))}
         </div>

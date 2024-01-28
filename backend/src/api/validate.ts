@@ -1,12 +1,12 @@
 import { z } from 'zod'
 import { UserShema, UserFormDataShema, UserLoginShema, UserFormDataType, UserLoginType, UserType } from '../models/userShema'
-import { OperationalQualificationFormDataShema, OperationalQualificationFormDataType } from '../models/operationalQualificationShema'
+import { qualificationFormDataShema, qualificationFormDataType } from '../models/qualificationShema'
 
 export const validateUser = (user: any): UserType => UserShema.parse(user)
 export const validateUserFormData = (formData: any): UserFormDataType => UserFormDataShema.parse(formData)
 export const validateUserLogin = (data: any): UserLoginType => UserLoginShema.parse(data)
 
-export const validateOperationalQualificationFormData = (data: any): OperationalQualificationFormDataType => OperationalQualificationFormDataShema.parse(data)
+export const validatequalificationFormData = (data: any): qualificationFormDataType => qualificationFormDataShema.parse(data)
 
 // const IDShema = z.string().uuid()   (Sollte normaler Weise UUID checken, aber das funktioniert nicht?!)
 const IDShema = z.string()

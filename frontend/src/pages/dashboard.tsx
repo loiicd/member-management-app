@@ -59,7 +59,7 @@ const DashboardPage = () => {
                 <TableCell>{user.lastname}</TableCell>
                 <TableCell>{user.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</TableCell>
                 <TableCell>{user.address}</TableCell>
-                <TableCell>{user.operationalQualifications.map((qualification) => qualification.abbreviation + ' ')}</TableCell>
+                <TableCell>{user.qualifications.map((qualification) => qualification.abbreviation + ' ')}</TableCell>
                 <TableCell>{user.webaccess ? <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} size='xl' className='text-lime-600' /> : <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} size='xl' className='text-red-600' />}</TableCell>
               </tr> 
             ))}

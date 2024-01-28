@@ -2,34 +2,34 @@ import { ChangeEvent, FC, useEffect, useState } from 'react'
 import Button from './base/button'
 import Modal from './base/modal'
 import Input from './base/input'
-import { postOperationalQualification } from '../services/operationalQualification'
+import { postqualification } from '../services/qualification'
 
 type Test = {
   name: string | undefined,
   abbreviation: string | undefined,
 }
 
-interface OperationalQualificationDialogProps {
+interface qualificationDialogProps {
   type: 'insert' | 'update'
-  operationalQualificationId?: string
+  qualificationId?: string
   accountId: string
 }
 
-const OperationalQualificationDialog: FC<OperationalQualificationDialogProps> = ({ type, operationalQualificationId, accountId }) => {
+const qualificationDialog: FC<qualificationDialogProps> = ({ type, qualificationId, accountId }) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const [formData, setFormData] = useState<Test>({name: undefined, abbreviation: undefined})
 
   useEffect(() => {
-    if (type === 'update' && operationalQualificationId) {
+    if (type === 'update' && qualificationId) {
       // @ts-ignore
-      // getUser(operationalQualificationId)
+      // getUser(qualificationId)
       //   .then((data) => {
       //     setFormData(data)
       //   })
       //   .catch((error) => alert(error))
     }
-  }, [type, operationalQualificationId])
+  }, [type, qualificationId])
 
   const handleOpen = () =>  setOpen(true)
   const handleClose = () =>  setOpen(false)
@@ -46,11 +46,11 @@ const OperationalQualificationDialog: FC<OperationalQualificationDialogProps> = 
       if (type === 'insert') {
         // @ts-ignore
         console.log('Form Data', formData)
-        postOperationalQualification(accountId, formData)
+        postqualification(accountId, formData)
           .then(handleClose)
           .catch((error) => alert(error))
       } else {
-        // if (operationalQualificationId) {
+        // if (qualificationId) {
         //   // @ts-ignore
         //   updateUser({id: userId, ...formData})
         //     .then(handleClose)
@@ -78,4 +78,4 @@ const OperationalQualificationDialog: FC<OperationalQualificationDialogProps> = 
   )
 }
 
-export default OperationalQualificationDialog
+export default qualificationDialog

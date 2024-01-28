@@ -5,13 +5,13 @@ import TableCell from "../components/base/table/tableCell"
 import TableHead from "../components/base/table/tableHead"
 import Typography from "../components/base/typography"
 import Header from "../components/header"
-import { getOperationalQualifications } from "../services/operationalQualification"
-import { OperationalQualification } from "../types/operationalQualification"
-import OperationalQualificationDialog from "../components/operationalQualificationDialog"
+import { getqualifications } from "../services/qualification"
+import { qualification } from "../types/qualification"
+import qualificationDialog from "../components/qualificationDialog"
 import { useParams } from "react-router-dom"
 
 const SettingsPage = () => {
-  const [operationalQualifications, setOperationalQualifications] = useState<OperationalQualification[]>([])
+  const [qualifications, setqualifications] = useState<qualification[]>([])
 
   const { accountId } = useParams()
 
@@ -19,8 +19,8 @@ const SettingsPage = () => {
 
   useEffect(() => {
     if (accountId) {
-      getOperationalQualifications(accountId)
-        .then((result) => setOperationalQualifications(result) ) 
+      getqualifications(accountId)
+        .then((result) => setqualifications(result) ) 
     }
   }, [accountId])
 
@@ -38,7 +38,7 @@ const SettingsPage = () => {
           <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
             <div className='flex justify-between'>
               <Typography variant='h5'>Funktionen</Typography>
-              <OperationalQualificationDialog type='insert' accountId={accountId as string} />
+              <qualificationDialog type='insert' accountId={accountId as string} />
             </div>
             <Table>
               <TableHead>
@@ -47,9 +47,9 @@ const SettingsPage = () => {
                 </tr>
               </TableHead>
               <TableBody>
-                {operationalQualifications.map((operationalQualification) => (
-                  <tr key={operationalQualification.id} className='bg-white border-b dark:bg-zinc-800 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600'>
-                    <TableCell>{operationalQualification.name}</TableCell>
+                {qualifications.map((qualification) => (
+                  <tr key={qualification.id} className='bg-white border-b dark:bg-zinc-800 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600'>
+                    <TableCell>{qualification.name}</TableCell>
                   </tr>
                 ))}
               </TableBody>

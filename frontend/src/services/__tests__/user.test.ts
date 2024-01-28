@@ -12,7 +12,7 @@ const resultDataOne = {
     email: 'max.mustermann@example.com',
     phone: '1234567890',
     webaccess: true,
-    operationalQualifications: []
+    qualifications: []
 }
 const resultDataMany = [
   {
@@ -24,7 +24,7 @@ const resultDataMany = [
     email: 'max.mustermann@example.com',
     phone: '1234567890',
     webaccess: true,
-    operationalQualifications: []
+    qualifications: []
   },
   {
     id: '456',
@@ -35,7 +35,7 @@ const resultDataMany = [
     email: 'erika.musterfrau@example.com',
     phone: '0987654321',
     webaccess: true,
-    operationalQualifications: []
+    qualifications: []
   }
 ]
 
@@ -62,8 +62,8 @@ const goodResponse = {
   config: {},
 }
 
-const expectedResponseData = {"address": "Musterstraße 1, 12345 Musterstadt", "birthdate": new Date('1981-05-08'), "email": "max.mustermann@example.com", "firstname": "Max", "id": "123", "lastname": "Mustermann", "operationalQualifications": [], "phone": "1234567890", "webaccess": true}
-const expectedResponseDataMany = [{"address": "Musterstraße 1, 12345 Musterstadt", "birthdate": new Date ('1981-05-08'), "email": "max.mustermann@example.com", "firstname": "Max", "id": "123", "lastname": "Mustermann", "operationalQualifications": [], "phone": "1234567890", "webaccess": true}, {"address": "Musterstraße 2, 12345 Musterstadt", "birthdate": new Date ('1990-10-04'), "email": "erika.musterfrau@example.com", "firstname": "Erika", "id": "456", "lastname": "Musterfrau", "operationalQualifications": [], "phone": "0987654321", "webaccess": true}]
+const expectedResponseData = {"address": "Musterstraße 1, 12345 Musterstadt", "birthdate": new Date('1981-05-08'), "email": "max.mustermann@example.com", "firstname": "Max", "id": "123", "lastname": "Mustermann", "qualifications": [], "phone": "1234567890", "webaccess": true}
+const expectedResponseDataMany = [{"address": "Musterstraße 1, 12345 Musterstadt", "birthdate": new Date ('1981-05-08'), "email": "max.mustermann@example.com", "firstname": "Max", "id": "123", "lastname": "Mustermann", "qualifications": [], "phone": "1234567890", "webaccess": true}, {"address": "Musterstraße 2, 12345 Musterstadt", "birthdate": new Date ('1990-10-04'), "email": "erika.musterfrau@example.com", "firstname": "Erika", "id": "456", "lastname": "Musterfrau", "qualifications": [], "phone": "0987654321", "webaccess": true}]
 
 describe('getUser', () => {
   const axiosGetMock = axios.get as jest.Mock
@@ -151,7 +151,7 @@ describe('updateUser', () => {
     firstname: 'test',
     lastname: 'test',
     webaccess: true,
-    operationalQualifications: []
+    qualifications: []
   }
   const expectedUrl = 'http://localhost:3002/user'
 
