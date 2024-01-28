@@ -22,9 +22,13 @@ VALUES
   ('4c3d7edb-dab2-4228-a033-a90b8582ef47', 'Mia', 'Baker', '1999-02-10', 'Baker Avenue 444, 34567 Bakerville', 'mia.baker@example.com', '+61 2 12345678', null, null, false, to_tsvector('german', 'Mia Baker 1999-02-10 Baker Avenue 444, 34567 Bakerville mia.baker@example.com +61 2 12345678')),
   ('5ecf4875-1311-4157-9af4-847581439690', 'Admin', 'Admin', null, null, 'admin@example.com', null, '$2a$10$DOyVPpgyw2zUxyPl4I4Kpu5Dg73QcaimXXhHFBjd15qxzc2WPOzYW', '$2a$10$jR5kyQ2QHqtYYs2ZGD7bGO', true, to_tsvector('german', 'Admin Admin admin@example.com'));
 
-INSERT INTO "account" (id, organisation_name, admin_user_id)
+INSERT INTO "account" (id, organisation_name)
 VALUES
-  ('44484414-a4db-4717-8507-26f5296409dd', 'Beispiel Organisation', '5ecf4875-1311-4157-9af4-847581439690');
+  ('44484414-a4db-4717-8507-26f5296409dd', 'Beispiel Organisation');
+
+INSERT INTO "user_account_rel" (user_id, account_id, is_admin)
+VALUES
+  ('5ecf4875-1311-4157-9af4-847581439690', '44484414-a4db-4717-8507-26f5296409dd', true);
 
 INSERT INTO "operational_qualification" (id, name, abbreviation)
 VALUES
