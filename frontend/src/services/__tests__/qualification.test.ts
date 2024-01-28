@@ -13,14 +13,14 @@ const goodResponse = {
 
 describe('getqualifications', () => {
   const axiosGetMock = axios.get as jest.Mock
-  const expectedUrl = 'http://localhost:3002/qualification/'
+  const expectedUrl = 'http://localhost:3002/qualification?accountId=123'
   const accountId = '123'
 
   it('call getqualifications with right url & params', async () => {
     axiosGetMock.mockResolvedValueOnce(goodResponse)
     await getqualifications(accountId)
     expect(axiosGetMock).toHaveBeenCalledTimes(1)
-    expect(axiosGetMock).toHaveBeenCalledWith(expectedUrl, { params: { accountId } })
+    expect(axiosGetMock).toHaveBeenCalledWith(expectedUrl)
   })
 
   it('return data from response', async () => {
