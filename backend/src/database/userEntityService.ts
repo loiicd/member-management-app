@@ -3,7 +3,7 @@ import { connect } from './db'
 import { v4 as uuidv4 } from 'uuid'
 import bcryptjs from 'bcryptjs'
 import { Client } from 'pg'
-import { qualificationType } from '../models/qualificationShema'
+import { QualificationType } from '../models/qualificationShema'
 
 export class UserEntityService {
   async getAll(searchTerm: string | undefined): Promise<UserType[]> {
@@ -11,7 +11,7 @@ export class UserEntityService {
     try {
       await client.query('BEGIN')
       const users = await selectUsers(client, searchTerm)
-      for (const user of users) user.qualifications = await selectqualifications(client, user.id)
+      for (const user of users) user.qualifications = await selectQualifications(client, user.id)
       await client.query('COMMIT')
       return users
     } catch(error) {
@@ -27,7 +27,7 @@ export class UserEntityService {
     try {
       await client.query('BEGIN')
       const user = await selectUserById(client, id)
-      user.qualifications = await selectqualifications(client, id)
+      user.qualifications = await selectQualifications(client, id)
       await client.query('COMMIT')
       return user
     } catch (error) {
@@ -99,11 +99,11 @@ const selectUserById = async (client: Client, userId: string): Promise<UserType>
   return user.rows[0]
 }
 
-const selectqualifications = async (client: Client, userId: string): Promise<qualificationType[]> => {
+const selectQualifications = async (client: Client, userId: string): Promise<QualificationType[]> => {
   const query = `
     SELECT id, name, abbreviation
     FROM public."qualification" 
-    LEFT JOIN public."user_qualification"
+    LEFT JOIN public."user_qualification_rel"
     ON qualification_id = id
     WHERE user_id = $1`
   const result = await client.query(query, [userId])

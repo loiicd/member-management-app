@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { qualification } from '../types/qualification'
+import { Qualification } from '../types/qualification'
 
-export const getqualifications = async (accountId: string): Promise<qualification[]> => {
+export const getqualifications = async (accountId: string): Promise<Qualification[]> => {
   const url = `http://localhost:3002/qualification?accountId=${accountId}`
   const response = await axios.get(url)
   return response.data

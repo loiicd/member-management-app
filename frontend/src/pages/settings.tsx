@@ -6,12 +6,12 @@ import TableHead from "../components/base/table/tableHead"
 import Typography from "../components/base/typography"
 import Header from "../components/header"
 import { getqualifications } from "../services/qualification"
-import { qualification } from "../types/qualification"
-import qualificationDialog from "../components/qualificationDialog"
+import { Qualification } from "../types/qualification"
+import QualificationDialog from "../components/qualificationDialog"
 import { useParams } from "react-router-dom"
 
 const SettingsPage = () => {
-  const [qualifications, setqualifications] = useState<qualification[]>([])
+  const [qualifications, setqualifications] = useState<Qualification[]>([])
 
   const { accountId } = useParams()
 
@@ -38,7 +38,7 @@ const SettingsPage = () => {
           <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
             <div className='flex justify-between'>
               <Typography variant='h5'>Funktionen</Typography>
-              <qualificationDialog type='insert' accountId={accountId as string} />
+              <QualificationDialog type='insert' accountId={accountId as string} />
             </div>
             <Table>
               <TableHead>

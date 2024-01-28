@@ -1,14 +1,14 @@
 import { z } from 'zod'
 
-export const qualificationShema = z.object({
+export const QualificationShema = z.object({
   id:           z.string(),
   name:         z.string(),
   abbreviation: z.string().optional(),
 })
-export type qualificationType = z.infer<typeof qualificationShema>
+export type QualificationType = z.infer<typeof QualificationShema>
 
-export const qualificationFormDataShema = z.object({
+export const QualificationFormDataShema = z.object({
   name:         z.string(),
   abbreviation: z.string().optional(),
 })
-export type qualificationFormDataType = z.infer<typeof qualificationFormDataShema>
+export type QualificationFormDataType = z.infer<typeof QualificationFormDataShema>

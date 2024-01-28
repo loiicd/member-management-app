@@ -1,9 +1,9 @@
-import { qualificationType, qualificationFormDataType } from '../models/qualificationShema'
+import { QualificationType, QualificationFormDataType } from '../models/qualificationShema'
 import { connect } from './db'
 import { v4 as uuidv4 } from 'uuid'
 
 export class QualificationEntityService {
-  async getAll(accountId: string): Promise<qualificationType[]> {
+  async getAll(accountId: string): Promise<QualificationType[]> {
     const client = await connect()
     const query = `
       SELECT id, name, abbreviation
@@ -16,7 +16,7 @@ export class QualificationEntityService {
     return qualifications
   }
 
-  async insert(accountId: string, qualification: qualificationFormDataType): Promise<void> {
+  async insert(accountId: string, qualification: QualificationFormDataType): Promise<void> {
     const client = await connect()
     const query = 'INSERT INTO public."qualification" (id, account_id, name, abbreviation) VALUES ($1, $2, $3, $4)'
     const values = [uuidv4(), accountId, qualification.name, qualification.abbreviation]
