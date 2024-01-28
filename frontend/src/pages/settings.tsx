@@ -9,6 +9,7 @@ import { getqualifications } from "../services/qualification"
 import { Qualification } from "../types/qualification"
 import QualificationDialog from "../components/qualificationDialog"
 import { useParams } from "react-router-dom"
+import Footer from "../components/footer"
 
 const SettingsPage = () => {
   const [qualifications, setqualifications] = useState<Qualification[]>([])
@@ -57,6 +58,7 @@ const SettingsPage = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   )
 }

@@ -9,6 +9,7 @@ import Typography from '../components/base/typography'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import PasswordDialog from '../components/passwordDialog'
+import Footer from '../components/footer'
 
 const UserPage = () => {
   const navigate = useNavigate()
@@ -76,15 +77,14 @@ const UserPage = () => {
             <Typography variant='text'>********** { user ? <PasswordDialog userId={user?.id} /> : null}</Typography>
           </div>
         </div>
-
         <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
           <Typography variant='h4'>Einsatzqualifikationen</Typography>
           {user?.qualifications.map((qualification) => (
             <Typography variant='text'>{qualification.name}</Typography>
           ))}
         </div>
-
       </div>
+      <Footer />
     </>
   )
 }

@@ -14,6 +14,7 @@ import Input from '../components/base/input'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import UserTable from '../components/userTable'
+import Footer from '../components/footer'
 
 const DashboardPage = () => {
   const navigate = useNavigate()
@@ -45,6 +46,7 @@ const DashboardPage = () => {
 
         <UserTable users={users} />
       </div>
+      <Footer />
     </main>
   )
 }
