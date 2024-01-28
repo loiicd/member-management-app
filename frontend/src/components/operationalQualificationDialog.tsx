@@ -12,9 +12,10 @@ type Test = {
 interface OperationalQualificationDialogProps {
   type: 'insert' | 'update'
   operationalQualificationId?: string
+  accountId: string
 }
 
-const OperationalQualificationDialog: FC<OperationalQualificationDialogProps> = ({ type, operationalQualificationId }) => {
+const OperationalQualificationDialog: FC<OperationalQualificationDialogProps> = ({ type, operationalQualificationId, accountId }) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const [formData, setFormData] = useState<Test>({name: undefined, abbreviation: undefined})
@@ -45,7 +46,7 @@ const OperationalQualificationDialog: FC<OperationalQualificationDialogProps> = 
       if (type === 'insert') {
         // @ts-ignore
         console.log('Form Data', formData)
-        postOperationalQualification(formData)
+        postOperationalQualification(accountId, formData)
           .then(handleClose)
           .catch((error) => alert(error))
       } else {

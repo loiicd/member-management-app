@@ -1,6 +1,7 @@
-DROP TABLE IF EXISTS "user_operational_qualification" CASCADE;
+DROP TABLE IF EXISTS "user_qualification_rel" CASCADE;
+DROP TABLE IF EXISTS "user_account_rel" CASCADE;
 DROP TABLE IF EXISTS "user" CASCADE;
-DROP TABLE IF EXISTS "operational_qualification" CASCADE;
+DROP TABLE IF EXISTS "qualification" CASCADE;
 DROP TABLE IF EXISTS "account" CASCADE;
 
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
@@ -35,19 +36,23 @@ CREATE TABLE "user_account_rel" (
   FOREIGN KEY (account_id) REFERENCES "account" (id)
 );
 
-CREATE TABLE "operational_qualification" (
+CREATE TABLE "qualification" (
   id text NOT NULL,
+  account_id text NOT NULL,
   name text NOT NULL,
   abbreviation text,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  FOREIGN KEY (account_id) REFERENCES "account" (id)
 );
 
-CREATE TABLE "user_operational_qualification" (
+CREATE TABLE "user_qualification_rel" (
   user_id text NOT NULL,
-  operational_qualification_id text NOT NULL,
-  PRIMARY KEY (user_id, operational_qualification_id),
+  qualification_id text NOT NULL,
+  account_id text NOT NULL,
+  PRIMARY KEY (user_id, qualification_id, account_id),
   FOREIGN KEY (user_id) REFERENCES "user" (id),
-  FOREIGN KEY (operational_qualification_id) REFERENCES "operational_qualification" (id)
+  FOREIGN KEY (qualification_id) REFERENCES "qualification" (id),
+  FOREIGN KEY (account_id) REFERENCES "account" (id)
 );
 
 CREATE INDEX searchvectorindex ON "user" USING gin(searchvector);

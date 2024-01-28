@@ -10,14 +10,14 @@ const LandingPage = () => {
         <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo"></img>
         Member Management App    
       </p>
-      <div className="w-full bg-white rounded-2xl shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mb-4 cursor-pointer hover:bg-gray-700" onClick={() => navigate('/dashboard')}>
+      <div className="w-full bg-white rounded-2xl shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mb-4 cursor-pointer hover:bg-gray-700" onClick={() => navigate('/44484414-a4db-4717-8507-26f5296409dd/dashboard')}> {/* HardCoded URL ACCOUNT */}
         <div className="p-4 space-y-4 md:space-y-4 sm:p-4">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             Organisation XY
           </h1>
         </div>
       </div>
-      <div className="w-full bg-white rounded-2xl shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mb-4 cursor-pointer hover:bg-gray-700" onClick={() => navigate('/dashboard')}>
+      <div className="w-full bg-white rounded-2xl shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mb-4 cursor-pointer hover:bg-gray-700" onClick={() => navigate('/44484414-a4db-4717-8507-26f5296409dd/dashboard')}>  {/* HardCoded URL ACCOUNT */}
         <div className="p-4 space-y-4 md:space-y-4 sm:p-4">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             Organisation XY

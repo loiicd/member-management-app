@@ -13,9 +13,9 @@ const App = () => {
       <Routes>
         <Route path='/' element={<RequireAuth loginPath='/login'><LandingPage /></RequireAuth>} />
         <Route path='*' element={<RequireAuth loginPath='/login'><LandingPage /></RequireAuth>} />
-        <Route path='/dashboard' element={<RequireAuth loginPath='/login'><DashboardPage /></RequireAuth>} />
-        <Route path='/settings' element={<RequireAuth loginPath='/login'><SettingsPage /></RequireAuth>} />
-        <Route path='/user/:id' element={<RequireAuth loginPath='/login'><UserPage /></RequireAuth>} />
+        <Route path=':accountId/dashboard' element={<RequireAuth loginPath='/login'><DashboardPage /></RequireAuth>} />
+        <Route path=':accountId/settings' element={<RequireAuth loginPath='/login'><SettingsPage /></RequireAuth>} />
+        <Route path=':accountId/user/:id' element={<RequireAuth loginPath='/login'><UserPage /></RequireAuth>} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
       </Routes>

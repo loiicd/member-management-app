@@ -8,14 +8,21 @@ import Header from "../components/header"
 import { getOperationalQualifications } from "../services/operationalQualification"
 import { OperationalQualification } from "../types/operationalQualification"
 import OperationalQualificationDialog from "../components/operationalQualificationDialog"
+import { useParams } from "react-router-dom"
 
 const SettingsPage = () => {
   const [operationalQualifications, setOperationalQualifications] = useState<OperationalQualification[]>([])
 
+  const { accountId } = useParams()
+
+  console.log('Account ID', accountId)
+
   useEffect(() => {
-    getOperationalQualifications()
-      .then((result) => setOperationalQualifications(result) ) 
-  }, [])
+    if (accountId) {
+      getOperationalQualifications(accountId)
+        .then((result) => setOperationalQualifications(result) ) 
+    }
+  }, [accountId])
 
   return (
     <>
@@ -31,7 +38,7 @@ const SettingsPage = () => {
           <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
             <div className='flex justify-between'>
               <Typography variant='h5'>Funktionen</Typography>
-              <OperationalQualificationDialog type='insert' />
+              <OperationalQualificationDialog type='insert' accountId={accountId as string} />
             </div>
             <Table>
               <TableHead>

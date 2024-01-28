@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import { useSignOut } from 'react-auth-kit'
-import Input from './base/input'
 import { useState } from 'react'
 
 const Header = () => {

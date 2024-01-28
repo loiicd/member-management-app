@@ -25,7 +25,7 @@ const UserPage = () => {
   const handleClick = () => {
     if (id) {
       deleteUser(id)
-        .then(() => navigate('/'))
+        .then(() => navigate('/44484414-a4db-4717-8507-26f5296409dd/dashboard')) //  HardCoded URL ACCOUNT
         .catch((error) => alert(error))
     }
   }
@@ -37,9 +37,9 @@ const UserPage = () => {
         <div className='flex justify-between'>
           <div className='flex space-x-2'>
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/44484414-a4db-4717-8507-26f5296409dd/dashboard')}
               className='px-3 text-gray-500 rounded-full hover:bg-zinc-700'
-            >
+            >  {/* HardCoded URL ACCOUNT */}
               <FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} size='xl'/>
             </button>
             <Typography variant='h3'>{user?.firstname} {user?.lastname}</Typography>
