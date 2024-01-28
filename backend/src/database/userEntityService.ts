@@ -70,6 +70,20 @@ export class UserEntityService {
     await client.query(query)
     await client.end()
   }
+
+  async getAccounts(userId: string): Promise<any> {
+    const client = await connect()
+    const query = `
+      SELECT id, organisation_name
+      FROM public."account"
+      LEFT JOIN public."user_account_rel"
+      ON account_id = id
+      WHERE user_id = $1
+    `
+    const result = await client.query(query, [userId])
+    await client.end()
+    return result.rows
+  }
 }
 
 const selectUsers = async (client: Client, searchTerm: string | undefined): Promise<UserType[]> => {

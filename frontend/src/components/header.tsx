@@ -14,8 +14,8 @@ const Header = () => {
   const hanldeOpenAppDropdown = () => setOpenAppDropdown(!openAppDropdown)
 
   const handleSignOut = () => {
-      signOut()
-      navigate('/login')  
+    signOut()
+    navigate('/login')  
   }
 
   return (
@@ -55,7 +55,7 @@ const Header = () => {
             <svg className="w-[18px] h-[18px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/></svg>
             <span className="sr-only">Toggle sidebar</span>
           </button>
-          <a href="https://flowbite.com" className="flex mr-4">
+          <a className="flex mr-4" onClick={() => navigate('/44484414-a4db-4717-8507-26f5296409dd/dashboard')}> {/* HardCoded URL ACCOUNT */}
             <img src="https://flowbite.s3.amazonaws.com/logo.svg" className="mr-3 h-8" alt="FlowBite Logo" />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Member Management App</span>
           </a>

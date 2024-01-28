@@ -43,4 +43,10 @@ router.delete('/:id', tryCatchMiddleware(async (req: Request, res: Response) => 
   res.status(200).send('User deleted')
 }))
 
+router.get('/accounts/:id', tryCatchMiddleware(async (req: Request, res: Response) => {
+  const id = validateUUID(req.params.id)
+  const accounts = await userEntityService.getAccounts(id)
+  res.status(200).send(accounts)
+}))
+
 export default router

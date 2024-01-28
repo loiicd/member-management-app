@@ -38,3 +38,9 @@ export const deleteUser = async (id: string): Promise<void> => {
   const url = `http://localhost:3002/user/${id}`
   await axios.delete(url)
 }
+
+export const getUserAccounts = async (userId: string): Promise<any> => {
+  const url = `http://localhost:3002/user/accounts/${userId}`
+  const response = await axios.get(url)
+  return response.data
+}

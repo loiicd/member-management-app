@@ -33,11 +33,12 @@ const LoginPage = () => {
     const password = passwordInputRef.current?.value
     try {
       const response = await login(email, password)
+      console.log(response)
       signIn({
         token: response.data.token,
         expiresIn: 3600,
         tokenType: 'Bearer',
-        authState: { email: response.data.email }
+        authState: { email: response.data.email, id: response.data.userId }
       })
       navigate('/')
     } catch {

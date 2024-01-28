@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
 
 export class AuthenticateService {
-  async login(email: string, password: string): Promise<string | null> {
+  async login(email: string, password: string): Promise<any | null> {
     const client = await connect()
     const query = `
       SELECT id, email, password, passwordsalt, webaccess
@@ -22,7 +22,7 @@ export class AuthenticateService {
 
     if (response) {
       const token = generateJsonWebToken(user.id, user.email)
-      return token
+      return { userId: user.id, email: user.email, token: token}
     } else {
       return null
     }
