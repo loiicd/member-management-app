@@ -1,53 +1,13 @@
-import { ChangeEvent, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { User } from '../types/user'
-import { getUsers } from '../services/user'
-import Table from '../components/base/table/table'
-import TableHead from '../components/base/table/tableHead'
-import TableBody from '../components/base/table/tableBody'
-import TableCell from '../components/base/table/tableCell'
-import Header from '../components/header'
-import UserDialog from '../components/userDialog'
 import Typography from '../components/base/typography'
-import Button from '../components/base/button'
-import Input from '../components/base/input'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
-import UserTable from '../components/userTable'
-import Footer from '../components/footer'
+import StandardLayout from '../layout/standard'
 
 const DashboardPage = () => {
-  const navigate = useNavigate()
-  const [users, setUsers] = useState<User[]>([])
-  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
-
-  useEffect(() => {
-    getUsers(searchTerm)
-      .then((data) => setUsers(data)) 
-  }, [searchTerm])
-
-  // const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const searchTerm = e.target.value.toLowerCase()
-  //   setSearchTerm(searchTerm)
-  // }
-
   return (
-    <main>
-      <Header />
-      <div className='container mx-auto'>
-        <div className='flex justify-between pb-2'>
-          <Typography variant='h3'>User</Typography>
-          {/* <div className='flex space-x-2'>
-            <Input type='text' placeholder='Suche ...' onChange={handleSearch}/>
-            <Button variant='outlined'>Export</Button>
-            <UserDialog type='insert' />
-          </div> */}
-        </div>
-
-        <UserTable users={users} />
+    <StandardLayout>
+      <div className='h-screen mt-4'>
+        <Typography variant='h3'>Dashboard</Typography>
       </div>
-      <Footer />
-    </main>
+    </StandardLayout>
   )
 }
 

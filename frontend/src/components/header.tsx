@@ -1,8 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 import { useSignOut } from 'react-auth-kit'
-import { useState } from 'react'
+import { FunctionComponent, useState } from 'react'
 
-const Header = () => {
+interface HeaderProps {
+  toogleSidebar: () => void
+}
+
+const Header: FunctionComponent<HeaderProps> = ({ toogleSidebar }) => {
   const navigate = useNavigate()
   const signOut = useSignOut()
 
@@ -44,11 +48,11 @@ const Header = () => {
     //   </nav>
     // </header>
 
-  <header className="antialiased">
+  <header className="antialiased z-50">
     <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
       <div className="flex flex-wrap justify-between items-center">
         <div className="flex justify-start items-center">
-          <button id="toggleSidebar" aria-expanded="true" aria-controls="sidebar" className="hidden p-2 mr-3 text-gray-600 rounded cursor-pointer lg:inline hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700">
+          <button id="toggleSidebar" aria-expanded="true" aria-controls="sidebar" className="hidden p-2 mr-3 text-gray-600 rounded cursor-pointer lg:inline hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700" onClick={toogleSidebar}>
             <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12"> <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h14M1 6h14M1 11h7"/> </svg>
           </button>
           <button aria-expanded="true" aria-controls="sidebar" className="p-2 mr-2 text-gray-600 rounded-lg cursor-pointer lg:hidden hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">

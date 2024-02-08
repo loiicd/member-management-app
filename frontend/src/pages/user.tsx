@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import PasswordDialog from '../components/passwordDialog'
 import Footer from '../components/footer'
+import StandardLayout from '../layout/standard'
 
 const UserPage = () => {
   const navigate = useNavigate()
@@ -26,66 +27,62 @@ const UserPage = () => {
   const handleClick = () => {
     if (id) {
       deleteUser(id)
-        .then(() => navigate('/44484414-a4db-4717-8507-26f5296409dd/dashboard')) //  HardCoded URL ACCOUNT
+        .then(() => navigate('/44484414-a4db-4717-8507-26f5296409dd/users')) //  HardCoded URL ACCOUNT
         .catch((error) => alert(error))
     }
   }
 
   return (
-    <>
-      <Header />
-      <div className='container mx-auto'>
-        <div className='flex justify-between'>
-          <div className='flex space-x-2'>
-            <button
-              onClick={() => navigate('/44484414-a4db-4717-8507-26f5296409dd/dashboard')}
-              className='px-3 text-gray-500 rounded-full hover:bg-zinc-700'
-            >  {/* HardCoded URL ACCOUNT */}
-              <FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} size='xl'/>
-            </button>
-            <Typography variant='h3'>{user?.firstname} {user?.lastname}</Typography>
-          </div>
-          <div className='flex space-x-2'>
-            <UserDialog type='update' userId={user?.id} />
-            <Button onClick={handleClick} variant='outlined'>Löschen</Button>
-          </div>
+    <StandardLayout>
+      <div className='flex justify-between'>
+        <div className='flex space-x-2'>
+          <button
+            onClick={() => navigate('/44484414-a4db-4717-8507-26f5296409dd/users')}
+            className='px-3 text-gray-500 rounded-full hover:bg-zinc-700'
+          >  {/* HardCoded URL ACCOUNT */}
+            <FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} size='xl'/>
+          </button>
+          <Typography variant='h3'>{user?.firstname} {user?.lastname}</Typography>
         </div>
-
-        <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
-          <div className='grid gap-2 grid-cols-4'>
-            <Typography variant='text'>Geburstdatum:</Typography>
-            <Typography variant='text'>{user?.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Typography>
-          </div>
-          <div className='grid gap-2 grid-cols-4'>
-            <Typography variant='text'>Addresse:</Typography>
-            <Typography variant='text'>{user?.address}</Typography>
-          </div>
-          <div className='grid gap-2 grid-cols-4'>
-            <Typography variant='text'>Email:</Typography>
-            <Typography variant='text'>{user?.email}</Typography>
-          </div>
-          <div className='grid gap-2 grid-cols-4'>
-            <Typography variant='text'>Telefon:</Typography>
-            <Typography variant='text'>{user?.phone}</Typography>
-          </div>
-          <div className='grid gap-2 grid-cols-4'>
-            <Typography variant='text'>Online Zugang:</Typography>
-            <Typography variant='text'>{user?.webaccess ? 'Ja' : 'Nein'}</Typography>
-          </div>
-          <div className='grid gap-2 grid-cols-4'>
-            <Typography variant='text'>Passwort:</Typography>
-            <Typography variant='text'>********** { user ? <PasswordDialog userId={user?.id} /> : null}</Typography>
-          </div>
-        </div>
-        <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
-          <Typography variant='h4'>Einsatzqualifikationen</Typography>
-          {user?.qualifications.map((qualification) => (
-            <Typography variant='text'>{qualification.name}</Typography>
-          ))}
+        <div className='flex space-x-2'>
+          <UserDialog type='update' userId={user?.id} />
+          <Button onClick={handleClick} variant='outlined'>Löschen</Button>
         </div>
       </div>
-      <Footer />
-    </>
+
+      <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
+        <div className='grid gap-2 grid-cols-4'>
+          <Typography variant='text'>Geburstdatum:</Typography>
+          <Typography variant='text'>{user?.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Typography>
+        </div>
+        <div className='grid gap-2 grid-cols-4'>
+          <Typography variant='text'>Addresse:</Typography>
+          <Typography variant='text'>{user?.address}</Typography>
+        </div>
+        <div className='grid gap-2 grid-cols-4'>
+          <Typography variant='text'>Email:</Typography>
+          <Typography variant='text'>{user?.email}</Typography>
+        </div>
+        <div className='grid gap-2 grid-cols-4'>
+          <Typography variant='text'>Telefon:</Typography>
+          <Typography variant='text'>{user?.phone}</Typography>
+        </div>
+        <div className='grid gap-2 grid-cols-4'>
+          <Typography variant='text'>Online Zugang:</Typography>
+          <Typography variant='text'>{user?.webaccess ? 'Ja' : 'Nein'}</Typography>
+        </div>
+        <div className='grid gap-2 grid-cols-4'>
+          <Typography variant='text'>Passwort:</Typography>
+          <Typography variant='text'>********** { user ? <PasswordDialog userId={user?.id} /> : null}</Typography>
+        </div>
+      </div>
+      <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
+        <Typography variant='h4'>Einsatzqualifikationen</Typography>
+        {user?.qualifications.map((qualification) => (
+          <Typography variant='text'>{qualification.name}</Typography>
+        ))}
+      </div>
+    </StandardLayout>
   )
 }
 
