@@ -7,8 +7,9 @@ const router = express.Router()
 const userEntityService = new UserEntityService
 
 router.get('/', tryCatchMiddleware(async (req: Request, res: Response) => {
+  const accountId = validateUUID(req.query.accountId)
   const searchTerm = validateSearchTerm(req.query.searchTerm)
-  const users = await userEntityService.getAll(searchTerm)
+  const users = await userEntityService.getAll(accountId, searchTerm)
   res.status(200).send(users)
 }))
 

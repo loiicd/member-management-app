@@ -6,11 +6,11 @@ import { Client } from 'pg'
 import { QualificationType } from '../models/qualificationShema'
 
 export class UserEntityService {
-  async getAll(searchTerm: string | undefined): Promise<UserType[]> {
+  async getAll(accountId: string, searchTerm: string | undefined): Promise<UserType[]> {
     const client = await connect()
     try {
       await client.query('BEGIN')
-      const users = await selectUsers(client, searchTerm)
+      const users = await selectUsers(client, accountId, searchTerm)
       for (const user of users) user.qualifications = await selectQualifications(client, user.id)
       await client.query('COMMIT')
       return users
@@ -86,22 +86,30 @@ export class UserEntityService {
   }
 }
 
-const selectUsers = async (client: Client, searchTerm: string | undefined): Promise<UserType[]> => {
+const selectUsers = async (client: Client, accountId: string, searchTerm: string | undefined): Promise<UserType[]> => {
   let query: string
   if (searchTerm) {
     const newSearchTerm = searchTerm.split(' ').join(' & ')
     query = `
       SELECT user.id, firstname, lastname, birthdate, address, email, phone, webaccess
       FROM public."user"
-      WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '${newSearchTerm}:*')`
+      LEFT JOIN public."user_account_rel"
+      ON user.id = user_id
+      WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '$1:*')
+      AND account_id = $2`
+      const result = await client.query(query, [newSearchTerm, accountId])
+      return result.rows
   } else {
     query = `
       SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
       FROM public."user"
+      LEFT JOIN public."user_account_rel"
+      ON id = user_id
+      WHERE account_id = $1
       ORDER BY lastname`
+    const result = await client.query(query, [accountId])
+    return result.rows
   }
-  const result = await client.query(query)
-  return result.rows
 }
 
 const selectUserById = async (client: Client, userId: string): Promise<UserType> => {

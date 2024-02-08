@@ -4,15 +4,18 @@ import UserTable from '../components/userTable'
 import StandardLayout from '../layout/standard'
 import { getUsers } from '../services/user'
 import { User } from '../types/user'
+import { useParams } from 'react-router-dom'
 
 const UsersPage = () => {
+  const { accountId } = useParams()
   const [users, setUsers] = useState<User[]>([])
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
 
   useEffect(() => {
-    getUsers(searchTerm)
+    if (!accountId) return
+    getUsers(accountId, searchTerm)
       .then((data) => setUsers(data)) 
-  }, [searchTerm])
+  }, [accountId, searchTerm])
   
   return (
     <StandardLayout>

@@ -7,12 +7,12 @@ export const getUser = async (id: string): Promise<User> => {
   return { ...response.data, birthdate: new Date(response.data.birthdate) }
 }
 
-export const getUsers = async (searchTerm: string | undefined): Promise<User[]> => {
+export const getUsers = async (accountId: string, searchTerm: string | undefined): Promise<User[]> => {
   let url: string
   if (searchTerm) {
-    url = `http://localhost:3002/user?searchTerm=${searchTerm}`
+    url = `http://localhost:3002/user?accountId=${accountId}&searchTerm=${searchTerm}`
   } else {
-    url = 'http://localhost:3002/user'
+    url = `http://localhost:3002/user?accountId=${accountId}`
   }
   const response = await axios.get(url)
   response.data.forEach((user: any) => user.birthdate = new Date(user.birthdate))
