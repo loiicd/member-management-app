@@ -3,19 +3,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { useNavigate } from 'react-router-dom'
 
+interface SidebarProps {
+  accountId: string
+}
 
-const Sidebar: FunctionComponent = () => {
+const Sidebar: FunctionComponent<SidebarProps> = ({ accountId }) => {
   const navigate = useNavigate()
 
   return (
     <aside id='default-sidebar' className='fixed top-0 left-0 z-40 w-64 h-screen pt-16 transition-transform -translate-x-full sm:translate-x-0' aria-label='Sidenav'>
       <div className='overflow-y-auto py-5 px-3 h-full bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700'>
         <ul className='space-y-2'>
-          <li className='flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group hover:cursor-pointer' onClick={() => navigate('/44484414-a4db-4717-8507-26f5296409dd/dashboard')}> {/* HardCoded URL ACCOUNT */}
+          <li className='flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group hover:cursor-pointer' onClick={() => navigate(`/${accountId}/dashboard`)}>
             <FontAwesomeIcon className='w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' icon={icon({ name: 'house', style: 'solid' })} />
             <span className='ml-3'>Dashboard</span>
           </li>
-          <li className='flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group hover:cursor-pointer' onClick={() => navigate('/44484414-a4db-4717-8507-26f5296409dd/users')}> {/* HardCoded URL ACCOUNT */}
+          <li className='flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group hover:cursor-pointer' onClick={() => navigate(`/${accountId}/users`)}>
             <FontAwesomeIcon className='w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' icon={icon({ name: 'users', style: 'solid' })} />
             <span className='ml-3'>Mitglieder</span>
           </li>
@@ -25,7 +28,7 @@ const Sidebar: FunctionComponent = () => {
           <p className='inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-600' onClick={() => navigate('/')} >
             <FontAwesomeIcon className='w-6 h-6' icon={icon({ name: 'folder-tree', style: 'solid' })} />
           </p>
-          <p data-tooltip-target='tooltip-settings' className='inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer dark:text-gray-400 dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600' onClick={() => navigate('/44484414-a4db-4717-8507-26f5296409dd/settings')}> {/* HardCoded URL ACCOUNT */}
+          <p data-tooltip-target='tooltip-settings' className='inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer dark:text-gray-400 dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600' onClick={() => navigate(`/${accountId}/settings`)}>
             <svg aria-hidden='true' className='w-6 h-6' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' d='M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z' clip-rule='evenodd'></path></svg>
           </p>
           <div id='tooltip-settings' role='tooltip' className='inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip'>

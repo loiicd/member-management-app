@@ -12,7 +12,7 @@ import StandardLayout from '../layout/standard'
 
 const UserPage = () => {
   const navigate = useNavigate()
-  const { id } = useParams()
+  const { accountId, id } = useParams()
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
@@ -30,8 +30,10 @@ const UserPage = () => {
     }
   }
 
+  if (!accountId) throw new Error('Account ID is required')
+
   return (
-    <StandardLayout>
+    <StandardLayout accountId={accountId}>
       <div className='flex justify-between'>
         <div className='flex space-x-2'>
           <button

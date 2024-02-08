@@ -16,9 +16,11 @@ const UsersPage = () => {
     getUsers(accountId, searchTerm)
       .then((data) => setUsers(data)) 
   }, [accountId, searchTerm])
+
+  if (!accountId) throw new Error('Account ID is required')
   
   return (
-    <StandardLayout>
+    <StandardLayout accountId={accountId}>
       <div className='flex justify-between pb-2'>
         <Typography variant='h3'>User</Typography>
       </div>

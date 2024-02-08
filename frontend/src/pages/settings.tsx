@@ -24,8 +24,10 @@ const SettingsPage = () => {
     }
   }, [accountId])
 
+  if (!accountId) throw new Error('Account ID is required')
+
   return (
-    <StandardLayout>
+    <StandardLayout accountId={accountId}>
       <div className='flex justify-between pb-2'>
         <Typography variant='h3'>Einstellungen</Typography>
         <div className='flex space-x-2'>
