@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { User } from '../types/user'
 import { useNavigate, useParams } from 'react-router-dom'
-import Header from '../components/header'
 import { getUser, deleteUser } from '../services/user'
 import Button from '../components/base/button'
 import UserDialog from '../components/userDialog'
@@ -9,7 +8,6 @@ import Typography from '../components/base/typography'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import PasswordDialog from '../components/passwordDialog'
-import Footer from '../components/footer'
 import StandardLayout from '../layout/standard'
 
 const UserPage = () => {
@@ -42,7 +40,10 @@ const UserPage = () => {
           >  {/* HardCoded URL ACCOUNT */}
             <FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} size='xl'/>
           </button>
-          <Typography variant='h3'>{user?.firstname} {user?.lastname}</Typography>
+          <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
+          {user?.firstname} {user?.lastname}
+          </h3>
+          {/* <Typography variant='h3'>{user?.firstname} {user?.lastname}</Typography> */}
         </div>
         <div className='flex space-x-2'>
           <UserDialog type='update' userId={user?.id} />
@@ -76,6 +77,7 @@ const UserPage = () => {
           <Typography variant='text'>********** { user ? <PasswordDialog userId={user?.id} /> : null}</Typography>
         </div>
       </div>
+
       <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
         <Typography variant='h4'>Einsatzqualifikationen</Typography>
         {user?.qualifications.map((qualification) => (

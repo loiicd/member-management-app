@@ -15,7 +15,7 @@ const StandardLayout: FunctionComponent<StandardLayoutProps> = ({ children }) =>
   }
 
   return (
-    <main className='min-h-screen flex flex-col justify-between'>
+    <main className='min-h-screen flex flex-col justify-between bg-gray-50 dark:bg-gray-900'>
       <div>
         <Header toogleSidebar={toogleSidebar} />
         { openSidebar && <Sidebar /> }
