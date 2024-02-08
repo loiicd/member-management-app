@@ -88,11 +88,12 @@ describe('getUsers', () => {
   const axiosGetMock = axios.get as jest.Mock
   const expectedUrlWithSearchTerm = 'http://localhost:3002/user?searchTerm=test'
   const expectedUrlWithoutSearchTerm = 'http://localhost:3002/user'
+  const accountId = '123'
 
   it('call getUsers with right url with search term', async () => {
     const searchTerm = 'test'
     axiosGetMock.mockResolvedValueOnce(goodResponseMany)
-    await getUsers(searchTerm)
+    await getUsers(accountId, searchTerm)
     expect(axiosGetMock).toHaveBeenCalledTimes(1)
     expect(axiosGetMock).toHaveBeenCalledWith(expectedUrlWithSearchTerm)
   })
@@ -100,7 +101,7 @@ describe('getUsers', () => {
   it('call getUsers with right url without search term', async () => {
     const searchTerm = undefined
     axiosGetMock.mockResolvedValueOnce(goodResponseMany)
-    await getUsers(searchTerm)
+    await getUsers(accountId, searchTerm)
     expect(axiosGetMock).toHaveBeenCalledTimes(1)
     expect(axiosGetMock).toHaveBeenCalledWith(expectedUrlWithoutSearchTerm)
   })
@@ -108,7 +109,7 @@ describe('getUsers', () => {
   it('return data from response', async () => {
     const searchTerm = undefined
     axiosGetMock.mockResolvedValueOnce(goodResponseMany)
-    const data = await getUsers(searchTerm)
+    const data = await getUsers(accountId, searchTerm)
     expect(data).toEqual(expectedResponseDataMany)
   })
 })
