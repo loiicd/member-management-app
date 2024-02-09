@@ -20,4 +20,4 @@ graph TB;
 	id13 --> id12
 ```
 
-![Flowchart](./pictures/)
+![Flowchart](./pictures/IMG_2394.PNG)
