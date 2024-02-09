@@ -8,20 +8,15 @@ export const getUser = async (id: string): Promise<User> => {
 }
 
 export const getUsers = async (accountId: string, searchTerm: string | undefined): Promise<User[]> => {
-  let url: string
-  if (searchTerm) {
-    url = `http://localhost:3002/user?accountId=${accountId}&searchTerm=${searchTerm}`
-  } else {
-    url = `http://localhost:3002/user?accountId=${accountId}`
-  }
-  const response = await axios.get(url)
-  response.data.forEach((user: any) => user.birthdate = new Date(user.birthdate))
-  return response.data
+  const url = 'http://localhost:3002/user'
+  const params = { accountId, ...(searchTerm && { searchTerm }) }
+  const response = await axios.get(url, { params })
+  return response.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
 }
 
-export const postUser = async (user: UserFormData): Promise<void> => {
+export const postUser = async (accountId: string, user: UserFormData): Promise<void> => {
   const url = `http://localhost:3002/user`
-  await axios.post(url, user)
+  await axios.post(url, user, { params: { accountId } })
 }
 
 export const putPassword = async (userId: string, password: string): Promise<void> => {

@@ -24,7 +24,7 @@ const UsersPage = () => {
       <div className='flex justify-between pb-2'>
         <Typography variant='h3'>User</Typography>
       </div>
-      <UserTable users={users} />
+      <UserTable users={users} accountId={accountId} />
     </StandardLayout>
   )
 }

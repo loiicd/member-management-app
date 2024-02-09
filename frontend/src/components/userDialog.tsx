@@ -1,7 +1,6 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 import Button from './base/button'
 import Modal from './base/modal'
-import Input from './base/input'
 import { getUser, postUser, updateUser } from '../services/user'
 
 type Test = {
@@ -17,9 +16,10 @@ type Test = {
 interface UserDialogProps {
   type: 'insert' | 'update'
   userId?: string
+  accountId: string
 }
 
-const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
+const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const [formData, setFormData] = useState<Test>({firstname: undefined, lastname: undefined, birthdate: undefined, address: undefined, email: undefined, phone: undefined, webaccess: false})
@@ -59,7 +59,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId }) => {
     if (formData.firstname && formData.lastname) {
       if (type === 'insert') {
         // @ts-ignore
-        postUser(formData)
+        postUser(accountId, formData)
           .then(handleClose)
           .catch((error) => alert(error))
       } else {

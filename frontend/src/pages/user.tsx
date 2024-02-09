@@ -48,7 +48,7 @@ const UserPage = () => {
           {/* <Typography variant='h3'>{user?.firstname} {user?.lastname}</Typography> */}
         </div>
         <div className='flex space-x-2'>
-          <UserDialog type='update' userId={user?.id} />
+          <UserDialog type='update' userId={user?.id} accountId={accountId}/>
           <Button onClick={handleClick} variant='outlined'>Löschen</Button>
         </div>
       </div>
