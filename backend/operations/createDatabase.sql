@@ -12,7 +12,7 @@ CREATE TABLE "user" (
   lastname text NOT NULL,
   birthdate date,
   address text,
-  email text,
+  email text UNIQUE,
   phone text,
   password text,
   passwordsalt text, 

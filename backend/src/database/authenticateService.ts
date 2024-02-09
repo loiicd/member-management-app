@@ -3,11 +3,7 @@ import bcryptjs from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
 
-// type LoginResponseType = 'Success' | 'PasswordMissed' | 'Error'
-// type DataResponseType = { userId: string, email: string, token: string } | { userId: string } 
-
 type LoginResponse = SuccessResponse | PasswordMissedResponse | ErrorResponse
-
 
 type SuccessResponse = { type: 'Success', data: { userId: string, email: string, token: string } }
 type PasswordMissedResponse = { type: 'PasswordMissed', data: { userId: string } }
@@ -24,14 +20,10 @@ export class AuthenticateService {
     const user = result.rows[0]
     const userFound = !!user
     client.end()
-
     if (!userFound) return { type: 'Error' }
-
     if (!user.password) return { type: 'PasswordMissed', data: { userId: user.id } }
-
-    const response = bcryptjs.compareSync(password+user.passwordsalt, user.password)
-
-    if (response) {
+    const passwordsMatch = bcryptjs.compareSync(password+user.passwordsalt, user.password)
+    if (passwordsMatch) {
       const token = generateJsonWebToken(user.id, user.email)
       return { type: 'Success', data: { userId: user.id, email: user.email, token: token }}
     } else {
@@ -63,8 +55,6 @@ export class AuthenticateService {
 const generateJsonWebToken = (userId: string, email: string): string => {
   const secretKey = 'your-secret-key'
   const payload = { userId, email }
-  const options: jwt.SignOptions = {
-    expiresIn: '1m',
-  }
+  const options: jwt.SignOptions = { expiresIn: '1m' }
   return jwt.sign(payload, secretKey, options)
 }

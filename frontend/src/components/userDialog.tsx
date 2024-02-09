@@ -2,6 +2,7 @@ import { ChangeEvent, FC, useEffect, useState } from 'react'
 import Button from './base/button'
 import Modal from './base/modal'
 import { getUser, postUser, updateUser } from '../services/user'
+import { UserApiClient } from '../services/userApiClient'
 
 type Test = {
   firstname?: string,
@@ -21,6 +22,8 @@ interface UserDialogProps {
 
 const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
   const [open, setOpen] = useState<boolean>(false)
+
+  const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
 
   const [formData, setFormData] = useState<Test>({firstname: undefined, lastname: undefined, birthdate: undefined, address: undefined, email: undefined, phone: undefined, webaccess: false})
 
@@ -58,10 +61,15 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
   const handleSave = () => {
     if (formData.firstname && formData.lastname) {
       if (type === 'insert') {
-        // @ts-ignore
-        postUser(accountId, formData)
+         // @ts-ignore
+        userApiClient.createUser(formData)
           .then(handleClose)
           .catch((error) => alert(error))
+
+        // // @ts-ignore
+        // postUser(accountId, formData)
+        //   .then(handleClose)
+        //   .catch((error) => alert(error))
       } else {
         if (userId) {
           // @ts-ignore

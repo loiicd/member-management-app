@@ -38,12 +38,24 @@ export class UserEntityService {
     }
   }
 
-  async insert(user: UserFormDataType): Promise<void> {
+  async insert(accountId: string, user: UserFormDataType): Promise<void> {
     const client = await connect()
-    const query = `INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, webaccess) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
-    const values = [uuidv4(), user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.webaccess]
-    await client.query(query, values)
-    await client.end()
+    try {
+      await client.query('BEGIN')
+      const userId = uuidv4()
+      const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, webaccess) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)'
+      const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.webaccess]
+      const query2 = 'INSERT INTO public."user_account_rel" (user_id, account_id, is_admin) VALUES ($1, $2, false)'
+      const values2 = [userId, accountId]
+      await client.query(query, values)
+      await client.query(query2, values2)
+      await client.query('COMMIT')
+    } catch (error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally {
+      await client.end()
+    }
   }
 
   async update(user: UserType): Promise<void> {
