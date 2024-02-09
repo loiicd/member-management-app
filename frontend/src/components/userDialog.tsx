@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 import Button from './base/button'
 import Modal from './base/modal'
-import { getUser, postUser, updateUser } from '../services/user'
+import { getUser, updateUser } from '../services/user'
 import { UserApiClient } from '../services/userApiClient'
 
 type Test = {
@@ -63,13 +63,22 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
       if (type === 'insert') {
          // @ts-ignore
         userApiClient.createUser(formData)
-          .then(handleClose)
-          .catch((error) => alert(error))
-
-        // // @ts-ignore
-        // postUser(accountId, formData)
-        //   .then(handleClose)
-        //   .catch((error) => alert(error))
+          .then((response) => {
+            switch (response.data.type) {
+              case 'userCreated':
+                alert('User wurde erstellt!')
+                break
+              case 'mailExists':
+                alert(`User ist bereits registriert! Wollen sie den User mit dem Account verknüpfen? - ${response.data.userId}`)
+                break
+              case 'relExists':
+                alert(`User ist bereits mit dem Account verknüpft! - ${response.data.userId}`)
+                break
+            }
+          })
+          .catch((error) => {
+            alert(error)
+          })
       } else {
         if (userId) {
           // @ts-ignore

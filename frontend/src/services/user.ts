@@ -14,11 +14,6 @@ export const getUsers = async (authorization: Authorization, searchTerm: string 
   return response.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
 }
 
-export const postUser = async (accountId: string, user: UserFormData): Promise<void> => {
-  const url = 'http://localhost:3002/user'
-  await axios.post(url, user, { params: { accountId } })
-}
-
 export const putPassword = async (userId: string, password: string): Promise<void> => {
   const url = `http://localhost:3002/user/password/${userId}?password=${password}`
   await axios.put(url)

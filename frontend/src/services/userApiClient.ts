@@ -13,8 +13,8 @@ export class UserApiClient extends BaseApiClient {
     return response.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
   }
 
-  public async createUser(userFormData: UserFormData): Promise<void> {
-    await this.axiosInstance.post('user', userFormData)
+  public async createUser(userFormData: UserFormData): Promise<any> {
+    return await this.axiosInstance.post('user', userFormData)
   }
 
   public async updatePassword(userId: string, newPassword: string): Promise<void> {

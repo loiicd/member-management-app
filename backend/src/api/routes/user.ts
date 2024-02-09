@@ -25,8 +25,8 @@ router.get('/', tryCatchMiddleware(async (req: Request, res: Response) => {
 router.post('/',tryCatchMiddleware(async (req: Request, res: Response) => {
   const accountId = validateUUID(req.headers.accountid)
   const userFormData = validateUserFormData(req.body)
-  await userEntityService.insert(accountId, userFormData)
-  res.status(200).send('User created')
+  const response = await userEntityService.insert(accountId, userFormData)
+  res.status(200).send(response)
 }))
 
 // Update user

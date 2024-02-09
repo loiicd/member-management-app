@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import bcryptjs from 'bcryptjs'
 import { Client } from 'pg'
 import { QualificationType } from '../models/qualificationShema'
+import { ApiResponse } from '../types/apiResponse'
 
 export class UserEntityService {
   async getAll(accountId: string, searchTerm: string | undefined): Promise<UserType[]> {
@@ -38,29 +39,24 @@ export class UserEntityService {
     }
   }
 
-  async insert(accountId: string, user: UserFormDataType): Promise<void> {
+  async insert(accountId: string, user: UserFormDataType): Promise<ApiResponse> {
     const client = await connect()
-    const response = await client.query('SELECT id, email FROM public."user" WHERE email = $1', [user.email])
-    if (response.rows.length > 0) {
-      await client.query('INSERT INTO public."user_account_rel" (user_id, account_id, is_admin) VALUES ($1, $2, false)', [response.rows[0].id, accountId])
-    } else {
-      try {
-        await client.query('BEGIN')
-        const userId = uuidv4()
-        const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, webaccess) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)'
-        const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.webaccess]
-        const query2 = 'INSERT INTO public."user_account_rel" (user_id, account_id, is_admin) VALUES ($1, $2, false)'
-        const values2 = [userId, accountId]
-        await client.query(query, values)
-        await client.query(query2, values2)
-        await client.query('COMMIT')
-      } catch (error) {
-        await client.query('ROLLBACK')
-        throw error
-      } finally {
-        await client.end()
-      }
+    const userWithMail = await checkIfMailExists(client, user.email)
+    let relExists = false
+    if (userWithMail) {
+      relExists = await checkIfRelExists(accountId, userWithMail)
+      if (relExists) return { type: 'relExists', userId: userWithMail.id }
     }
+    if (userWithMail && !relExists) return { type: 'mailExists', userId: userWithMail}
+    await insertUser(client, accountId, user)
+    return { type: 'userCreated' }
+  }
+
+  async addAccountRelation(userId: string, accountId: string): Promise<void> {
+    const client = await connect()
+    const query = 'INSERT INTO public."user_account_rel" (user_id, account_id, is_admin) VALUES ($1, $2, false)'
+    await client.query(query, [userId, accountId])
+    await client.end()
   }
 
   async update(user: UserType): Promise<void> {
@@ -147,4 +143,35 @@ const selectQualifications = async (client: Client, userId: string): Promise<Qua
     WHERE user_id = $1`
   const result = await client.query(query, [userId])
   return result.rows
+}
+
+const checkIfMailExists = async (client: Client, email: string): Promise<any | null> => {
+  const response = await client.query('SELECT id, email, ARRAY_AGG(account_id) as account_ids FROM public."user" RIGHT JOIN public."user_account_rel" ON id = user_id WHERE email = $1 GROUP BY id', [email])
+  console.log(response.rows)
+  if (response.rows.length = 1) return response.rows[0]
+  return null
+}
+
+const checkIfRelExists = async (accountId: string, user: any): Promise<boolean> => {
+  if (user.account_ids.includes(accountId)) return true
+  return false
+}
+
+const insertUser = async (client: Client, accountId: string, user: UserFormDataType): Promise<void> => {
+  try {
+    await client.query('BEGIN')
+    const userId = uuidv4()
+    const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, webaccess) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)'
+    const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.webaccess]
+    const query2 = 'INSERT INTO public."user_account_rel" (user_id, account_id, is_admin) VALUES ($1, $2, false)'
+    const values2 = [userId, accountId]
+    await client.query(query, values)
+    await client.query(query2, values2)
+    await client.query('COMMIT')
+  } catch (error) {
+    await client.query('ROLLBACK')
+    throw error
+  } finally {
+    await client.end()
+  }
 }
