@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { User, UserFormData } from '../types/user'
+import { Authorization } from '../types/authorization'
 
 export const getUser = async (id: string): Promise<User> => {
   const url = `http://localhost:3002/user/${id}`
@@ -7,15 +8,14 @@ export const getUser = async (id: string): Promise<User> => {
   return { ...response.data, birthdate: new Date(response.data.birthdate) }
 }
 
-export const getUsers = async (accountId: string, searchTerm: string | undefined): Promise<User[]> => {
+export const getUsers = async (authorization: Authorization, searchTerm: string | undefined): Promise<User[]> => {
   const url = 'http://localhost:3002/user'
-  const params = { accountId, ...(searchTerm && { searchTerm }) }
-  const response = await axios.get(url, { params })
+  const response = await axios.get(url, { params: { accountId: authorization.accountId, searchTerm } })
   return response.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
 }
 
 export const postUser = async (accountId: string, user: UserFormData): Promise<void> => {
-  const url = `http://localhost:3002/user`
+  const url = 'http://localhost:3002/user'
   await axios.post(url, user, { params: { accountId } })
 }
 
@@ -25,7 +25,7 @@ export const putPassword = async (userId: string, password: string): Promise<voi
 }
 
 export const updateUser = async (user: User): Promise<void> => {
-  const url = `http://localhost:3002/user`
+  const url = 'http://localhost:3002/user'
   await axios.put(url, user)
 }
 

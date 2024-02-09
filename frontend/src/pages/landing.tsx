@@ -8,6 +8,8 @@ const LandingPage = () => {
   const [accounts, setAccounts] = useState<any>([])
 
   const authParams = useAuthUser()()
+
+  console.log('AuthParams', authParams)
   
   useEffect(() => {
     if (authParams) {

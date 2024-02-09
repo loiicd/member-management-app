@@ -4,13 +4,18 @@ import Button from './base/button'
 import { putPassword } from '../services/user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { UserApiClient } from '../services/userApiClient'
+import { useParams } from 'react-router-dom'
 
 interface PasswordDialogProps {
   userId: string
 }
 
 const PasswordDialog: FC<PasswordDialogProps> = ({ userId }) => {
+  const { accountId } = useParams()
   const [open, setOpen] = useState<boolean>(false)
+
+  const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
 
   const password1InputRef = useRef<HTMLInputElement>(null)
   const password2InputRef = useRef<HTMLInputElement>(null)
@@ -33,7 +38,11 @@ const PasswordDialog: FC<PasswordDialogProps> = ({ userId }) => {
 
     if (password1 === password2) {
       //@ts-ignore
-      await putPassword(userId, password1)
+      userApiClient.updatePassword(userId, password1)
+      
+      
+      // await putPassword(userId, password1)
+
       handleClose()
       return
     }
