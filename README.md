@@ -1,3 +1,3 @@
 # Memeber Management App
 
-[Test]('docs/test.md')
+[Flows](./docs/flows.md)
