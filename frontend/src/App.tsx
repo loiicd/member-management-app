@@ -7,6 +7,7 @@ import SettingsPage from './pages/settings'
 import RegisterPage from './pages/register'
 import LandingPage from './pages/landing'
 import UsersPage from './pages/users'
+import SetPasswordPage from './pages/setPassword'
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path=':accountId/user/:id' element={<RequireAuth loginPath='/login'><UserPage /></RequireAuth>} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
+        <Route path='/setpassword/:userId' element={<SetPasswordPage />} />
       </Routes>
     </BrowserRouter>
   )

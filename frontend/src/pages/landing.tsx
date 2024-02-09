@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom'
-import { useAuthUser } from 'react-auth-kit'
+import { useAuthUser, useSignOut } from 'react-auth-kit'
 import { useEffect, useState } from 'react'
 import { getUserAccounts } from '../services/user'
 
 const LandingPage = () => {
   const navigate = useNavigate()
+  const signOut = useSignOut()
   const [accounts, setAccounts] = useState<any>([])
 
   const authParams = useAuthUser()()
@@ -17,6 +18,11 @@ const LandingPage = () => {
         .then((data) => setAccounts(data))
     }
   }, [authParams])
+
+  const handleSignOut = () => {
+    signOut()
+    navigate('/login')
+  }
 
   return (
     <main className='bg-gray-50 dark:bg-gray-900'>
@@ -35,8 +41,13 @@ const LandingPage = () => {
         </div>
       ))}
       {accounts.length === 0 && (
-        <div className="flex items-center justify-center w-full h-full">
-          <p className="text-lg text-gray-500">Du gehörst keiner Organisation an</p>
+        <div className="w-full md:mt-4 sm:max-w-md xl:p-0 mb-4" >
+          <div className="p-4 space-y-4 md:space-y-4 sm:p-4">
+            <div className="flex flex-col items-center justify-center w-full h-full">
+              <p className="text-lg text-center text-gray-500">Du gehörst keiner Organisation an oder hast keinen Online Zugriff</p>
+              <button className='mt-4' onClick={handleSignOut}>Abmelden</button>
+            </div>
+          </div>
         </div>
       )}
       <p className='pt-4 text-sm font-light text-center text-gray-500 dark:text-gray-400'>Impressum - Datenschutz</p>

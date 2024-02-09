@@ -3,11 +3,21 @@ import bcryptjs from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
 
+// type LoginResponseType = 'Success' | 'PasswordMissed' | 'Error'
+// type DataResponseType = { userId: string, email: string, token: string } | { userId: string } 
+
+type LoginResponse = SuccessResponse | PasswordMissedResponse | ErrorResponse
+
+
+type SuccessResponse = { type: 'Success', data: { userId: string, email: string, token: string } }
+type PasswordMissedResponse = { type: 'PasswordMissed', data: { userId: string } }
+type ErrorResponse = { type: 'Error' }
+
 export class AuthenticateService {
-  async login(email: string, password: string): Promise<any | null> {
+  async login(email: string, password: string): Promise<LoginResponse> {
     const client = await connect()
     const query = `
-      SELECT id, email, password, passwordsalt, webaccess
+      SELECT id, email, password, passwordsalt
       FROM public."user" 
       WHERE email = '${email}'`
     const result = await client.query(query)
@@ -15,16 +25,17 @@ export class AuthenticateService {
     const userFound = !!user
     client.end()
 
-    if (!userFound) return null
-    if (!user.webaccess) return null
+    if (!userFound) return { type: 'Error' }
+
+    if (!user.password) return { type: 'PasswordMissed', data: { userId: user.id } }
 
     const response = bcryptjs.compareSync(password+user.passwordsalt, user.password)
 
     if (response) {
       const token = generateJsonWebToken(user.id, user.email)
-      return { userId: user.id, email: user.email, token: token}
+      return { type: 'Success', data: { userId: user.id, email: user.email, token: token }}
     } else {
-      return null
+      return { type: 'Error' }
     }
   }
 

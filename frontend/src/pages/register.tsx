@@ -1,6 +1,7 @@
 import { forwardRef, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { register } from '../services/authenticate'
+import AuthenticateLayout from '../layout/authenticate'
 
 interface InputElementProps {
   label: string,
@@ -56,32 +57,23 @@ const RegisterPage = () => {
   }
 
   return (
-    <main className='bg-gray-50 dark:bg-gray-900'>
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <p className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-          <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo"></img>
-          Member Management App    
-        </p>
-        <div className="w-full bg-white rounded-2xl shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Registrieren
-            </h1>
-            <div className='space-y-4 md:space-y-6'>
-              <InputElement label='Organisationsname' type='text' error={organisationsNameError} ref={organisationsNameRef} />
-              <InputElement label='E-Mail' type='email' error={emailInputError} ref={emailInputRef} />
-              <InputElement label='Passwort' type='password' error={passwordInputError} ref={passwordInputRef} />
-              { error ? <p className='text-red-600'>Fehler beim Registrieren</p> : null }
-              <button onClick={handleRegister} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrieren</button>
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Breits ein Account? <a onClick={() => navigate('/login')} className="cursor-pointer font-medium text-primary-600 hover:underline dark:text-primary-500">Anmelden</a>
-              </p>
-            </div>
-          </div>
+    <AuthenticateLayout>
+      <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+          Registrieren
+        </h1>
+        <div className='space-y-4 md:space-y-6'>
+          <InputElement label='Organisationsname' type='text' error={organisationsNameError} ref={organisationsNameRef} />
+          <InputElement label='E-Mail' type='email' error={emailInputError} ref={emailInputRef} />
+          <InputElement label='Passwort' type='password' error={passwordInputError} ref={passwordInputRef} />
+          { error ? <p className='text-red-600'>Fehler beim Registrieren</p> : null }
+          <button onClick={handleRegister} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrieren</button>
+          <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+            Breits ein Account? <p onClick={() => navigate('/login')} className="cursor-pointer font-medium text-primary-600 hover:underline dark:text-primary-500">Anmelden</p>
+          </p>
         </div>
-        <p className='pt-4 text-sm font-light text-center text-gray-500 dark:text-gray-400'>Impressum - Datenschutz</p>
       </div>
-    </main>
+    </AuthenticateLayout>
   )
 }
 
