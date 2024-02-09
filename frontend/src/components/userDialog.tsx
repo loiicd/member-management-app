@@ -41,8 +41,8 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
     }
   }, [type, userId])
 
-  const handleOpen = () =>  setOpen(true)
-  const handleClose = () =>  setOpen(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   const handleChange = (field: keyof Test) => (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({
