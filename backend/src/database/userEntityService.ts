@@ -6,12 +6,15 @@ import { Client } from 'pg'
 import { QualificationType } from '../models/qualificationShema'
 import { ApiResponse } from '../types/apiResponse'
 
+export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
+export type SortDirection = 'ASC' | 'DESC'
+
 export class UserEntityService {
-  async getAll(accountId: string, searchTerm: string | undefined): Promise<UserType[]> {
+  async getAll(accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection): Promise<UserType[]> {
     const client = await connect()
     try {
       await client.query('BEGIN')
-      const users = await selectUsers(client, accountId, searchTerm)
+      const users = await selectUsers(client, accountId, searchTerm, sortAttribute, sortDirection)
       for (const user of users) user.qualifications = await selectQualifications(client, user.id)
       await client.query('COMMIT')
       return users
@@ -99,7 +102,7 @@ export class UserEntityService {
   }
 }
 
-const selectUsers = async (client: Client, accountId: string, searchTerm: string | undefined): Promise<UserType[]> => {
+const selectUsers = async (client: Client, accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection): Promise<UserType[]> => {
   let query: string
   if (searchTerm) {
     const newSearchTerm = searchTerm.split(' ').join(' & ')
@@ -109,7 +112,8 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
       LEFT JOIN public."user_account_rel"
       ON user.id = user_id
       WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '$1:*')
-      AND account_id = $2`
+      AND account_id = $2
+      ORDER BY ${sortAttribute} ${sortDirection}`
       const result = await client.query(query, [newSearchTerm, accountId])
       return result.rows
   } else {
@@ -119,7 +123,7 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
       LEFT JOIN public."user_account_rel"
       ON id = user_id
       WHERE account_id = $1
-      ORDER BY lastname`
+      ORDER BY ${sortAttribute} ${sortDirection}`
     const result = await client.query(query, [accountId])
     return result.rows
   }

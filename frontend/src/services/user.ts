@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { User, UserFormData } from '../types/user'
+import { User } from '../types/user'
 import { Authorization } from '../types/authorization'
 
 export const getUser = async (id: string): Promise<User> => {

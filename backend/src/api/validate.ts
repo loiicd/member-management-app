@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { UserShema, UserFormDataShema, UserLoginShema, UserFormDataType, UserLoginType, UserType } from '../models/userShema'
 import { QualificationFormDataShema, QualificationFormDataType } from '../models/qualificationShema'
+import { SortAttribute, SortDirection } from '../database/userEntityService'
 
 export const validateUser = (user: any): UserType => UserShema.parse(user)
 export const validateUserFormData = (formData: any): UserFormDataType => UserFormDataShema.parse(formData)
@@ -17,3 +18,9 @@ export const validateSearchTerm = (string: any): string | undefined => SearchTer
 
 const StringShema = z.string()
 export const validateString = (string: any): string => StringShema.parse(string)
+
+const SortAttributeShema = z.enum(['firstname', 'lastname', 'birthdate', 'address', 'webaccess'])
+export const validateSortAttribute = (string: any): SortAttribute => SortAttributeShema.parse(string)
+
+const SortDirectionShema = z.enum(['ASC', 'DESC'])
+export const validateSortDirection = (string: any): SortDirection => SortDirectionShema.parse(string)
