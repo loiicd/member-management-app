@@ -27,8 +27,6 @@ const UsersPage = () => {
   let sortAttribute = sortParams.get('sortAttribute')
   let sortDirection = sortParams.get('sortDirection')
 
-  if (!sortAttribute || !sortDirection) setSortParams({ sortAttribute: 'firstname', sortDirection: 'ASC' })
-
   const authParams = useAuthUser()()
 
   const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
@@ -62,9 +60,9 @@ const UsersPage = () => {
       <div className='py-4 flex justify-between'>
         <h2>Test</h2>
         <div className='flex justify-between'>
-          <NewButton>Filter</NewButton>
+          <NewButton>Qualifikation</NewButton>
           <UserDialog type='insert' accountId={accountId} />
-          <Dropwdown text='Filter'>
+          <Dropwdown text='Qualifikation'>
             <ul className='py-2'>
               <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer'>Property</li>
               <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer'>Property</li>
@@ -102,8 +100,8 @@ const UsersPage = () => {
                 {sortAttribute === 'address' && sortDirection === 'DESC' ? <FontAwesomeIcon icon={icon({ name: 'arrow-up-z-a', style: 'solid' })} className='ps-2' /> : null}
                 {sortAttribute !== 'address' ? <FontAwesomeIcon icon={icon({ name: 'arrow-up-z-a', style: 'solid' })} className='ps-2 text-slate-50' /> : null}
               </th>
-              <th className='ps-3 py-2 pe-3'>Einsatzqualifikation</th>
-              <th className='ps-3 py-2 pe-3' onClick={() => handleChangeSort('webaccess')}>
+              <th className='ps-3 py-2 pe-3'>Qualifikation</th>
+              <th className='ps-3 py-2 pe-3 cursor-pointer' onClick={() => handleChangeSort('webaccess')}>
                 Online Zugang
                 {sortAttribute === 'webaccess' && sortDirection === 'ASC' ? <FontAwesomeIcon icon={icon({ name: 'arrow-down-short-wide', style: 'solid' })} className='ps-2' /> : null}
                 {sortAttribute === 'webaccess' && sortDirection === 'DESC' ? <FontAwesomeIcon icon={icon({ name: 'arrow-up-wide-short', style: 'solid' })} className='ps-2' /> : null}
