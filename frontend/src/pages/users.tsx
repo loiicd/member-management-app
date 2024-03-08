@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import StandardLayout from '../layout/standard'
 import { User } from '../types/user'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuthUser } from 'react-auth-kit'
 import { UserApiClient } from '../services/userApiClient'
 import PageHead from '../components/pageHead'
@@ -22,8 +22,12 @@ const UsersPage = () => {
   const [users, setUsers] = useState<User[]>([])
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
 
-  const [sortDirection, setSortDirection] = useState<SortDirection>('ASC')
-  const [sortAttribute, setSortAttribute] = useState<SortAttribute>('firstname')
+  const [sortParams, setSortParams] = useSearchParams()
+
+  let sortAttribute = sortParams.get('sortAttribute')
+  let sortDirection = sortParams.get('sortDirection')
+
+  if (!sortAttribute || !sortDirection) setSortParams({ sortAttribute: 'firstname', sortDirection: 'ASC' })
 
   const authParams = useAuthUser()()
 
@@ -41,13 +45,12 @@ const UsersPage = () => {
   const handleChangeSort = (attribute: SortAttribute) => {
     if (attribute === sortAttribute) {
       if (sortDirection === 'ASC') {
-        setSortDirection('DESC')
+        setSortParams({ sortAttribute: attribute, sortDirection: 'DESC' })
       } else {
-        setSortDirection('ASC')
+        setSortParams({ sortAttribute: attribute, sortDirection: 'ASC' })
       }
     } else {
-      setSortAttribute(attribute)
-      setSortDirection('ASC')
+      setSortParams({ sortAttribute: attribute, sortDirection: 'ASC' })
     }
   }
   
@@ -56,8 +59,6 @@ const UsersPage = () => {
       <PageHead title='Mitglieder'>
         <NewButton>Test</NewButton>
       </PageHead>
-
-
       <div className='py-4 flex justify-between'>
         <h2>Test</h2>
         <div className='flex justify-between'>

@@ -1,4 +1,3 @@
-import { SortAttribute, SortDirection } from '../pages/users'
 import { User, UserFormData } from '../types/user'
 import { BaseApiClient } from './baseApiClient'
 
@@ -9,7 +8,10 @@ export class UserApiClient extends BaseApiClient {
     return { ...response.data, birthdate: new Date(response.data.birthdate) }
   }
 
-  public async getUsers(searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection): Promise<User[]> {
+  public async getUsers(searchTerm: string | undefined, sortAttribute: string | null, sortDirection: string | null): Promise<User[]> {
+    if (!sortAttribute) sortAttribute = 'firstname'
+    if (!sortDirection) sortDirection = 'ASC'
+
     const response = await this.axiosInstance.get('user', { params: { searchTerm, sortAttribute, sortDirection } })
     return response.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
   }
