@@ -44,7 +44,7 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, accountId }) => {
             <th className='ps-3 py-2 pe-3'>Addresse</th>
             <th className='ps-3 py-2 pe-3'>Einsatzqualifikation</th>
             <th className='ps-3 py-2 pe-3'>Online Zugang</th>
-            <th className='ps-3 py-2 pe-4'>...</th>
+            <th className='ps-3 py-2 pe-4'></th>
           </tr>
         </thead>
         <tbody>
@@ -56,7 +56,7 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, accountId }) => {
               <td className='ps-3 py-2 pe-3'>{user.address}</td>
               <td className='ps-3 py-2 pe-3'>{user.qualifications.map((qualification) => <Badge>{qualification.abbreviation}</Badge>)}</td>
               <td className='ps-3 py-2 pe-3'>{user.webaccess}</td>
-              <td className='ps-3 py-2 pe-4'><IconButton icon={icon({ name: 'pen', style: 'solid' })}/></td>
+              <td className='ps-3 py-2 pe-4 flex items-center justify-end'><IconButton icon={icon({ name: 'pen', style: 'solid' })}/></td>
             </tr>
           ))}
            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => (
@@ -67,7 +67,7 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, accountId }) => {
               <td className='ps-3 py-2 pe-3'>Hausen</td>
               <td className='ps-3 py-2 pe-3'></td>
               <td className='ps-3 py-2 pe-3'></td>
-              <td className='ps-3 py-2 pe-4'><IconButton icon={icon({ name: 'pen', style: 'solid' })}/></td>
+              <td className='ps-3 py-2 pe-4 flex items-center justify-end'><IconButton icon={icon({ name: 'pen', style: 'solid' })}/></td>
             </tr>
           ))}
         </tbody>

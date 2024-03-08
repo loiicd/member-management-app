@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import PasswordDialog from '../components/passwordDialog'
 import StandardLayout from '../layout/standard'
+import PageHead from '../components/pageHead'
+import NewButton from '../components/newButtom'
 
 const UserPage = () => {
   const navigate = useNavigate()
@@ -34,24 +36,16 @@ const UserPage = () => {
 
   return (
     <StandardLayout accountId={accountId}>
-      <div className='flex justify-between'>
-        <div className='flex space-x-2'>
-          <button
-            onClick={() => navigate('/44484414-a4db-4717-8507-26f5296409dd/users')}
-            className='px-3 text-gray-500 rounded-full hover:bg-zinc-700'
-          >  {/* HardCoded URL ACCOUNT */}
-            <FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} size='xl'/>
-          </button>
-          <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
-          {user?.firstname} {user?.lastname}
-          </h3>
-          {/* <Typography variant='h3'>{user?.firstname} {user?.lastname}</Typography> */}
-        </div>
-        <div className='flex space-x-2'>
+      <PageHead title={`${user?.firstname} ${user?.lastname}`}>
+        <div className='flex justify-end gap-2'>
           <UserDialog type='update' userId={user?.id} accountId={accountId}/>
-          <Button onClick={handleClick} variant='outlined'>Löschen</Button>
+          <NewButton onClick={handleClick}>Löschen</NewButton>
         </div>
-      </div>
+      </PageHead>
+
+
+      
+
 
       <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
         <div className='grid gap-2 grid-cols-4'>

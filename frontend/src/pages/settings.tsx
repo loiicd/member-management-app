@@ -9,6 +9,10 @@ import { Qualification } from "../types/qualification"
 import QualificationDialog from "../components/qualificationDialog"
 import { useParams } from "react-router-dom"
 import StandardLayout from "../layout/standard"
+import PageHead from "../components/pageHead"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { icon } from "@fortawesome/fontawesome-svg-core/import.macro"
+import IconButton from "../components/iconButton"
 
 const SettingsPage = () => {
   const [qualifications, setqualifications] = useState<Qualification[]>([])
@@ -28,32 +32,52 @@ const SettingsPage = () => {
 
   return (
     <StandardLayout accountId={accountId}>
-      <div className='flex justify-between pb-2'>
-        <Typography variant='h3'>Einstellungen</Typography>
-        <div className='flex space-x-2'>
+      <PageHead title='Einstellungen'></PageHead>
+      <div className='grid grid-cols-12 gap-4'>
+        <div className='col-span-2'>
+          <ul>
+            <li className='px-3 py-2 rounded-lg cursor-pointer bg-gray-200 text-sm font-semibold'>
+              <FontAwesomeIcon icon={icon({ name: 'user-graduate', style: 'solid' })} className='pe-2' />
+              Qualifikationen
+            </li>
+            <li className='px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-200 text-sm text-slate-500'>
+              <FontAwesomeIcon icon={icon({ name: 'users', style: 'solid' })} className='pe-2' />
+              Gruppen
+            </li>
+            <li className='px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-200 text-sm text-slate-500'>
+              <FontAwesomeIcon icon={icon({ name: 'user-tag', style: 'solid' })} className='pe-2' />
+              Rollen
+            </li>
+          </ul>
         </div>
-      </div>
-      <div className='grid grid-cols-2 gap-4'>
-        <div className='border rounded-lg border-zinc-600 mt-2 p-4'></div>
-        <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
+        <div className='col-span-8'>
           <div className='flex justify-between'>
-            <Typography variant='h5'>Funktionen</Typography>
+            <Typography variant='h5'>Qualifikationen</Typography>
             <QualificationDialog type='insert' accountId={accountId as string} />
           </div>
-          <Table>
-            <TableHead>
-              <tr>
-                <TableCell>Name</TableCell>
-              </tr>
-            </TableHead>
-            <TableBody>
-              {qualifications.map((qualification) => (
-                <tr key={qualification.id} className='bg-white border-b dark:bg-zinc-800 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600'>
-                  <TableCell>{qualification.name}</TableCell>
+          <div className='border rounded-md'>
+            <table className='w-full min-w-max table-auto text-left'>
+              <thead className='bg-slate-50 text-slate-600 border-b'>
+                <tr>
+                  <th className='ps-4 py-2 pe-3'>Name</th>
+                  <th className='ps-3 py-2 pe-3'>Abkürzung</th>
+                  <th className='ps-3 py-2 pe-3'></th>
                 </tr>
-              ))}
-            </TableBody>
-          </Table>
+              </thead>
+              <tbody>
+                {qualifications.map((qualification) => (
+                  <tr className='bg-white border-b hover:bg-slate-100'>
+                    <td className='ps-4 py-2 pe-3'>{qualification.name}</td>
+                    <td className='ps-3 py-2 pe-3'>{qualification.abbreviation}</td>
+                    <td  className='ps-3 py-2 pe-4 flex items-center justify-end'>
+                      <IconButton icon={icon({ name: 'pen', style: 'solid' })} onClick={() => alert('Not Implemented!')} />
+                      <IconButton icon={icon({ name: 'trash', style: 'solid' })} onClick={() => alert('Not Implemented!')} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </StandardLayout>

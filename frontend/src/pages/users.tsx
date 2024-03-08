@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
-import Typography from '../components/base/typography'
 import UserTable from '../components/userTable'
 import StandardLayout from '../layout/standard'
-import { getUsers } from '../services/user'
 import { User } from '../types/user'
 import { useParams } from 'react-router-dom'
 import { useAuthUser } from 'react-auth-kit'
