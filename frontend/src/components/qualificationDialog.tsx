@@ -1,8 +1,8 @@
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
-import Button from './base/button'
 import Modal from './base/modal'
 import Input from './base/input'
 import { postqualification } from '../services/qualification'
+import NewButton from './newButtom'
 
 type Test = {
   name: string | undefined,
@@ -62,7 +62,7 @@ const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type
 
   return (
     <>
-      <Button onClick={handleOpen} variant='contained' color={type === 'insert' ? 'green' : 'gray'}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</Button>
+      <NewButton onClick={handleOpen}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</NewButton>
       <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert Qualification' : 'Update Qualification'}>
         <div className='grid grid-cols-2 gap-2'>
           <div className='col-1'>
@@ -72,7 +72,7 @@ const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type
             <Input type='text' label='Abkürzung' value={formData.abbreviation} required={false} onChange={handleChange('abbreviation')} />
           </div>
         </div>
-        <Button onClick={handleSave}>Speichern</Button>
+        <NewButton onClick={handleSave}>Speichern</NewButton>
       </Modal>
     </>
   )

@@ -1,5 +1,4 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react'
-import Button from './base/button'
 import Modal from './base/modal'
 import { getUser, updateUser } from '../services/user'
 import { UserApiClient } from '../services/userApiClient'

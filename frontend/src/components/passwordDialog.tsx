@@ -1,11 +1,11 @@
 import { FC, useRef, useState } from 'react'
 import Modal from './base/modal'
-import Button from './base/button'
 import { putPassword } from '../services/user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { UserApiClient } from '../services/userApiClient'
 import { useParams } from 'react-router-dom'
+import NewButton from './newButtom'
 
 interface PasswordDialogProps {
   userId: string
@@ -76,7 +76,7 @@ const PasswordDialog: FC<PasswordDialogProps> = ({ userId }) => {
         </div>
 
         <div className='flex justify-center mt-4'>
-          <Button variant='contained' onClick={handleSave}>Speichern</Button>
+          <NewButton onClick={handleSave}>Speichern</NewButton>
         </div>
       </Modal>
     </>

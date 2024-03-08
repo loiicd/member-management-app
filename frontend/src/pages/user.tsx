@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { User } from '../types/user'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getUser, deleteUser } from '../services/user'
-import Button from '../components/base/button'
 import UserDialog from '../components/userDialog'
 import Typography from '../components/base/typography'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -11,11 +10,14 @@ import PasswordDialog from '../components/passwordDialog'
 import StandardLayout from '../layout/standard'
 import PageHead from '../components/pageHead'
 import NewButton from '../components/newButtom'
+import ApproveDialog from '../components/approveDialog'
 
 const UserPage = () => {
   const navigate = useNavigate()
   const { accountId, id } = useParams()
   const [user, setUser] = useState<User | null>(null)
+
+  const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
 
   useEffect(() => {
     if (id) {
@@ -24,11 +26,16 @@ const UserPage = () => {
     }
   }, [id])
 
-  const handleClick = () => {
+  const handleDeleteClick = () => {
+    setOpenApproveDialog(true)
+  }
+
+  const handleDeleteApprove = () => {
     if (id) {
       deleteUser(id)
         .then(() => navigate('/44484414-a4db-4717-8507-26f5296409dd/users')) //  HardCoded URL ACCOUNT
         .catch((error) => alert(error))
+        .finally(() => setOpenApproveDialog(false))
     }
   }
 
@@ -39,7 +46,7 @@ const UserPage = () => {
       <PageHead title={`${user?.firstname} ${user?.lastname}`}>
         <div className='flex justify-end gap-2'>
           <UserDialog type='update' userId={user?.id} accountId={accountId}/>
-          <NewButton onClick={handleClick}>Löschen</NewButton>
+          <NewButton onClick={handleDeleteClick}>Löschen</NewButton>
         </div>
       </PageHead>
       <div className='grid grid-cols-12 gap-4'>
@@ -100,6 +107,7 @@ const UserPage = () => {
           <Typography variant='text'>{qualification.name}</Typography>
         ))}
       </div>
+      <ApproveDialog title='User wirklich löschen?' open={openApproveDialog} handleClose={() => setOpenApproveDialog(false)} handleApprove={handleDeleteApprove} />
     </StandardLayout>
   )
 }
