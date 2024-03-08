@@ -1,8 +1,4 @@
 import { useEffect, useState } from "react"
-import Table from "../components/base/table/table"
-import TableBody from "../components/base/table/tableBody"
-import TableCell from "../components/base/table/tableCell"
-import TableHead from "../components/base/table/tableHead"
 import Typography from "../components/base/typography"
 import { getqualifications } from "../services/qualification"
 import { Qualification } from "../types/qualification"

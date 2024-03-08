@@ -19,9 +19,13 @@ const StandardLayout: FunctionComponent<StandardLayoutProps> = ({ accountId, chi
     <main className='min-h-screen flex flex-col justify-between bg-gray-50 dark:bg-gray-900'>
       <div>
         <Header toogleSidebar={toogleSidebar} />
-        { openSidebar && <Sidebar accountId={accountId} /> }
-        <div className='container mx-auto ml-72'>
-          { children }
+        <div className='grid grid-cols-12 gap-4'>
+          { openSidebar && <div className='col-span-2'><Sidebar accountId={accountId} /></div> }
+          <div className={`${openSidebar ? 'col-span-10' : 'col-span-12'}`}>
+            <div className='container mx-auto'>
+              { children }
+            </div>
+          </div>
         </div>
       </div>
       <Footer />
