@@ -1,26 +1,17 @@
-import { useEffect, useState } from "react"
-import Typography from "../components/base/typography"
-import { getqualifications } from "../services/qualification"
-import { Qualification } from "../types/qualification"
-import QualificationDialog from "../components/qualificationDialog"
 import { useNavigate, useParams } from "react-router-dom"
 import StandardLayout from "../layout/standard"
 import PageHead from "../components/pageHead"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { icon } from "@fortawesome/fontawesome-svg-core/import.macro"
-import IconButton from "../components/iconButton"
+import { useState } from "react"
 
 const SettingsGeneralPage = () => {
-  const [qualifications, setqualifications] = useState<Qualification[]>([])
   const { accountId } = useParams()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (accountId) {
-      getqualifications(accountId)
-        .then((result) => setqualifications(result) ) 
-    }
-  }, [accountId])
+  const [color, setColor] = useState<string>('lime')
+
+  const changeColor = (color: string) => setColor(color)
 
   if (!accountId) throw new Error('Account ID is required')
 
@@ -45,7 +36,20 @@ const SettingsGeneralPage = () => {
           </ul>
         </div>
         <div className='col-span-8'>
-
+          <div className='flex justify-start gap-2'>
+            <div className={`w-8 h-8 p-0.5 border-2 ${color === 'lime' ? 'border-slate-400' : 'border-transparent'} rounded-full flex justify-center cursor-pointer`} onClick={() => changeColor('lime')}>
+              <div className='w-full h-full rounded-full bg-lime-500'></div>
+            </div>
+            <div className={`w-8 h-8 p-0.5 border-2 ${color === 'red' ? 'border-slate-400' : 'border-transparent'} rounded-full flex justify-center cursor-pointer`} onClick={() => changeColor('red')}>
+              <div className='w-full h-full rounded-full bg-red-500'></div>
+            </div>
+            <div className={`w-8 h-8 p-0.5 border-2 ${color === 'blue' ? 'border-slate-400' : 'border-transparent'} rounded-full flex justify-center cursor-pointer`} onClick={() => changeColor('blue')}>
+              <div className='w-full h-full rounded-full bg-blue-500'></div>
+            </div>
+            <div className={`w-8 h-8 p-0.5 border-2 ${color === 'yellow' ? 'border-slate-400' : 'border-transparent'} rounded-full flex justify-center cursor-pointer`} onClick={() => changeColor('yellow')}>
+              <div className='w-full h-full rounded-full bg-yellow-500'></div>
+            </div>
+          </div>
         </div>
       </div>
     </StandardLayout>

@@ -3,6 +3,7 @@ import Button from './base/button'
 import Modal from './base/modal'
 import { getUser, updateUser } from '../services/user'
 import { UserApiClient } from '../services/userApiClient'
+import NewButton from './newButtom'
 
 type Test = {
   firstname?: string,
@@ -95,7 +96,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
 
   return (
     <>
-      <Button onClick={handleOpen} variant='contained' color={type === 'insert' ? 'green' : 'gray'}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</Button>
+      <NewButton onClick={handleOpen}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</NewButton>
       <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert User' : 'Update User'}>
         <div className='grid gap-4 mb-4 sm:grid-cols-2'>
           <div>

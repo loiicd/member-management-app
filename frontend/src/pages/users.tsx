@@ -59,8 +59,7 @@ const UsersPage = () => {
       </PageHead>
       <div className='py-4 flex justify-between'>
         <h2>Test</h2>
-        <div className='flex justify-between'>
-          <NewButton>Qualifikation</NewButton>
+        <div className='flex justify-between gap-2'>
           <UserDialog type='insert' accountId={accountId} />
           <Dropwdown text='Qualifikation'>
             <ul className='py-2'>
