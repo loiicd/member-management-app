@@ -42,35 +42,55 @@ const UserPage = () => {
           <NewButton onClick={handleClick}>Löschen</NewButton>
         </div>
       </PageHead>
-
-
-      
-
-
-      <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
-        <div className='grid gap-2 grid-cols-4'>
-          <Typography variant='text'>Geburstdatum:</Typography>
-          <Typography variant='text'>{user?.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</Typography>
+      <div className='grid grid-cols-12 gap-4'>
+        <div className='col-span-2'>
+          <ul>
+            <li className='px-3 py-2 rounded-lg cursor-pointer bg-gray-200 text-sm font-semibold'>
+              <FontAwesomeIcon icon={icon({ name: 'table', style: 'solid' })} className='pe-2' />
+              Allgemein
+            </li>
+            <li className='px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-200 text-sm text-slate-500'>
+              <FontAwesomeIcon icon={icon({ name: 'user-graduate', style: 'solid' })} className='pe-2' />
+              Qualifikationen
+            </li>
+          </ul>
         </div>
-        <div className='grid gap-2 grid-cols-4'>
-          <Typography variant='text'>Addresse:</Typography>
-          <Typography variant='text'>{user?.address}</Typography>
-        </div>
-        <div className='grid gap-2 grid-cols-4'>
-          <Typography variant='text'>Email:</Typography>
-          <Typography variant='text'>{user?.email}</Typography>
-        </div>
-        <div className='grid gap-2 grid-cols-4'>
-          <Typography variant='text'>Telefon:</Typography>
-          <Typography variant='text'>{user?.phone}</Typography>
-        </div>
-        <div className='grid gap-2 grid-cols-4'>
-          <Typography variant='text'>Online Zugang:</Typography>
-          <Typography variant='text'>{user?.webaccess ? 'Ja' : 'Nein'}</Typography>
-        </div>
-        <div className='grid gap-2 grid-cols-4'>
-          <Typography variant='text'>Passwort:</Typography>
-          <Typography variant='text'>********** { user ? <PasswordDialog userId={user?.id} /> : null}</Typography>
+        <div className='col-span-8'>
+          <h2 className='text-2xl'>Allgemein</h2>
+          <div className='grid grid-cols-4'>
+            <div className='col-span-1'>
+              <p className='text-base'>Name:</p>  
+              <p className='text-base'>Geburtsdatum:</p>
+              <p className='text-base'>Online Zugang:</p>
+            </div>  
+            <div className='col-span-1'>
+              <p className='text-base'>{user?.firstname} {user?.lastname}</p>
+              <p className='text-base'>{user?.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</p>
+              <p className='text-base'>{user?.webaccess ? 'Ja' : 'Nein'}</p>
+            </div>
+          </div>
+          <div className='border-b my-4'></div>
+          <h3 className='text-xl'>Kontaktdaten</h3>
+          <div className='grid grid-cols-4'>
+            <div className='col-span-1'>
+              <p className='text-base'>E-Mail:</p>
+              <p className='text-base'>Telefon:</p>
+            </div>  
+            <div className='col-span-1'>
+              <p className='text-base'>{user?.email}</p>
+              <p className='text-base'>{user?.phone}</p>
+            </div>
+          </div>
+          <div className='border-b my-4'></div>
+          <h3 className='text-xl'>Secruity</h3>
+          <div className='grid grid-cols-4'>
+            <div className='col-span-1'>
+              <p className='text-base'>Passwort:</p>
+            </div>  
+            <div className='col-span-1'>
+              <p className='text-base'>*********** { user ? <PasswordDialog userId={user?.id} /> : null}</p>
+            </div>
+          </div>
         </div>
       </div>
 
