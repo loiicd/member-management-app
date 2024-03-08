@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, ReactNode } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { useNavigate } from 'react-router-dom'
@@ -11,7 +11,7 @@ interface SidebarProps {
 interface ButtonProps {
   startIcon?: IconDefinition
   onClick?: () => void
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const Button: FunctionComponent<ButtonProps> = ({ startIcon, onClick, children }) => {

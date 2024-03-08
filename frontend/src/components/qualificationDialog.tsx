@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useState } from 'react'
+import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
 import Button from './base/button'
 import Modal from './base/modal'
 import Input from './base/input'
@@ -15,7 +15,7 @@ interface qualificationDialogProps {
   accountId: string
 }
 
-const qualificationDialog: FC<qualificationDialogProps> = ({ type, qualificationId, accountId }) => {
+const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type, qualificationId, accountId }) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const [formData, setFormData] = useState<Test>({name: undefined, abbreviation: undefined})
@@ -78,4 +78,4 @@ const qualificationDialog: FC<qualificationDialogProps> = ({ type, qualification
   )
 }
 
-export default qualificationDialog
+export default QualificationDialog

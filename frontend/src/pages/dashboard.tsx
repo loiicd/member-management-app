@@ -4,6 +4,7 @@ import StandardLayout from '../layout/standard'
 import { useEffect, useState } from 'react'
 import { getAccount } from '../services/account'
 import { Account } from '../types/account'
+import PageHead from '../components/pageHead'
 
 const DashboardPage = () => {
   const { accountId } = useParams()
@@ -19,10 +20,8 @@ const DashboardPage = () => {
   
   return (
     <StandardLayout accountId={accountId}>
-      <div className='h-screen mt-4'>
-        <Typography variant='h3'>Dashboard</Typography>
-        <Typography variant='h3'>{account?.organisation_name}</Typography>
-      </div>
+      <PageHead title={`Dashboard - ${account?.organisation_name}`}></PageHead>
+      <div className='h-screen'></div>
     </StandardLayout>
   )
 }

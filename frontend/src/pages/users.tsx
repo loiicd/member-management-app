@@ -7,6 +7,8 @@ import { User } from '../types/user'
 import { useParams } from 'react-router-dom'
 import { useAuthUser } from 'react-auth-kit'
 import { UserApiClient } from '../services/userApiClient'
+import PageHead from '../components/pageHead'
+import NewButton from '../components/newButtom'
 
 const UsersPage = () => {
   const { accountId } = useParams()
@@ -28,9 +30,9 @@ const UsersPage = () => {
   
   return (
     <StandardLayout accountId={accountId}>
-      <div className='flex justify-between pb-2'>
-        <Typography variant='h3'>User</Typography>
-      </div>
+      <PageHead title='Mitglieder'>
+        <NewButton>Test</NewButton>
+      </PageHead>
       <UserTable users={users} accountId={accountId} />
     </StandardLayout>
   )

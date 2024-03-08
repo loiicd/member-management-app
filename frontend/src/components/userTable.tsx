@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import UserDialog from './userDialog'
+import NewButton from './newButtom'
+import Badge from './badge'
+import IconButton from './iconButton'
+import Dropwdown from './dropdown'
 
 interface UserTableProps {
   users: User[]
@@ -14,6 +18,64 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, accountId }) => {
   const navigate = useNavigate()
 
   return (
+    <div>
+    <div className='py-4 flex justify-between'>
+      <h2>Test</h2>
+      <div className='flex justify-between'>
+        <NewButton>Filter</NewButton>
+        <NewButton variant='transparent'>Test</NewButton>
+        <Dropwdown text='Filter'>
+          <ul className='py-2'>
+            <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer'>Property</li>
+            <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer'>Property</li>
+            <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer'>Property</li>
+            <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer'>Property</li>
+          </ul>
+        </Dropwdown>
+      </div>
+    </div>
+    <div className='border rounded-md'>
+      <table className='w-full min-w-max table-auto text-left'>
+        <thead className='bg-slate-50 text-slate-600 border-b'>
+          <tr>
+            <th className='ps-4 py-2 pe-3'>Vorname</th>
+            <th className='ps-3 py-2 pe-3'>Nachname</th>
+            <th className='ps-3 py-2 pe-3'>Geburtsdatum</th>
+            <th className='ps-3 py-2 pe-3'>Addresse</th>
+            <th className='ps-3 py-2 pe-3'>Einsatzqualifikation</th>
+            <th className='ps-3 py-2 pe-3'>Online Zugang</th>
+            <th className='ps-3 py-2 pe-4'>...</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <tr className='bg-white border-b cursor-pointer hover:bg-slate-100' onClick={() => navigate(`/44484414-a4db-4717-8507-26f5296409dd/user/${user.id}`)}> {/* HardCoded URL ACCOUNT */}
+              <td className='ps-4 py-2 pe-3'>{user.firstname}</td>
+              <td className='ps-3 py-2 pe-3'>{user.lastname}</td>
+              <td className='ps-3 py-2 pe-3'>{user.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
+              <td className='ps-3 py-2 pe-3'>{user.address}</td>
+              <td className='ps-3 py-2 pe-3'>{user.qualifications.map((qualification) => <Badge>{qualification.abbreviation}</Badge>)}</td>
+              <td className='ps-3 py-2 pe-3'>{user.webaccess}</td>
+              <td className='ps-3 py-2 pe-4'><IconButton icon={icon({ name: 'pen', style: 'solid' })}/></td>
+            </tr>
+          ))}
+           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => (
+            <tr className='bg-white border-b cursor-pointer hover:bg-slate-100'>
+              <td className='ps-4 py-2 pe-3'>Testus</td>
+              <td className='ps-3 py-2 pe-3'>Probersa</td>
+              <td className='ps-3 py-2 pe-3'>13.03.2003</td>
+              <td className='ps-3 py-2 pe-3'>Hausen</td>
+              <td className='ps-3 py-2 pe-3'></td>
+              <td className='ps-3 py-2 pe-3'></td>
+              <td className='ps-3 py-2 pe-4'><IconButton icon={icon({ name: 'pen', style: 'solid' })}/></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div className='p-10'></div>
+
     <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
       <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
         <div className="w-full md:w-1/2">
@@ -177,6 +239,7 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, accountId }) => {
                 </ul>
             </nav>
         </div>
+      </div>
   )
 }
 
