@@ -9,7 +9,7 @@ import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import PasswordDialog from '../components/passwordDialog'
 import StandardLayout from '../layout/standard'
 import PageHead from '../components/pageHead'
-import NewButton from '../components/newButtom'
+import NewButton from '../components/newButton'
 import ApproveDialog from '../components/approveDialog'
 
 const UserPage = () => {
@@ -18,6 +18,8 @@ const UserPage = () => {
   const [user, setUser] = useState<User | null>(null)
 
   const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
+
+  const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false)
 
   useEffect(() => {
     if (id) {
@@ -32,10 +34,15 @@ const UserPage = () => {
 
   const handleDeleteApprove = () => {
     if (id) {
+      setIsDeletingUser(true)
       deleteUser(id)
-        .then(() => navigate('/44484414-a4db-4717-8507-26f5296409dd/users')) //  HardCoded URL ACCOUNT
+        .then(() => {
+          navigate('/44484414-a4db-4717-8507-26f5296409dd/users')
+          setOpenApproveDialog(false)
+        }) //  HardCoded URL ACCOUNT
         .catch((error) => alert(error))
-        .finally(() => setOpenApproveDialog(false))
+        .finally(
+          () => setIsDeletingUser(false))
     }
   }
 
@@ -107,7 +114,13 @@ const UserPage = () => {
           <Typography variant='text'>{qualification.name}</Typography>
         ))}
       </div>
-      <ApproveDialog title='User wirklich löschen?' open={openApproveDialog} handleClose={() => setOpenApproveDialog(false)} handleApprove={handleDeleteApprove} />
+      <ApproveDialog 
+        title='User wirklich löschen?' 
+        open={openApproveDialog} 
+        loading={isDeletingUser} 
+        handleClose={() => setOpenApproveDialog(false)} 
+        handleApprove={handleDeleteApprove}
+      />
     </StandardLayout>
   )
 }

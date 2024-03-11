@@ -2,7 +2,7 @@ import { ChangeEvent, FC, useEffect, useState } from 'react'
 import Modal from './base/modal'
 import { getUser, updateUser } from '../services/user'
 import { UserApiClient } from '../services/userApiClient'
-import NewButton from './newButtom'
+import NewButton from './newButton'
 
 type Test = {
   firstname?: string,

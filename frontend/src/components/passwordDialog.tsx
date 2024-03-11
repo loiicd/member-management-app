@@ -1,11 +1,10 @@
 import { FC, useRef, useState } from 'react'
 import Modal from './base/modal'
-import { putPassword } from '../services/user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { UserApiClient } from '../services/userApiClient'
 import { useParams } from 'react-router-dom'
-import NewButton from './newButtom'
+import NewButton from './newButton'
 
 interface PasswordDialogProps {
   userId: string
