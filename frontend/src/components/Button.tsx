@@ -3,7 +3,7 @@ import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FunctionComponent, ReactNode } from 'react'
 
-interface NewButtonProps {
+interface ButtonProps {
   startIcon?: IconDefinition
   endIcon?: IconDefinition
   variant?: 'contained' | 'transparent'
@@ -12,7 +12,7 @@ interface NewButtonProps {
   loading?: boolean
 }
 
-const NewButton: FunctionComponent<NewButtonProps> = ({ startIcon, endIcon, variant = 'contained', children, onClick, loading = false }) => {
+const Button: FunctionComponent<ButtonProps> = ({ startIcon, endIcon, variant = 'contained', children, onClick, loading = false }) => {
   return (
     <button className={`px-3 h-8 rounded-md ${variant === 'contained' ? 'border' : null} hover:bg-gray-200`} onClick={onClick}>
       {loading ? <FontAwesomeIcon className='w-4 h-4 mr-2 animate-spin' icon={icon({ name: 'spinner', style: 'solid' })} /> : null}
@@ -23,4 +23,4 @@ const NewButton: FunctionComponent<NewButtonProps> = ({ startIcon, endIcon, vari
   )
 }
 
-export default NewButton
+export default Button

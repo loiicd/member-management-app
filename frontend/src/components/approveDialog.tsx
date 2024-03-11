@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react'
 import Modal from './base/modal'
-import NewButton from './newButton'
+import Button from './Button'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 interface ApproveDialogProps {
@@ -15,8 +15,8 @@ const ApproveDialog: FunctionComponent<ApproveDialogProps> = ({ title, open, loa
   return (
     <Modal open={open} onClose={handleClose} title={title}>
       <div className='flex justify-end gap-2'>
-        <NewButton onClick={handleClose}>Abbrechen</NewButton>
-        <NewButton loading={loading} startIcon={icon({ name: 'trash', style: 'solid' })} onClick={handleApprove}>Löschen</NewButton>
+        <Button onClick={handleClose}>Abbrechen</Button>
+        <Button loading={loading} startIcon={icon({ name: 'trash', style: 'solid' })} onClick={handleApprove}>Löschen</Button>
       </div>
     </Modal>
   )

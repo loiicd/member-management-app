@@ -9,7 +9,7 @@ import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import PasswordDialog from '../components/passwordDialog'
 import StandardLayout from '../layout/standard'
 import PageHead from '../components/pageHead'
-import NewButton from '../components/newButton'
+import Button from '../components/Button'
 import ApproveDialog from '../components/approveDialog'
 import { UserApiClient } from '../services/userApiClient'
 
@@ -55,7 +55,7 @@ const UserPage = () => {
       <PageHead title={`${user?.firstname} ${user?.lastname}`}>
         <div className='flex justify-end gap-2'>
           <UserDialog type='update' userId={user?.id} accountId={accountId}/>
-          <NewButton onClick={handleDeleteClick}>Löschen</NewButton>
+          <Button onClick={handleDeleteClick}>Löschen</Button>
         </div>
       </PageHead>
       <div className='grid grid-cols-12 gap-4'>

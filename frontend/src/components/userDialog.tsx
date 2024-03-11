@@ -2,7 +2,7 @@ import { ChangeEvent, FC, useEffect, useState } from 'react'
 import Modal from './base/modal'
 import { getUser, updateUser } from '../services/user'
 import { UserApiClient } from '../services/userApiClient'
-import NewButton from './newButton'
+import Button from './Button'
 
 type Test = {
   firstname?: string,
@@ -95,7 +95,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
 
   return (
     <>
-      <NewButton onClick={handleOpen}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</NewButton>
+      <Button onClick={handleOpen}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</Button>
       <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert User' : 'Update User'}>
         <div className='grid gap-4 mb-4 sm:grid-cols-2'>
           <div>

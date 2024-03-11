@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { UserApiClient } from '../services/userApiClient'
 import { useParams } from 'react-router-dom'
-import NewButton from './newButton'
+import Button from './Button'
 
 interface PasswordDialogProps {
   userId: string
@@ -75,7 +75,7 @@ const PasswordDialog: FC<PasswordDialogProps> = ({ userId }) => {
         </div>
 
         <div className='flex justify-center mt-4'>
-          <NewButton onClick={handleSave}>Speichern</NewButton>
+          <Button onClick={handleSave}>Speichern</Button>
         </div>
       </Modal>
     </>
