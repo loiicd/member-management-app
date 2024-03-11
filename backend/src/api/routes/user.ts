@@ -19,7 +19,6 @@ router.get('/', tryCatchMiddleware(async (req: Request, res: Response) => {
   const searchTerm = validateSearchTerm(req.query.searchTerm)
   const sortAttribute = validateSortAttribute(req.query.sortAttribute)
   const sortDirection = validateSortDirection(req.query.sortDirection)
-  // const filter = validateUUIDs(req.query.filter)
 
   let filter = req.query.filter as string[]
   let newList: string[]

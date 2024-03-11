@@ -120,7 +120,7 @@ const UsersPage = () => {
       </div>
       <div className='border rounded-md'>
         <table className='w-full min-w-max table-auto text-left'>
-          <thead className='bg-slate-50 text-slate-600'>
+          <thead className='bg-slate-50 text-slate-600 border-b'>
             <tr>
               <th className='ps-4 py-2 pe-3 cursor-pointer' onClick={() => handleChangeSort('firstname')}>
                 Vorname
@@ -168,6 +168,19 @@ const UsersPage = () => {
                 <td className='ps-3 py-2 pe-4 flex items-center justify-end'><IconButton icon={icon({ name: 'pen', style: 'solid' })}/></td>
               </tr>
             ))}
+            {users.length === 0 ? 
+              <tr className='border-b'>
+                <td colSpan={7} className='text-center py-8'>
+                  <div className='flex flex-col justify-center gap-2'>
+                    Keine passenden User gefunden!
+                    <div>
+                      <NewButton onClick={resetSearchFilter}>Filter zurücksetzen</NewButton>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              : null
+            }
           </tbody>
           <tfoot className='bg-slate-50 text-slate-600'>
             <tr>
