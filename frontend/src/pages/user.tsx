@@ -9,7 +9,7 @@ import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import PasswordDialog from '../components/passwordDialog'
 import StandardLayout from '../layout/standard'
 import PageHead from '../components/pageHead'
-import Button from '../components/Button'
+import Button from '../components/core/Button'
 import ApproveDialog from '../components/approveDialog'
 import { UserApiClient } from '../services/userApiClient'
 

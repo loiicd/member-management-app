@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react'
 import Modal from './base/modal'
-import Button from './Button'
+import Button from './core/Button'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 interface ApproveDialogProps {

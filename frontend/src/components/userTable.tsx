@@ -5,7 +5,7 @@ import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import IconButton from './iconButton'
 import { useNavigate } from 'react-router-dom'
 import Badge from './badge'
-import Button from './Button'
+import Button from './core/Button'
 import { SortAttribute } from '../pages/users'
 
 interface UserTableProps {

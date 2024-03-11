@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { UserApiClient } from '../services/userApiClient'
 import { useParams } from 'react-router-dom'
-import Button from './Button'
+import Button from './core/Button'
 
 interface PasswordDialogProps {
   userId: string

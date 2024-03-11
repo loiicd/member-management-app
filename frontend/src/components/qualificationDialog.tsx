@@ -2,7 +2,7 @@ import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
 import Modal from './base/modal'
 import Input from './base/input'
 import { postqualification } from '../services/qualification'
-import Button from './Button'
+import Button from './core/Button'
 
 type Test = {
   name: string | undefined,
