@@ -106,14 +106,18 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
   console.log(filter)
   let query: string
   if (searchTerm) {
-    const newSearchTerm = searchTerm.split(' ').join(' & ')
+    console.log('Search Term:', searchTerm)
+    const newSearchTerm = searchTerm.trim().split(' ').join(':* & ')
+    console.log('Typeof newSearchTerm:', typeof newSearchTerm)
+    console.log('New Search Term:', newSearchTerm)
     if (filter.length === 0) {
       query = `
         SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
         FROM public."user"
         LEFT JOIN public."user_account_rel"
         ON id = user_account_rel.user_id
-        WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '$1:*')
+        WHERE to_tsvector('simple', firstname || ' ' || lastname || ' ' || coalesce(birthdate::text, '') || ' ' || coalesce(address, '') || ' ' || coalesce(email, '') || ' ' || coalesce(phone, '')) @@ to_tsquery('simple', $1)
+        AND user_account_rel.account_id = $2
         ORDER BY ${sortAttribute} ${sortDirection}`
     } else {
       query = `
@@ -123,12 +127,13 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
         ON id = user_account_rel.user_id
         LEFT JOIN public."user_qualification_rel"
         ON id = user_qualification_rel.user_id
-        WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '$1:*')
+        WHERE to_tsvector('simple', firstname || ' ' || lastname || ' ' || coalesce(birthdate::text, '') || ' ' || coalesce(address, '') || ' ' || coalesce(email, '') || ' ' || coalesce(phone, '')) @@ to_tsquery('simple', $1)
+        AND user_account_rel.account_id = $2
         AND user_qualification_rel.account_id = $2
         AND qualification_id IN (${filter.map((filter) => `'${filter}'`)})
         ORDER BY ${sortAttribute} ${sortDirection}`
     }
-    const result = await client.query(query, [newSearchTerm, accountId])
+    const result = await client.query(query, [newSearchTerm + ':*', accountId])
     return result.rows
   } else {
     if (filter.length === 0) {

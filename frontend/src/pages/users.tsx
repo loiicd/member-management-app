@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import StandardLayout from '../layout/standard'
 import { User } from '../types/user'
 import { useParams, useSearchParams } from 'react-router-dom'
@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getqualifications } from '../services/qualification'
 import { Qualification } from '../types/qualification'
 import UserTable from '../components/userTable'
+import Input from '../components/core/Input'
 
 export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
 export type SortDirection = 'ASC' | 'DESC'
@@ -44,6 +45,8 @@ const UsersPage = () => {
       setUrlParams(urlParams)
     }
   }
+
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => setSearchTerm(event.target.value)
 
   const resetSearchFilter = () => {
     urlParams.delete('searchFilter')
@@ -95,6 +98,7 @@ const UsersPage = () => {
       <div className='py-4 flex justify-between'>
         <h2>Test</h2>
         <div className='flex justify-between gap-2'>
+          <Input placeholder='Suche ...' onChange={handleSearch} startIcon={icon({ name: 'search', style: 'solid' })} />
           <UserDialog type='insert' accountId={accountId} />
           <Dropwdown text='Qualifikation' counter={searchFilter ? searchFilter.split('%').length : undefined}>
             <ul className='py-2'>
