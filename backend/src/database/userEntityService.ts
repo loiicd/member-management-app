@@ -10,11 +10,11 @@ export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' |
 export type SortDirection = 'ASC' | 'DESC'
 
 export class UserEntityService {
-  async getAll(accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection): Promise<UserType[]> {
+  async getAll(accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[]): Promise<UserType[]> {
     const client = await connect()
     try {
       await client.query('BEGIN')
-      const users = await selectUsers(client, accountId, searchTerm, sortAttribute, sortDirection)
+      const users = await selectUsers(client, accountId, searchTerm, sortAttribute, sortDirection, filter)
       for (const user of users) user.qualifications = await selectQualifications(client, user.id)
       await client.query('COMMIT')
       return users
@@ -102,29 +102,60 @@ export class UserEntityService {
   }
 }
 
-const selectUsers = async (client: Client, accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection): Promise<UserType[]> => {
+const selectUsers = async (client: Client, accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[]): Promise<UserType[]> => {
+  console.log(filter)
   let query: string
   if (searchTerm) {
     const newSearchTerm = searchTerm.split(' ').join(' & ')
-    query = `
-      SELECT user.id, firstname, lastname, birthdate, address, email, phone, webaccess
-      FROM public."user"
-      LEFT JOIN public."user_account_rel"
-      ON user.id = user_id
-      WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '$1:*')
-      AND account_id = $2
-      ORDER BY ${sortAttribute} ${sortDirection}`
-      const result = await client.query(query, [newSearchTerm, accountId])
-      return result.rows
+    if (filter.length === 0) {
+      query = `
+        SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
+        FROM public."user"
+        LEFT JOIN public."user_account_rel"
+        ON id = user_account_rel.user_id
+        WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '$1:*')
+        ORDER BY ${sortAttribute} ${sortDirection}`
+    } else {
+      query = `
+        SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
+        FROM public."user"
+        LEFT JOIN public."user_account_rel"
+        ON id = user_account_rel.user_id
+        LEFT JOIN public."user_qualification_rel"
+        ON id = user_qualification_rel.user_id
+        WHERE to_tsvector(firstname || ' ' || lastname || ' ' || birthdate::text || ' ' || address || ' ' || email || ' ' || phone) @@ plainto_tsquery('simple', '$1:*')
+        AND user_qualification_rel.account_id = $2
+        AND qualification_id IN (${filter.map((filter) => `'${filter}'`)})
+        ORDER BY ${sortAttribute} ${sortDirection}`
+    }
+    const result = await client.query(query, [newSearchTerm, accountId])
+    return result.rows
   } else {
-    query = `
-      SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
-      FROM public."user"
-      LEFT JOIN public."user_account_rel"
-      ON id = user_id
-      WHERE account_id = $1
-      ORDER BY ${sortAttribute} ${sortDirection}`
+    if (filter.length === 0) {
+      query = `
+        SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
+        FROM public."user"
+        LEFT JOIN public."user_account_rel"
+        ON id = user_id
+        WHERE user_account_rel.account_id = $1
+        ORDER BY ${sortAttribute} ${sortDirection}`
+    } else {
+      query = `
+        SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
+        FROM public."user"
+        LEFT JOIN public."user_account_rel"
+        ON id = user_id
+        LEFT JOIN public."user_qualification_rel"
+        ON id = user_qualification_rel.user_id
+        WHERE user_account_rel.account_id = $1
+        AND user_qualification_rel.account_id = $1
+        AND qualification_id IN (${filter.map((filter) => `'${filter}'`)})
+        ORDER BY ${sortAttribute} ${sortDirection}`
+    }
+    console.log(query)
+    console.log('Filter Length', filter.length)
     const result = await client.query(query, [accountId])
+    console.log(result.rows)
     return result.rows
   }
 }

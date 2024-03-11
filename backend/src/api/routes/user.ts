@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import { UserEntityService } from '../../database/userEntityService'
 import { tryCatchMiddleware } from '../tryCatchMiddleware'
-import { validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateUser, validateUserFormData } from '../validate'
+import { validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateUUIDs, validateUser, validateUserFormData } from '../validate'
 
 const router = express.Router()
 const userEntityService = new UserEntityService
@@ -19,7 +19,17 @@ router.get('/', tryCatchMiddleware(async (req: Request, res: Response) => {
   const searchTerm = validateSearchTerm(req.query.searchTerm)
   const sortAttribute = validateSortAttribute(req.query.sortAttribute)
   const sortDirection = validateSortDirection(req.query.sortDirection)
-  const users = await userEntityService.getAll(accountId, searchTerm, sortAttribute, sortDirection)
+  // const filter = validateUUIDs(req.query.filter)
+
+  const filter = req.query.filter as string
+
+  console.log(filter)
+
+  const list = filter[0].split('%')
+
+  const newList = list.filter((item) => item != '')
+
+  const users = await userEntityService.getAll(accountId, searchTerm, sortAttribute, sortDirection, newList)
   res.status(200).send(users)
 }))
 

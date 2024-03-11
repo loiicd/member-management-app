@@ -13,6 +13,11 @@ export const validatequalificationFormData = (data: any): QualificationFormDataT
 const IDShema = z.string()
 export const validateUUID = (id: any): string => IDShema.parse(id)
 
+const IDsShema = z.array(
+  z.string()
+)
+export const validateUUIDs = (ids: any): string[] => IDsShema.parse(ids)
+
 const SearchTermShema = z.string().optional()
 export const validateSearchTerm = (string: any): string | undefined => SearchTermShema.parse(string)
 

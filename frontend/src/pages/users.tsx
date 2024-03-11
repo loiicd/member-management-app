@@ -12,6 +12,8 @@ import IconButton from '../components/iconButton'
 import Badge from '../components/badge'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { getqualifications } from '../services/qualification'
+import { Qualification } from '../types/qualification'
 
 export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
 export type SortDirection = 'ASC' | 'DESC'
@@ -20,12 +22,35 @@ const UsersPage = () => {
   const { accountId } = useParams()
   const navigate = useNavigate()
   const [users, setUsers] = useState<User[]>([])
+  const [qualifications, setQualifications] = useState<Qualification[]>([])
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
 
-  const [sortParams, setSortParams] = useSearchParams()
+  const [urlParams, setUrlParams] = useSearchParams()
 
-  let sortAttribute = sortParams.get('sortAttribute')
-  let sortDirection = sortParams.get('sortDirection')
+  let sortAttribute = urlParams.get('sortAttribute')
+  let sortDirection = urlParams.get('sortDirection')
+  let searchFilter = urlParams.get('searchFilter')
+
+  const toogleSearchFilter = (attribute: string) => {
+    if (searchFilter && searchFilter.includes(attribute)) {
+      const list = searchFilter.split('%').filter(e => e !== attribute)
+      urlParams.set('searchFilter', list.join('%'))
+      setUrlParams(urlParams)
+    } else if (searchFilter && !searchFilter.includes(attribute)) {
+      const list = searchFilter.split('%')
+      list.push(attribute)
+      urlParams.set('searchFilter', list.join('%'))
+      setUrlParams(urlParams)
+    } else {
+      urlParams.set('searchFilter', attribute)
+      setUrlParams(urlParams)
+    }
+  }
+
+  const resetSearchFilter = () => {
+    urlParams.delete('searchFilter')
+    setUrlParams(urlParams)
+  }
 
   const authParams = useAuthUser()()
 
@@ -33,9 +58,15 @@ const UsersPage = () => {
 
   useEffect(() => {
     if (!accountId || !authParams) return
-    userApiClient.getUsers(searchTerm, sortAttribute, sortDirection)
+    getqualifications(accountId)
+      .then((data) => setQualifications(data))
+  }, [accountId, authParams])
+
+  useEffect(() => {
+    if (!accountId || !authParams) return
+    userApiClient.getUsers(searchTerm, sortAttribute, sortDirection, urlParams.getAll('searchFilter'))
       .then(data => setUsers(data))
-  }, [accountId, searchTerm, authParams, sortAttribute, sortDirection])
+  }, [accountId, searchTerm, authParams, urlParams])
 
   if (!accountId) throw new Error('Account ID is required')
   if (!authParams) throw new Error('Auth Params is required')
@@ -43,14 +74,20 @@ const UsersPage = () => {
   const handleChangeSort = (attribute: SortAttribute) => {
     if (attribute === sortAttribute) {
       if (sortDirection === 'ASC') {
-        setSortParams({ sortAttribute: attribute, sortDirection: 'DESC' })
+        urlParams.set('sortDirection', 'DESC')
+        setUrlParams(urlParams)
       } else {
-        setSortParams({ sortAttribute: attribute, sortDirection: 'ASC' })
+        urlParams.set('sortDirection', 'ASC')
+        setUrlParams(urlParams)
       }
     } else {
-      setSortParams({ sortAttribute: attribute, sortDirection: 'ASC' })
+      urlParams.set('sortAttribute', attribute)
+      urlParams.set('sortDirection', 'ASC')
+      setUrlParams(urlParams)
     }
   }
+
+  console.log(urlParams.values)
   
   return (
     <StandardLayout accountId={accountId}>
@@ -61,19 +98,29 @@ const UsersPage = () => {
         <h2>Test</h2>
         <div className='flex justify-between gap-2'>
           <UserDialog type='insert' accountId={accountId} />
-          <Dropwdown text='Qualifikation'>
+          <Dropwdown text='Qualifikation' counter={searchFilter ? searchFilter.split('%').length : undefined}>
             <ul className='py-2'>
-              <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer'>Property</li>
-              <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer'>Property</li>
-              <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer'>Property</li>
-              <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer'>Property</li>
+              {qualifications.map((qualification) => (
+                <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer' onClick={() => toogleSearchFilter(qualification.id)}>
+                  {searchFilter?.includes(qualification.id) ? 
+                    <>
+                      <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='w-4' />
+                      <span className='ms-2'>{qualification.name}</span>
+                    </>
+                    :
+                    <span className='ms-6'>{qualification.name}</span>
+                  }
+                </li>
+              ))}
+              <li className='border-b my-2'></li>
+              <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer flex justify-center' onClick={resetSearchFilter}>Zurücksetzen</li>
             </ul>
           </Dropwdown>
         </div>
       </div>
       <div className='border rounded-md'>
         <table className='w-full min-w-max table-auto text-left'>
-          <thead className='bg-slate-50 text-slate-600 border-b'>
+          <thead className='bg-slate-50 text-slate-600'>
             <tr>
               <th className='ps-4 py-2 pe-3 cursor-pointer' onClick={() => handleChangeSort('firstname')}>
                 Vorname
