@@ -21,13 +21,17 @@ router.get('/', tryCatchMiddleware(async (req: Request, res: Response) => {
   const sortDirection = validateSortDirection(req.query.sortDirection)
   // const filter = validateUUIDs(req.query.filter)
 
-  const filter = req.query.filter as string
+  let filter = req.query.filter as string[]
+  let newList: string[]
+  
+  if (!filter) {
+    newList = []
+  } else {
+    const list = filter[0].split('%')
+    newList = list.filter((item) => item != '')
+  }
 
-  console.log(filter)
-
-  const list = filter[0].split('%')
-
-  const newList = list.filter((item) => item != '')
+  console.log('Filter Incoming:', filter)
 
   const users = await userEntityService.getAll(accountId, searchTerm, sortAttribute, sortDirection, newList)
   res.status(200).send(users)

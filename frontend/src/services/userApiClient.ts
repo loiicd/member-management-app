@@ -11,6 +11,9 @@ export class UserApiClient extends BaseApiClient {
   public async getUsers(searchTerm: string | undefined, sortAttribute: string | null, sortDirection: string | null, filter: string[] | null): Promise<User[]> {
     if (!sortAttribute) sortAttribute = 'firstname'
     if (!sortDirection) sortDirection = 'ASC'
+    if (!filter) filter = []
+
+    console.log('Filter', filter)
 
     const response = await this.axiosInstance.get('user', { params: { searchTerm, sortAttribute, sortDirection, filter } })
     return response.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
