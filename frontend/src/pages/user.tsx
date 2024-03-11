@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { User } from '../types/user'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getUser, deleteUser } from '../services/user'
+import { getUser } from '../services/user'
 import UserDialog from '../components/userDialog'
 import Typography from '../components/base/typography'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -11,6 +11,7 @@ import StandardLayout from '../layout/standard'
 import PageHead from '../components/pageHead'
 import NewButton from '../components/newButton'
 import ApproveDialog from '../components/approveDialog'
+import { UserApiClient } from '../services/userApiClient'
 
 const UserPage = () => {
   const navigate = useNavigate()
@@ -20,6 +21,8 @@ const UserPage = () => {
   const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
 
   const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false)
+
+  const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
 
   useEffect(() => {
     if (id) {
@@ -35,14 +38,13 @@ const UserPage = () => {
   const handleDeleteApprove = () => {
     if (id) {
       setIsDeletingUser(true)
-      deleteUser(id)
+      userApiClient.deleteUser(id)
         .then(() => {
           navigate('/44484414-a4db-4717-8507-26f5296409dd/users')
           setOpenApproveDialog(false)
         }) //  HardCoded URL ACCOUNT
         .catch((error) => alert(error))
-        .finally(
-          () => setIsDeletingUser(false))
+        .finally(() => setIsDeletingUser(false))
     }
   }
 

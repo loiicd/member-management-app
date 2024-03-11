@@ -12,9 +12,6 @@ export class UserApiClient extends BaseApiClient {
     if (!sortAttribute) sortAttribute = 'firstname'
     if (!sortDirection) sortDirection = 'ASC'
     if (!filter) filter = []
-
-    console.log('Filter', filter)
-
     const response = await this.axiosInstance.get('user', { params: { searchTerm, sortAttribute, sortDirection, filter } })
     return response.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
   }
@@ -27,4 +24,7 @@ export class UserApiClient extends BaseApiClient {
     await this.axiosInstance.put(`user/password/${userId}`, { newPassword })
   }
 
+  public async deleteUser(userId: string): Promise<void> {
+    await this.axiosInstance.delete(`user/${userId}`)
+  }
 }
