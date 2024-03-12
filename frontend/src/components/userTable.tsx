@@ -22,6 +22,8 @@ interface UserTableProps {
 const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, sortDirection, currentPage, totalEntries, handleChangeSort, resetSearchFilter, handleChangePagination }) => {
   const navigate = useNavigate()
 
+  console.log(users)
+
   return (
     <div className='border rounded-md mb-4'>
       <table className='w-full min-w-max table-auto text-left'>
@@ -68,7 +70,7 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, so
               <td className='ps-3 py-2 pe-3'>{user.lastname}</td>
               <td className='ps-3 py-2 pe-3'>{user.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
               <td className='ps-3 py-2 pe-3'>{user.address}</td>
-              <td className='ps-3 py-2 pe-3'>{user.qualifications.map((qualification) => <Badge>{qualification.abbreviation}</Badge>)}</td>
+              <td className='ps-3 py-2 pe-3'>{user.qualifications.map((qualification) => <Badge color={qualification.color}>{qualification.abbreviation}</Badge>)}</td>
               <td className='ps-3 py-2 pe-3'>{user.webaccess ? <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='text-lime-500' /> : <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} className='text-red-500' />}</td>
               <td className='ps-3 py-2 pe-4 flex items-center justify-end'><IconButton icon={icon({ name: 'pen', style: 'solid' })}/></td>
             </tr>
@@ -99,9 +101,9 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, so
                   <span className='hover:bg-slate-200 rounded h-6 w-6 text-center cursor-pointer' onClick={() => handleChangePagination(index + 1)}>{index + 1}</span>  
                 ))}
                 <span className='rounded-md h-6 w-6 bg-blue-500 text-white text-center cursor-pointer'>{currentPage}</span>
-                {[...Array(Math.ceil(totalEntries / 5) - currentPage)].map((_, index) => (
+                {/* {[...Array(Math.ceil(totalEntries / 5) - currentPage)].map((_, index) => (
                   <span className='hover:bg-slate-200 rounded h-6 w-6 text-center cursor-pointer' onClick={() => handleChangePagination(currentPage + index + 1)}>{currentPage + index + 1}</span>  
-                ))}
+                ))} */}
                 {currentPage !== Math.ceil(totalEntries / 5) ? 
                   <span className='hover:bg-slate-200 rounded h-6 px-2 text-center cursor-pointer' onClick={() => handleChangePagination(currentPage + 1)}>Next<FontAwesomeIcon icon={icon({ name: 'chevron-right', style: 'solid' })} className='ms-2' /></span>
                   : <span className='rounded h-6 px-2 text-center text-slate-500 cursor-not-allowed' onClick={() => handleChangePagination(currentPage + 1)}>Next<FontAwesomeIcon icon={icon({ name: 'chevron-right', style: 'solid' })} className='ms-2' /></span>

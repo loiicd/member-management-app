@@ -222,7 +222,7 @@ const selectUserById = async (client: Client, userId: string): Promise<UserType>
 
 const selectQualifications = async (client: Client, userId: string): Promise<QualificationType[]> => {
   const query = `
-    SELECT id, name, abbreviation
+    SELECT id, name, abbreviation, color
     FROM public."qualification" 
     LEFT JOIN public."user_qualification_rel"
     ON qualification_id = id

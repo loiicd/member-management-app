@@ -53,6 +53,7 @@ const SettingsQualificationPage = () => {
             <table className='w-full min-w-max table-auto text-left'>
               <thead className='bg-slate-50 text-slate-600 border-b'>
                 <tr>
+                  <th className='ps-4 py-2 pe-3'></th>
                   <th className='ps-4 py-2 pe-3'>Name</th>
                   <th className='ps-3 py-2 pe-3'>Abkürzung</th>
                   <th className='ps-3 py-2 pe-3'></th>
@@ -61,6 +62,7 @@ const SettingsQualificationPage = () => {
               <tbody>
                 {qualifications.map((qualification) => (
                   <tr className='bg-white border-b hover:bg-slate-100'>
+                    <th className='ps-4 py-2 pe-3'><div className='h-4 w-4 rounded-full' style={{ backgroundColor: qualification.color}}></div></th>
                     <td className='ps-4 py-2 pe-3'>{qualification.name}</td>
                     <td className='ps-3 py-2 pe-3'>{qualification.abbreviation}</td>
                     <td  className='ps-3 py-2 pe-4 flex items-center justify-end'>

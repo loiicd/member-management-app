@@ -41,6 +41,7 @@ CREATE TABLE "qualification" (
   account_id text NOT NULL,
   name text NOT NULL,
   abbreviation text,
+  color text,
   PRIMARY KEY (id),
   FOREIGN KEY (account_id) REFERENCES "account" (id)
 );

@@ -15,8 +15,8 @@ export class UserApiClient extends BaseApiClient {
     if (!filter) filter = []
     if (!page) page = '1'
     const response = await this.axiosInstance.get('user', { params: { searchTerm, sortAttribute, sortDirection, filter, page } })
-    // console.log(response.data)
     const data = response.data.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
+    console.log('Response.Data:', response.data)
     return { ...response.data, data }
   }
 

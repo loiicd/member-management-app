@@ -82,14 +82,14 @@ VALUES
   ('e69c4837-cd79-4064-a4bd-a7e2f9eba740', '44484414-a4db-4717-8507-26f5296409dd', false),
   ('7ca5c388-d5bd-4871-bd01-a330499357a0', '44484414-a4db-4717-8507-26f5296409dd', false);
 
-INSERT INTO "qualification" (id, account_id, name, abbreviation)
+INSERT INTO "qualification" (id, account_id, name, abbreviation, color)
 VALUES
-('02408990-10f5-4921-a874-d24c2ec682d4', '44484414-a4db-4717-8507-26f5296409dd', 'Truppmann', 'TM'),
-('f4c6b77f-bba3-4e2a-9c78-0ea52e148d88', '44484414-a4db-4717-8507-26f5296409dd', 'Truppführer', 'TF'),
-('2052c1bd-3c0f-4e86-aa7e-c3aff95085ef', '44484414-a4db-4717-8507-26f5296409dd', 'Gruppenführer', 'GF'),
-('e096f52a-0af3-4897-a158-a10b60db79fe', '44484414-a4db-4717-8507-26f5296409dd', 'Zugführer', 'ZF'),
-('4b495910-6480-424c-8b7d-408d04063afa', '44484414-a4db-4717-8507-26f5296409dd', 'Atemschutzträger', 'AGT'),
-('5dfe839f-94dc-4dfd-a3b0-81b265f7d0c8', '44484414-a4db-4717-8507-26f5296409dd', 'Maschinist', 'MA');
+('02408990-10f5-4921-a874-d24c2ec682d4', '44484414-a4db-4717-8507-26f5296409dd', 'Truppmann', 'TM', '#FF3B30'),
+('f4c6b77f-bba3-4e2a-9c78-0ea52e148d88', '44484414-a4db-4717-8507-26f5296409dd', 'Truppführer', 'TF', '#FF9500'),
+('2052c1bd-3c0f-4e86-aa7e-c3aff95085ef', '44484414-a4db-4717-8507-26f5296409dd', 'Gruppenführer', 'GF', '#FFCC00'),
+('e096f52a-0af3-4897-a158-a10b60db79fe', '44484414-a4db-4717-8507-26f5296409dd', 'Zugführer', 'ZF', '#34C759'),
+('4b495910-6480-424c-8b7d-408d04063afa', '44484414-a4db-4717-8507-26f5296409dd', 'Atemschutzträger', 'AGT', '#00C7BE'),
+('5dfe839f-94dc-4dfd-a3b0-81b265f7d0c8', '44484414-a4db-4717-8507-26f5296409dd', 'Maschinist', 'MA', '#007AFF');
 
 INSERT INTO "user_qualification_rel" (user_id, qualification_id, account_id)
 VALUES

@@ -115,6 +115,8 @@ const UsersPage = () => {
     setUrlParams(urlParams)
   }
   
+  console.log('Users:', users)
+
   return (
     <StandardLayout accountId={accountId}>
       <PageHead title='Mitglieder'>
