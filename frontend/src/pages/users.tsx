@@ -22,7 +22,7 @@ const UsersPage = () => {
   const { accountId } = useParams()
   const [users, setUsers] = useState<User[]>([])
   const [qualifications, setQualifications] = useState<Qualification[]>([])
-  // const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
+  const [totalEntries, setTotalEntries] = useState<number>(0)
 
   const [urlParams, setUrlParams] = useSearchParams()
 
@@ -30,6 +30,7 @@ const UsersPage = () => {
   let sortDirection = urlParams.get('sortDirection')
   let searchFilter = urlParams.get('searchFilter')
   const searchTerm = urlParams.get('searchTerm')
+  const page = urlParams.get('page')
 
   const toogleSearchFilter = (attribute: string) => {
     if (searchFilter && searchFilter.includes(attribute)) {
@@ -45,16 +46,23 @@ const UsersPage = () => {
       urlParams.set('searchFilter', attribute)
       setUrlParams(urlParams)
     }
+    resetPagination()
   }
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     urlParams.set('searchTerm', event.target.value)
     setUrlParams(urlParams)
+    resetPagination()
   }
 
   const resetSearchFilter = () => {
     urlParams.delete('searchFilter')
     setUrlParams(urlParams)
+    resetPagination()
+  }
+
+  const handleChangeTotalEntries = (number: number) => {
+    setTotalEntries(number)
   }
 
   const authParams = useAuthUser()()
@@ -69,8 +77,13 @@ const UsersPage = () => {
 
   useEffect(() => {
     if (!accountId || !authParams) return
-    userApiClient.getUsers(urlParams.get('searchTerm'), sortAttribute, sortDirection, urlParams.getAll('searchFilter'))
-      .then(data => setUsers(data))
+    userApiClient.getUsers(urlParams.get('searchTerm'), sortAttribute, sortDirection, urlParams.getAll('searchFilter'), urlParams.get('page'))
+      .then(data => {
+        setUsers(data.data)
+        handleChangeTotalEntries(data.total)
+        urlParams.set('page', data.page.toString())
+        setUrlParams(urlParams)
+      })
   }, [accountId, authParams, urlParams])
 
   if (!accountId) throw new Error('Account ID is required')
@@ -92,7 +105,15 @@ const UsersPage = () => {
     }
   }
 
-  console.log(urlParams.values)
+  const handleChangePagination = (page: number) => {
+    urlParams.set('page', page.toString())
+    setUrlParams(urlParams)
+  }
+
+  const resetPagination = () => {
+    urlParams.delete('page')
+    setUrlParams(urlParams)
+  }
   
   return (
     <StandardLayout accountId={accountId}>
@@ -128,8 +149,11 @@ const UsersPage = () => {
         users={users}
         sortAttribute={sortAttribute}
         sortDirection={sortDirection}
+        currentPage={page ? Number(page) : 1}
+        totalEntries={totalEntries}
         handleChangeSort={handleChangeSort}
         resetSearchFilter={resetSearchFilter}
+        handleChangePagination={handleChangePagination}
       />
     </StandardLayout>
   )

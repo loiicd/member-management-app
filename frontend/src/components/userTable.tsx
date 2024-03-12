@@ -12,15 +12,18 @@ interface UserTableProps {
   users: User[]
   sortAttribute: string | null
   sortDirection: string | null
+  currentPage: number
+  totalEntries: number
   handleChangeSort: (attribute: SortAttribute) => void
   resetSearchFilter: () => void
+  handleChangePagination: (page: number) => void
 }
 
-const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, sortDirection, handleChangeSort, resetSearchFilter }) => {
+const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, sortDirection, currentPage, totalEntries, handleChangeSort, resetSearchFilter, handleChangePagination }) => {
   const navigate = useNavigate()
 
   return (
-    <div className='border rounded-md'>
+    <div className='border rounded-md mb-4'>
       <table className='w-full min-w-max table-auto text-left'>
         <thead className='bg-slate-50 text-slate-600 border-b'>
           <tr>
@@ -84,9 +87,27 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, so
             : null
           }
         </tbody>
-        <tfoot className='bg-slate-50 text-slate-600'>
+        <tfoot className='bg-slate-50'>
           <tr>
-            Pagination
+            <td colSpan={7}>
+              <div className='flex justify-end gap-2 p-4'>
+                {currentPage !== 1 ? 
+                  <span className='hover:bg-slate-200 rounded h-6 px-2 text-center cursor-pointer' onClick={() => handleChangePagination(currentPage - 1)}><FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} className='me-2' />Previous</span>
+                  : <span className='rounded h-6 px-2 text-center text-slate-500 cursor-not-allowed'><FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} className='me-2' />Previous</span>
+                }
+                {[...Array(currentPage - 1)].map((_, index) => (
+                  <span className='hover:bg-slate-200 rounded h-6 w-6 text-center cursor-pointer' onClick={() => handleChangePagination(index + 1)}>{index + 1}</span>  
+                ))}
+                <span className='rounded-md h-6 w-6 bg-blue-500 text-white text-center cursor-pointer'>{currentPage}</span>
+                {[...Array(Math.ceil(totalEntries / 5) - currentPage)].map((_, index) => (
+                  <span className='hover:bg-slate-200 rounded h-6 w-6 text-center cursor-pointer' onClick={() => handleChangePagination(currentPage + index + 1)}>{currentPage + index + 1}</span>  
+                ))}
+                {currentPage !== Math.ceil(totalEntries / 5) ? 
+                  <span className='hover:bg-slate-200 rounded h-6 px-2 text-center cursor-pointer' onClick={() => handleChangePagination(currentPage + 1)}>Next<FontAwesomeIcon icon={icon({ name: 'chevron-right', style: 'solid' })} className='ms-2' /></span>
+                  : <span className='rounded h-6 px-2 text-center text-slate-500 cursor-not-allowed' onClick={() => handleChangePagination(currentPage + 1)}>Next<FontAwesomeIcon icon={icon({ name: 'chevron-right', style: 'solid' })} className='ms-2' /></span>
+                }
+              </div>
+            </td>
           </tr>
         </tfoot>
       </table>

@@ -29,3 +29,5 @@ export const validateSortAttribute = (string: any): SortAttribute => SortAttribu
 
 const SortDirectionShema = z.enum(['ASC', 'DESC'])
 export const validateSortDirection = (string: any): SortDirection => SortDirectionShema.parse(string)
+
+export const validateNumber = (string: any): number => z.coerce.number().parse(string)

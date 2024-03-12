@@ -5,19 +5,20 @@ import bcryptjs from 'bcryptjs'
 import { Client } from 'pg'
 import { QualificationType } from '../models/qualificationShema'
 import { ApiResponse } from '../types/apiResponse'
+import { DataBaseResponse } from '../types/DataBaseResponse'
 
 export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
 export type SortDirection = 'ASC' | 'DESC'
 
 export class UserEntityService {
-  async getAll(accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[]): Promise<UserType[]> {
+  async getAll(accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[], page: number): Promise<DataBaseResponse> {
     const client = await connect()
     try {
       await client.query('BEGIN')
-      const users = await selectUsers(client, accountId, searchTerm, sortAttribute, sortDirection, filter)
-      for (const user of users) user.qualifications = await selectQualifications(client, user.id)
+      const result = await selectUsers(client, accountId, searchTerm, sortAttribute, sortDirection, filter, page)
+      for (const user of result.data) user.qualifications = await selectQualifications(client, user.id)
       await client.query('COMMIT')
-      return users
+      return result
     } catch(error) {
       await client.query('ROLLBACK')
       throw error
@@ -102,14 +103,10 @@ export class UserEntityService {
   }
 }
 
-const selectUsers = async (client: Client, accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[]): Promise<UserType[]> => {
-  console.log(filter)
+const selectUsers = async (client: Client, accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[], page: number): Promise<DataBaseResponse> => {
   let query: string
   if (searchTerm) {
-    console.log('Search Term:', searchTerm)
     const newSearchTerm = searchTerm.trim().split(' ').join(':* & ')
-    console.log('Typeof newSearchTerm:', typeof newSearchTerm)
-    console.log('New Search Term:', newSearchTerm)
     if (filter.length === 0) {
       query = `
         SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
@@ -118,7 +115,8 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
         ON id = user_account_rel.user_id
         WHERE to_tsvector('simple', firstname || ' ' || lastname || ' ' || coalesce(birthdate::text, '') || ' ' || coalesce(address, '') || ' ' || coalesce(email, '') || ' ' || coalesce(phone, '')) @@ to_tsquery('simple', $1)
         AND user_account_rel.account_id = $2
-        ORDER BY ${sortAttribute} ${sortDirection}`
+        ORDER BY ${sortAttribute} ${sortDirection}
+        LIMIT 5 OFFSET ${(page - 1) * 5}`
     } else {
       query = `
         SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
@@ -131,10 +129,36 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
         AND user_account_rel.account_id = $2
         AND user_qualification_rel.account_id = $2
         AND qualification_id IN (${filter.map((filter) => `'${filter}'`)})
-        ORDER BY ${sortAttribute} ${sortDirection}`
+        ORDER BY ${sortAttribute} ${sortDirection}
+        LIMIT 5 OFFSET ${(page - 1) * 5}`
     }
     const result = await client.query(query, [newSearchTerm + ':*', accountId])
-    return result.rows
+
+    let query_totalEntries: string
+    if (filter.length === 0) {
+      query_totalEntries = `
+      SELECT count(*) as total
+      FROM public."user"
+      LEFT JOIN public."user_account_rel"
+      ON id = user_account_rel.user_id
+      WHERE to_tsvector('simple', firstname || ' ' || lastname || ' ' || coalesce(birthdate::text, '') || ' ' || coalesce(address, '') || ' ' || coalesce(email, '') || ' ' || coalesce(phone, '')) @@ to_tsquery('simple', $1)
+      AND user_account_rel.account_id = $2`
+    } else {
+      query_totalEntries = `
+      SELECT count(*) as total
+      FROM public."user"
+      LEFT JOIN public."user_account_rel"
+      ON id = user_account_rel.user_id
+      LEFT JOIN public."user_qualification_rel"
+      ON id = user_qualification_rel.user_id
+      WHERE to_tsvector('simple', firstname || ' ' || lastname || ' ' || coalesce(birthdate::text, '') || ' ' || coalesce(address, '') || ' ' || coalesce(email, '') || ' ' || coalesce(phone, '')) @@ to_tsquery('simple', $1)
+      AND user_account_rel.account_id = $2
+      AND user_qualification_rel.account_id = $2
+      AND qualification_id IN (${filter.map((filter) => `'${filter}'`)})`
+    }
+
+    const totalEntries = await client.query(query_totalEntries, [newSearchTerm + ':*', accountId])
+    return { page: page, total: totalEntries.rows[0].total, data: result.rows}
   } else {
     if (filter.length === 0) {
       query = `
@@ -143,7 +167,8 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
         LEFT JOIN public."user_account_rel"
         ON id = user_id
         WHERE user_account_rel.account_id = $1
-        ORDER BY ${sortAttribute} ${sortDirection}`
+        ORDER BY ${sortAttribute} ${sortDirection}
+        LIMIT 5 OFFSET ${(page - 1) * 5}`
     } else {
       query = `
         SELECT id, firstname, lastname, birthdate, address, email, phone, webaccess
@@ -155,13 +180,34 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
         WHERE user_account_rel.account_id = $1
         AND user_qualification_rel.account_id = $1
         AND qualification_id IN (${filter.map((filter) => `'${filter}'`)})
-        ORDER BY ${sortAttribute} ${sortDirection}`
+        ORDER BY ${sortAttribute} ${sortDirection}
+        LIMIT 5 OFFSET ${(page - 1) * 5}`
     }
-    console.log(query)
-    console.log('Filter Length', filter.length)
     const result = await client.query(query, [accountId])
-    console.log(result.rows)
-    return result.rows
+    let query_totalEntries: string
+    if (filter.length === 0) {
+      query_totalEntries = `
+        SELECT count(*) as total
+        FROM public."user"
+        LEFT JOIN public."user_account_rel"
+        ON id = user_id
+        WHERE user_account_rel.account_id = $1`
+    } else {
+      query_totalEntries = `
+        SELECT count(*) as total
+        FROM public."user"
+        LEFT JOIN public."user_account_rel"
+        ON id = user_id
+        LEFT JOIN public."user_qualification_rel"
+        ON id = user_qualification_rel.user_id
+        WHERE user_account_rel.account_id = $1
+        AND user_qualification_rel.account_id = $1
+        AND qualification_id IN (${filter.map((filter) => `'${filter}'`)})`
+    }
+
+    const totalEntries = await client.query(query_totalEntries, [accountId])
+
+    return { page: page, total: totalEntries.rows[0].total, data: result.rows}
   }
 }
 

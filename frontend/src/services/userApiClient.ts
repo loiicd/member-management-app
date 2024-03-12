@@ -1,3 +1,4 @@
+import { UserApiResponse } from '../types/apiResponse'
 import { User, UserFormData } from '../types/user'
 import { BaseApiClient } from './baseApiClient'
 
@@ -8,12 +9,15 @@ export class UserApiClient extends BaseApiClient {
     return { ...response.data, birthdate: new Date(response.data.birthdate) }
   }
 
-  public async getUsers(searchTerm: string | null, sortAttribute: string | null, sortDirection: string | null, filter: string[] | null): Promise<User[]> {
+  public async getUsers(searchTerm: string | null, sortAttribute: string | null, sortDirection: string | null, filter: string[] | null, page: string | null): Promise<UserApiResponse> {
     if (!sortAttribute) sortAttribute = 'firstname'
     if (!sortDirection) sortDirection = 'ASC'
     if (!filter) filter = []
-    const response = await this.axiosInstance.get('user', { params: { searchTerm, sortAttribute, sortDirection, filter } })
-    return response.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
+    if (!page) page = '1'
+    const response = await this.axiosInstance.get('user', { params: { searchTerm, sortAttribute, sortDirection, filter, page } })
+    // console.log(response.data)
+    const data = response.data.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
+    return { ...response.data, data }
   }
 
   public async createUser(userFormData: UserFormData): Promise<any> {
