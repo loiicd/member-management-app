@@ -22,8 +22,6 @@ interface UserTableProps {
 const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, sortDirection, currentPage, totalEntries, handleChangeSort, resetSearchFilter, handleChangePagination }) => {
   const navigate = useNavigate()
 
-  console.log(users)
-
   return (
     <div className='border rounded-md mb-4'>
       <table className='w-full min-w-max table-auto text-left'>

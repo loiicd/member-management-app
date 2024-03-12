@@ -18,12 +18,18 @@ import Input from '../components/core/Input'
 export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
 export type SortDirection = 'ASC' | 'DESC'
 
+const urlParamKeys = ['sortAttribute', 'sortDirection', 'searchFilter', 'searchTerm', 'page'] as const
+export type UrlParamKey = typeof urlParamKeys[number]
+
 const UsersPage = () => {
   const { accountId } = useParams()
+
+  const authParams = useAuthUser()()
+  const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
+
   const [users, setUsers] = useState<User[]>([])
   const [qualifications, setQualifications] = useState<Qualification[]>([])
   const [totalEntries, setTotalEntries] = useState<number>(0)
-
   const [urlParams, setUrlParams] = useSearchParams()
 
   let sortAttribute = urlParams.get('sortAttribute')
@@ -31,43 +37,6 @@ const UsersPage = () => {
   let searchFilter = urlParams.get('searchFilter')
   const searchTerm = urlParams.get('searchTerm')
   const page = urlParams.get('page')
-
-  const toogleSearchFilter = (attribute: string) => {
-    if (searchFilter && searchFilter.includes(attribute)) {
-      const list = searchFilter.split('%').filter(e => e !== attribute)
-      urlParams.set('searchFilter', list.join('%'))
-      setUrlParams(urlParams)
-    } else if (searchFilter && !searchFilter.includes(attribute)) {
-      const list = searchFilter.split('%')
-      list.push(attribute)
-      urlParams.set('searchFilter', list.join('%'))
-      setUrlParams(urlParams)
-    } else {
-      urlParams.set('searchFilter', attribute)
-      setUrlParams(urlParams)
-    }
-    resetPagination()
-  }
-
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    urlParams.set('searchTerm', event.target.value)
-    setUrlParams(urlParams)
-    resetPagination()
-  }
-
-  const resetSearchFilter = () => {
-    urlParams.delete('searchFilter')
-    setUrlParams(urlParams)
-    resetPagination()
-  }
-
-  const handleChangeTotalEntries = (number: number) => {
-    setTotalEntries(number)
-  }
-
-  const authParams = useAuthUser()()
-
-  const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
 
   useEffect(() => {
     if (!accountId || !authParams) return
@@ -89,33 +58,49 @@ const UsersPage = () => {
   if (!accountId) throw new Error('Account ID is required')
   if (!authParams) throw new Error('Auth Params is required')
 
-  const handleChangeSort = (attribute: SortAttribute) => {
-    if (attribute === sortAttribute) {
-      if (sortDirection === 'ASC') {
-        urlParams.set('sortDirection', 'DESC')
-        setUrlParams(urlParams)
-      } else {
-        urlParams.set('sortDirection', 'ASC')
-        setUrlParams(urlParams)
-      }
+  const toggleSearchFilter = (attribute: string) => {
+    const list = searchFilter ? searchFilter.split('%') : []
+    const index = list.indexOf(attribute)
+    if (index !== -1) {
+      list.splice(index, 1)
     } else {
-      urlParams.set('sortAttribute', attribute)
-      urlParams.set('sortDirection', 'ASC')
-      setUrlParams(urlParams)
+      list.push(attribute)
+    }
+    updateUrlParameter('searchFilter', list.join('%'))
+    updateUrlParameter('page')
+  }
+
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    updateUrlParameter('searchTerm', event.target.value)
+    updateUrlParameter('page')
+  }
+
+  const resetSearchFilter = () => {
+    updateUrlParameter('searchFilter')
+    updateUrlParameter('page')
+  }
+
+  const handleChangeSort = (attribute: SortAttribute) => {
+    const newSortDirection = sortDirection === 'ASC' ? 'DESC' : 'ASC'
+    if (attribute === sortAttribute) {
+      updateUrlParameter('sortDirection', newSortDirection)
+    } else {
+      updateUrlParameter('sortAttribute', attribute)
+      updateUrlParameter('sortDirection', 'ASC')
     }
   }
 
   const handleChangePagination = (page: number) => {
-    urlParams.set('page', page.toString())
+    updateUrlParameter('page', page.toString())
+  }
+
+  const updateUrlParameter = (key: UrlParamKey, value?: string): void => {
+    if (value) urlParams.set(key, value)
+    if (!value) urlParams.delete(key)
     setUrlParams(urlParams)
   }
 
-  const resetPagination = () => {
-    urlParams.delete('page')
-    setUrlParams(urlParams)
-  }
-  
-  console.log('Users:', users)
+  const handleChangeTotalEntries = (number: number) => setTotalEntries(number)
 
   return (
     <StandardLayout accountId={accountId}>
@@ -130,7 +115,7 @@ const UsersPage = () => {
           <Dropwdown text='Qualifikation' counter={searchFilter ? searchFilter.split('%').length : undefined}>
             <ul className='py-2'>
               {qualifications.map((qualification) => (
-                <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer' onClick={() => toogleSearchFilter(qualification.id)}>
+                <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer' onClick={() => toggleSearchFilter(qualification.id)}>
                   {searchFilter?.includes(qualification.id) ? 
                     <>
                       <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='w-4' />
