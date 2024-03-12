@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom'
-import Typography from '../components/base/typography'
 import StandardLayout from '../layout/standard'
 import { useEffect, useState } from 'react'
 import { getAccount } from '../services/account'
@@ -10,13 +9,12 @@ const DashboardPage = () => {
   const { accountId } = useParams()
   const [account, setAccount] = useState<Account | null>(null)
 
+  if (!accountId) throw new Error('Account ID is required')
+
   useEffect(() => {
-    if (!accountId) return
     getAccount(accountId)
       .then(data => setAccount(data))
   }, [accountId])
-
-  if (!accountId) throw new Error('Account ID is required')
   
   return (
     <StandardLayout accountId={accountId}>

@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
 import StandardLayout from '../layout/standard'
 import { User } from '../types/user'
 import { useParams, useSearchParams } from 'react-router-dom'
@@ -15,15 +15,17 @@ import { Qualification } from '../types/qualification'
 import UserTable from '../components/userTable'
 import Input from '../components/core/Input'
 
-export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
-export type SortDirection = 'ASC' | 'DESC'
+const sortAttributes = ['firstname', 'lastname',  'birthdate', 'address', 'webaccess'] as const
+export type SortAttribute = typeof sortAttributes[number]
+
+const sortDirections = ['ASC', 'DESC'] as const
+export type SortDirection = typeof sortDirections[number]
 
 const urlParamKeys = ['sortAttribute', 'sortDirection', 'searchFilter', 'searchTerm', 'page'] as const
 export type UrlParamKey = typeof urlParamKeys[number]
 
-const UsersPage = () => {
+const UsersPage: FunctionComponent = () => {
   const { accountId } = useParams()
-
   const authParams = useAuthUser()()
   const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
 
@@ -32,21 +34,22 @@ const UsersPage = () => {
   const [totalEntries, setTotalEntries] = useState<number>(0)
   const [urlParams, setUrlParams] = useSearchParams()
 
-  let sortAttribute = urlParams.get('sortAttribute')
-  let sortDirection = urlParams.get('sortDirection')
-  let searchFilter = urlParams.get('searchFilter')
+  const sortAttribute = urlParams.get('sortAttribute')
+  const sortDirection = urlParams.get('sortDirection')
+  const searchFilter = urlParams.get('searchFilter')
   const searchTerm = urlParams.get('searchTerm')
   const page = urlParams.get('page')
 
+  if (!accountId) throw new Error('Account ID is required')
+  if (!authParams) throw new Error('Auth Params is required')
+
   useEffect(() => {
-    if (!accountId || !authParams) return
     getqualifications(accountId)
       .then((data) => setQualifications(data))
   }, [accountId, authParams])
 
   useEffect(() => {
-    if (!accountId || !authParams) return
-    userApiClient.getUsers(urlParams.get('searchTerm'), sortAttribute, sortDirection, urlParams.getAll('searchFilter'), urlParams.get('page'))
+    userApiClient.getUsers(searchTerm, sortAttribute, sortDirection, urlParams.getAll('searchFilter'), urlParams.get('page'))
       .then(data => {
         setUsers(data.data)
         handleChangeTotalEntries(data.total)
@@ -55,10 +58,7 @@ const UsersPage = () => {
       })
   }, [accountId, authParams, urlParams])
 
-  if (!accountId) throw new Error('Account ID is required')
-  if (!authParams) throw new Error('Auth Params is required')
-
-  const toggleSearchFilter = (attribute: string) => {
+  const toggleSearchFilter = (attribute: string): void => {
     const list = searchFilter ? searchFilter.split('%') : []
     const index = list.indexOf(attribute)
     if (index !== -1) {
@@ -70,17 +70,17 @@ const UsersPage = () => {
     updateUrlParameter('page')
   }
 
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
     updateUrlParameter('searchTerm', event.target.value)
     updateUrlParameter('page')
   }
 
-  const resetSearchFilter = () => {
+  const resetSearchFilter = (): void => {
     updateUrlParameter('searchFilter')
     updateUrlParameter('page')
   }
 
-  const handleChangeSort = (attribute: SortAttribute) => {
+  const handleChangeSort = (attribute: SortAttribute): void => {
     const newSortDirection = sortDirection === 'ASC' ? 'DESC' : 'ASC'
     if (attribute === sortAttribute) {
       updateUrlParameter('sortDirection', newSortDirection)
@@ -90,7 +90,7 @@ const UsersPage = () => {
     }
   }
 
-  const handleChangePagination = (page: number) => {
+  const handleChangePagination = (page: number): void => {
     updateUrlParameter('page', page.toString())
   }
 
@@ -100,7 +100,7 @@ const UsersPage = () => {
     setUrlParams(urlParams)
   }
 
-  const handleChangeTotalEntries = (number: number) => setTotalEntries(number)
+  const handleChangeTotalEntries = (number: number): void => setTotalEntries(number)
 
   return (
     <StandardLayout accountId={accountId}>
@@ -121,8 +121,7 @@ const UsersPage = () => {
                       <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='w-4' />
                       <span className='ms-2'>{qualification.name}</span>
                     </>
-                    :
-                    <span className='ms-6'>{qualification.name}</span>
+                    : <span className='ms-6'>{qualification.name}</span>
                   }
                 </li>
               ))}

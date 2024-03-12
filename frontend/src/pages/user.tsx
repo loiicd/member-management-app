@@ -16,39 +16,31 @@ import { UserApiClient } from '../services/userApiClient'
 const UserPage = () => {
   const navigate = useNavigate()
   const { accountId, id } = useParams()
-  const [user, setUser] = useState<User | null>(null)
-
-  const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
-
-  const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false)
-
   const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
 
-  useEffect(() => {
-    if (id) {
-      getUser(id)
-        .then((data) => setUser(data))
-    }
-  }, [id])
-
-  const handleDeleteClick = () => {
-    setOpenApproveDialog(true)
-  }
-
-  const handleDeleteApprove = () => {
-    if (id) {
-      setIsDeletingUser(true)
-      userApiClient.deleteUser(id)
-        .then(() => {
-          navigate('/44484414-a4db-4717-8507-26f5296409dd/users')
-          setOpenApproveDialog(false)
-        }) //  HardCoded URL ACCOUNT
-        .catch((error) => alert(error))
-        .finally(() => setIsDeletingUser(false))
-    }
-  }
+  const [user, setUser] = useState<User | null>(null)
+  const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
+  const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false)
 
   if (!accountId) throw new Error('Account ID is required')
+  if (!id) throw new Error('User ID is required')
+
+  useEffect(() => {
+    getUser(id).then((data) => setUser(data))
+  }, [id])
+
+  const handleDeleteClick = () => setOpenApproveDialog(true)
+
+  const handleDeleteApprove = () => {
+    setIsDeletingUser(true)
+    userApiClient.deleteUser(id)
+      .then(() => {
+        navigate('/44484414-a4db-4717-8507-26f5296409dd/users')
+        setOpenApproveDialog(false)
+      }) //  HardCoded URL ACCOUNT
+      .catch((error) => alert(error))
+      .finally(() => setIsDeletingUser(false))
+  }
 
   return (
     <StandardLayout accountId={accountId}>
