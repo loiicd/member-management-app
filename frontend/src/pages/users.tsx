@@ -49,7 +49,7 @@ const UsersPage: FunctionComponent = () => {
   }, [accountId, authParams])
 
   useEffect(() => {
-    userApiClient.getUsers(searchTerm, sortAttribute, sortDirection, urlParams.getAll('searchFilter'), urlParams.get('page'))
+    userApiClient.getUsers(searchTerm, sortAttribute, sortDirection, urlParams.get('searchFilter'), urlParams.get('page'))
       .then(data => {
         setUsers(data.data)
         handleChangeTotalEntries(data.total)

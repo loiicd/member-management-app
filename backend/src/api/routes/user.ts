@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
-import { UserEntityService } from '../../database/userEntityService'
+import { SortAttribute, SortDirection, UserEntityService } from '../../database/userEntityService'
 import { tryCatchMiddleware } from '../tryCatchMiddleware'
-import { validateNumber, validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateUUIDs, validateUser, validateUserFormData } from '../validate'
+import { validateFilter, validatePageNumber, validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateUUIDs, validateUser, validateUserFormData } from '../validate'
 
 const router = express.Router()
 const userEntityService = new UserEntityService
@@ -15,20 +15,8 @@ router.get('/:id', tryCatchMiddleware(async (req: Request, res: Response) => {
 
 // Get all users
 router.get('/', tryCatchMiddleware(async (req: Request, res: Response) => {
-  const accountId = validateUUID(req.headers.accountid)
-  const searchTerm = validateSearchTerm(req.query.searchTerm)
-  const sortAttribute = validateSortAttribute(req.query.sortAttribute)
-  const sortDirection = validateSortDirection(req.query.sortDirection)
-  const page = validateNumber(req.query.page)
-  let filter = req.query.filter as string[]
-  let newList: string[]
-  if (!filter) {
-    newList = []
-  } else {
-    const list = filter[0].split('%')
-    newList = list.filter((item) => item != '')
-  }
-  const users = await userEntityService.getAll(accountId, searchTerm, sortAttribute, sortDirection, newList, page)
+  const data = validateReqData(req)
+  const users = await userEntityService.getAll(data.accountId, data.searchTerm, data.sortAttribute, data.sortDirection, data.filter, data.page)
   res.status(200).send(users)
 }))
 
@@ -70,3 +58,22 @@ router.get('/accounts/:id', tryCatchMiddleware(async (req: Request, res: Respons
 }))
 
 export default router
+
+interface RequestData {
+  accountId: string 
+  searchTerm: string
+  sortAttribute: SortAttribute
+  sortDirection: SortDirection
+  page: number
+  filter: string[]
+}
+
+const validateReqData = (req: Request): RequestData => {
+  const accountId = validateUUID(req.headers.accountid)
+  const searchTerm = validateSearchTerm(req.query.searchTerm)
+  const sortAttribute = validateSortAttribute(req.query.sortAttribute)
+  const sortDirection = validateSortDirection(req.query.sortDirection)
+  const page = validatePageNumber(req.query.page)
+  const filter = validateFilter(req.query.filter)
+  return { accountId, searchTerm, sortAttribute, sortDirection, page, filter }
+}

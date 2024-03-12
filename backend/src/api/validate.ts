@@ -24,10 +24,19 @@ export const validateSearchTerm = (string: any): string | undefined => SearchTer
 const StringShema = z.string()
 export const validateString = (string: any): string => StringShema.parse(string)
 
-const SortAttributeShema = z.enum(['firstname', 'lastname', 'birthdate', 'address', 'webaccess'])
+const SortAttributeShema = z.enum(['firstname', 'lastname', 'birthdate', 'address', 'webaccess']).default('firstname')
 export const validateSortAttribute = (string: any): SortAttribute => SortAttributeShema.parse(string)
 
-const SortDirectionShema = z.enum(['ASC', 'DESC'])
+const SortDirectionShema = z.enum(['ASC', 'DESC']).default('ASC')
 export const validateSortDirection = (string: any): SortDirection => SortDirectionShema.parse(string)
 
-export const validateNumber = (string: any): number => z.coerce.number().parse(string)
+export const validatePageNumber = (string: any) => z.coerce.number().default(1).parse(string)
+
+const FilterShema = z.string().transform((val) => val.split('%'))
+export const validateFilter = (string: any): string[] => {
+  try {
+    return FilterShema.parse(string)
+  } catch {
+    return []
+  }
+}

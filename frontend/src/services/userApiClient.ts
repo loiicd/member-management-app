@@ -9,14 +9,9 @@ export class UserApiClient extends BaseApiClient {
     return { ...response.data, birthdate: new Date(response.data.birthdate) }
   }
 
-  public async getUsers(searchTerm: string | null, sortAttribute: string | null, sortDirection: string | null, filter: string[] | null, page: string | null): Promise<UserApiResponse> {
-    if (!sortAttribute) sortAttribute = 'firstname'
-    if (!sortDirection) sortDirection = 'ASC'
-    if (!filter) filter = []
-    if (!page) page = '1'
+  public async getUsers(searchTerm: string | null, sortAttribute: string | null = 'firstname', sortDirection: string | null = 'ASC', filter: string | null = '', page: string | null = '1'): Promise<UserApiResponse> {
     const response = await this.axiosInstance.get('user', { params: { searchTerm, sortAttribute, sortDirection, filter, page } })
     const data = response.data.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
-    console.log('Response.Data:', response.data)
     return { ...response.data, data }
   }
 
