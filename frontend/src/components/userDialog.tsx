@@ -100,27 +100,27 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
         <div className='grid gap-4 mb-4 sm:grid-cols-2'>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vorname</label>
-            <input type="text" value={formData.firstname} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('firstname')} />
+            <input type="text" value={formData.firstname} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('firstname')} />
           </div>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nachname</label>
-            <input type="text" value={formData.lastname} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('lastname')} />
+            <input type="text" value={formData.lastname} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('lastname')} />
           </div>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Geburtsdatum</label>
-            <input type="date" value={formData.birthdate?.toString()} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('birthdate')} />
+            <input type="date" value={formData.birthdate?.toString()} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('birthdate')} />
           </div>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adresse</label>
-            <input type="text" value={formData.address} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('address')} />
+            <input type="text" value={formData.address} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('address')} />
           </div>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">E-Mail</label>
-            <input type="text" value={formData.email} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('email')} />
+            <input type="text" value={formData.email} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('email')} />
           </div>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Telefon</label>
-            <input type="text" value={formData.phone} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('phone')} />
+            <input type="text" value={formData.phone} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" onChange={handleChange('phone')} />
           </div>
           <label className="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" checked={formData.webaccess} className="sr-only peer" onChange={handleWebaccessChange('webaccess')} />

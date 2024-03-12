@@ -22,13 +22,14 @@ const UsersPage = () => {
   const { accountId } = useParams()
   const [users, setUsers] = useState<User[]>([])
   const [qualifications, setQualifications] = useState<Qualification[]>([])
-  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
+  // const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
 
   const [urlParams, setUrlParams] = useSearchParams()
 
   let sortAttribute = urlParams.get('sortAttribute')
   let sortDirection = urlParams.get('sortDirection')
   let searchFilter = urlParams.get('searchFilter')
+  const searchTerm = urlParams.get('searchTerm')
 
   const toogleSearchFilter = (attribute: string) => {
     if (searchFilter && searchFilter.includes(attribute)) {
@@ -46,7 +47,10 @@ const UsersPage = () => {
     }
   }
 
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => setSearchTerm(event.target.value)
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    urlParams.set('searchTerm', event.target.value)
+    setUrlParams(urlParams)
+  }
 
   const resetSearchFilter = () => {
     urlParams.delete('searchFilter')
@@ -65,9 +69,9 @@ const UsersPage = () => {
 
   useEffect(() => {
     if (!accountId || !authParams) return
-    userApiClient.getUsers(searchTerm, sortAttribute, sortDirection, urlParams.getAll('searchFilter'))
+    userApiClient.getUsers(urlParams.get('searchTerm'), sortAttribute, sortDirection, urlParams.getAll('searchFilter'))
       .then(data => setUsers(data))
-  }, [accountId, searchTerm, authParams, urlParams])
+  }, [accountId, authParams, urlParams])
 
   if (!accountId) throw new Error('Account ID is required')
   if (!authParams) throw new Error('Auth Params is required')
@@ -98,7 +102,7 @@ const UsersPage = () => {
       <div className='py-4 flex justify-between'>
         <h2>Test</h2>
         <div className='flex justify-between gap-2'>
-          <Input placeholder='Suche ...' onChange={handleSearch} startIcon={icon({ name: 'search', style: 'solid' })} />
+          <Input placeholder='Suche ...' value={searchTerm != null ? searchTerm : undefined} onChange={handleSearch} startIcon={icon({ name: 'search', style: 'solid' })} />
           <UserDialog type='insert' accountId={accountId} />
           <Dropwdown text='Qualifikation' counter={searchFilter ? searchFilter.split('%').length : undefined}>
             <ul className='py-2'>

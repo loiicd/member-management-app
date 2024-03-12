@@ -8,7 +8,7 @@ export class UserApiClient extends BaseApiClient {
     return { ...response.data, birthdate: new Date(response.data.birthdate) }
   }
 
-  public async getUsers(searchTerm: string | undefined, sortAttribute: string | null, sortDirection: string | null, filter: string[] | null): Promise<User[]> {
+  public async getUsers(searchTerm: string | null, sortAttribute: string | null, sortDirection: string | null, filter: string[] | null): Promise<User[]> {
     if (!sortAttribute) sortAttribute = 'firstname'
     if (!sortDirection) sortDirection = 'ASC'
     if (!filter) filter = []
