@@ -36,8 +36,6 @@ const LoginPage = () => {
     try {
       const response = await login(email, password)
 
-      console.log(response.status)
-
       switch (response.status) {
         case 200:
           signIn({

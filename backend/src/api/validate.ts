@@ -32,11 +32,7 @@ export const validateSortDirection = (string: any): SortDirection => SortDirecti
 
 export const validatePageNumber = (string: any) => z.coerce.number().default(1).parse(string)
 
-const FilterShema = z.string().transform((val) => val.split('%'))
-export const validateFilter = (string: any): string[] => {
-  try {
-    return FilterShema.parse(string)
-  } catch {
-    return []
-  }
-}
+const FilterShema = z.string().transform((val) => val.split('%')).catch([])
+export const validateFilter = (string: any): string[] => FilterShema.parse(string)
+
+export const validateEmail = (email: any): string => z.string().email({message: 'Es muss eine gültige E-Mail Adresse sein!'}).parse(email)

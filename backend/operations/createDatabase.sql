@@ -12,10 +12,12 @@ CREATE TABLE "user" (
   lastname text NOT NULL,
   birthdate date,
   address text,
-  email text UNIQUE,
+  email text,
   phone text,
+  login_email text UNIQUE,
   password text,
   passwordsalt text, 
+  is_online_user boolean NOT NULL,
   webaccess boolean NOT NULL,
   searchvector tsvector,
   PRIMARY KEY (id)

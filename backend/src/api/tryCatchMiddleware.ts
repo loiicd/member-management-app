@@ -8,10 +8,11 @@ export const tryCatchMiddleware = (handler: (req: Request, res: Response, next: 
     } catch (error) {
       if (error instanceof ZodError) {
         console.error(error)
-        res.status(400).send('Zod Error')
+        res.statusMessage = error.issues[0].message
+        res.status(403).send({ errorType: 'Validation Error', message: error.issues[0].message })
       } else {
         console.error(error)
-        res.status(500).send('Internal Server Error')
+        res.status(500).send({ errorType: 'Internal Server Error', message: 'Internal Server Error' })
       }
     }
   }

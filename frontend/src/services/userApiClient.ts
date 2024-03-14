@@ -26,4 +26,8 @@ export class UserApiClient extends BaseApiClient {
   public async deleteUser(userId: string): Promise<void> {
     await this.axiosInstance.delete(`user/${userId}`)
   }
+
+  public async checkEMail(email: string): Promise<void> {
+    await this.axiosInstance.get(`user/email/${email}`)
+  }
 }

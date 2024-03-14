@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import { SortAttribute, SortDirection, UserEntityService } from '../../database/userEntityService'
 import { tryCatchMiddleware } from '../tryCatchMiddleware'
-import { validateFilter, validatePageNumber, validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateUUIDs, validateUser, validateUserFormData } from '../validate'
+import { validateFilter, validatePageNumber, validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateEmail, validateUser, validateUserFormData } from '../validate'
 
 const router = express.Router()
 const userEntityService = new UserEntityService
@@ -55,6 +55,19 @@ router.get('/accounts/:id', tryCatchMiddleware(async (req: Request, res: Respons
   const id = validateUUID(req.params.id)
   const accounts = await userEntityService.getAccounts(id)
   res.status(200).send(accounts)
+}))
+
+// Check E-Mail
+router.get('/email/:email', tryCatchMiddleware(async (req: Request, res: Response) => {
+  const email = validateEmail(req.params.email)
+  const emailExists = await userEntityService.checkEmail(email)
+
+  if (emailExists) {
+    res.statusMessage = 'E-Mail bereits vergeben!'
+    res.status(403).send('E-Mail bereits vergeben!')
+  } else {
+    res.status(200).send('success')
+  }
 }))
 
 export default router

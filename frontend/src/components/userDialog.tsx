@@ -3,6 +3,10 @@ import Modal from './base/modal'
 import { getUser, updateUser } from '../services/user'
 import { UserApiClient } from '../services/userApiClient'
 import Button from './core/Button'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
+import Input from './core/Input'
+import { AxiosError } from 'axios'
 
 type Test = {
   firstname?: string,
@@ -26,6 +30,8 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
   const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
 
   const [formData, setFormData] = useState<Test>({firstname: undefined, lastname: undefined, birthdate: undefined, address: undefined, email: undefined, phone: undefined, webaccess: false})
+
+  const [userType, setUserType] = useState<'SELF' | 'ORGANISATION'>('SELF')
 
   const [firstnameInputError, setFirstnameInputError] = useState<boolean>(false)
   const [lastnameInputError, setLastnameInputError] = useState<boolean>(false)
@@ -93,10 +99,57 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
     }
   }
 
+  const [emailStatus, setEmailStatus] = useState<'initial' | 'loading' | 'success' | 'error'>('initial')
+  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
+
+  const handleCheckEmail = (event: ChangeEvent<HTMLInputElement>) => {
+    if (typingTimeout) {
+      clearTimeout(typingTimeout)
+    }
+
+    const timeout = setTimeout(() => {
+      setEmailStatus('loading')
+      if (event.target.value) {
+        userApiClient.checkEMail(event.target.value)
+          .then(() => {
+            setErrorMessage(undefined)
+            setEmailStatus('success')
+          })
+          .catch((error: AxiosError) => {
+            setErrorMessage(error.response?.statusText)
+            setEmailStatus('error')
+          })
+      } else {
+        setErrorMessage(undefined)
+        setEmailStatus('initial')
+      }
+    }, 500)
+    setTypingTimeout(timeout)
+  }
+
   return (
     <>
       <Button onClick={handleOpen}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</Button>
       <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert User' : 'Update User'}>
+        <div className='py-6 grid grid-cols-2 gap-4'>
+          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${userType === 'SELF' ? 'border-blue-500' : null}`} onClick={() => setUserType('SELF')}>
+            <div className='text-center'>
+              <FontAwesomeIcon icon={icon({ name: 'user-tie', style: 'solid' })} className='rounded-full h-4 w-4 bg-lime-200 p-4' />
+            </div>
+            <div className='text-center'>
+              Online User
+            </div>
+          </div>
+          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${userType === 'ORGANISATION' ? 'border-blue-500' : null}`} onClick={() => setUserType('ORGANISATION')}>
+            <div className='text-center'>
+            <FontAwesomeIcon icon={icon({ name: 'user-secret', style: 'solid' })} className='rounded-full h-4 w-4 bg-blue-200 p-4' />
+            </div>
+            <div className='text-center'>
+              Organisation User
+            </div>
+          </div>
+        </div>
         <div className='grid gap-4 mb-4 sm:grid-cols-2'>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vorname</label>
@@ -127,6 +180,24 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
             <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Online Zugang</span>
           </label>
+        </div>
+        <div className='border-b my-4' />
+        <div className='grid gap-4 mb-4 sm:grid-cols-2'>
+          <div>
+            <label className={`block mb-2 text-sm font-medium dark:text-white ${userType === 'SELF' ? 'text-gray-900' : 'text-gray-400'}`}>Account E-Mail</label>
+            <Input 
+              spinningEndIcon={emailStatus === 'loading' ? true : false} 
+              endIcon={emailStatus === 'loading' ? icon({ name: 'spinner', style: 'solid' }) : emailStatus === 'success' ? icon({ name: 'check', style: 'solid' }) : emailStatus === 'error' ? icon({ name: 'circle-exclamation', style: 'solid' }) : icon({ name: 'user', style: 'solid' })}
+              error={emailStatus === 'error' ? true : false}
+              errorMessage={errorMessage ? errorMessage : undefined}
+              onChange={handleCheckEmail} 
+              disabled={userType === 'SELF' ? false : true}
+            />
+          </div>
+          <div>
+            <label className={`block mb-2 text-sm font-medium dark:text-white ${userType === 'SELF' ? 'text-gray-900' : 'text-gray-400'}`}>Passwort</label>
+            <input type='password' disabled={userType === 'SELF' ? false : true} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+          </div>
         </div>
         <div className="flex items-center space-x-4">
           <button type="button" className="text-green-600 inline-flex items-center hover:text-white border border-green-600 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-900" onClick={handleSave}>
