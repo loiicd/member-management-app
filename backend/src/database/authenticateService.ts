@@ -13,9 +13,9 @@ export class AuthenticateService {
   async login(email: string, password: string): Promise<LoginResponse> {
     const client = await connect()
     const query = `
-      SELECT id, email, password, passwordsalt
+      SELECT id, login_email, password, passwordsalt
       FROM public."user" 
-      WHERE email = '${email}'`
+      WHERE login_email = '${email}'`
     const result = await client.query(query)
     const user = result.rows[0]
     const userFound = !!user

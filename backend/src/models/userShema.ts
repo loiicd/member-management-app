@@ -9,6 +9,7 @@ export const UserShema = z.object({
   address:        z.string().optional().nullable(),
   email:          z.string().optional().nullable(),
   phone:          z.string().optional().nullable(),
+  isOnlineUser:   z.boolean(),
   webaccess:      z.boolean(),
   qualifications: z.array(QualificationShema),
 })
@@ -21,6 +22,7 @@ export const UserFormDataShema = z.object({
   address:        z.string().optional().nullable(),
   email:          z.string().optional().nullable(),
   phone:          z.string().optional().nullable(),
+  isOnlineUser:   z.boolean(),
   webaccess:      z.boolean(),
 })
 export type UserFormDataType = z.infer<typeof UserFormDataShema>

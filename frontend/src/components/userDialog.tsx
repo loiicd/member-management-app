@@ -15,6 +15,7 @@ type Test = {
   address?: string,
   email?: string,
   phone?: string,
+  isOnlineUser: boolean
   webaccess: boolean
 }
 
@@ -29,9 +30,16 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
 
   const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
 
-  const [formData, setFormData] = useState<Test>({firstname: undefined, lastname: undefined, birthdate: undefined, address: undefined, email: undefined, phone: undefined, webaccess: false})
-
-  const [userType, setUserType] = useState<'SELF' | 'ORGANISATION'>('SELF')
+  const [formData, setFormData] = useState<Test>({
+    firstname: undefined, 
+    lastname: undefined, 
+    birthdate: undefined, 
+    address: undefined, 
+    email: undefined, 
+    phone: undefined, 
+    isOnlineUser: true, 
+    webaccess: false
+  })
 
   const [firstnameInputError, setFirstnameInputError] = useState<boolean>(false)
   const [lastnameInputError, setLastnameInputError] = useState<boolean>(false)
@@ -54,6 +62,13 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
     setFormData({
       ...formData,
       [field]: event.target.value,
+    })
+  }
+
+  const handleChangeIsOnlineUser = (isOnlineUser: boolean) => {
+    setFormData({
+      ...formData,
+      isOnlineUser: isOnlineUser,
     })
   }
 
@@ -133,20 +148,20 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
       <Button onClick={handleOpen}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</Button>
       <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert User' : 'Update User'}>
         <div className='py-6 grid grid-cols-2 gap-4'>
-          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${userType === 'SELF' ? 'border-blue-500' : null}`} onClick={() => setUserType('SELF')}>
+          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(true)}>
             <div className='text-center'>
-              <FontAwesomeIcon icon={icon({ name: 'user-tie', style: 'solid' })} className='rounded-full h-4 w-4 bg-lime-200 p-4' />
+              <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} className='rounded-full h-4 w-4 bg-lime-200 p-4' />
             </div>
             <div className='text-center'>
               Online User
             </div>
           </div>
-          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${userType === 'ORGANISATION' ? 'border-blue-500' : null}`} onClick={() => setUserType('ORGANISATION')}>
+          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${!formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(false)}>
             <div className='text-center'>
-            <FontAwesomeIcon icon={icon({ name: 'user-secret', style: 'solid' })} className='rounded-full h-4 w-4 bg-blue-200 p-4' />
+            <FontAwesomeIcon icon={icon({ name: 'user-lock', style: 'solid' })} className='rounded-full h-4 w-4 bg-blue-200 p-4' />
             </div>
             <div className='text-center'>
-              Organisation User
+              Offline User
             </div>
           </div>
         </div>
@@ -181,22 +196,23 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
             <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Online Zugang</span>
           </label>
         </div>
-        <div className='border-b my-4' />
+        <h2 className='pt-4'>Authentifizierung</h2>
+        <div className='border-b mb-4 mt-2' />
         <div className='grid gap-4 mb-4 sm:grid-cols-2'>
-          <div>
-            <label className={`block mb-2 text-sm font-medium dark:text-white ${userType === 'SELF' ? 'text-gray-900' : 'text-gray-400'}`}>Account E-Mail</label>
+          <div className={`${!formData.isOnlineUser ? 'blur-sm' : null}`}>
+            <label className={`block mb-2 text-sm font-medium dark:text-white ${formData.isOnlineUser ? 'text-gray-900' : 'text-gray-400'}`}>Account E-Mail</label>
             <Input 
               spinningEndIcon={emailStatus === 'loading' ? true : false} 
               endIcon={emailStatus === 'loading' ? icon({ name: 'spinner', style: 'solid' }) : emailStatus === 'success' ? icon({ name: 'check', style: 'solid' }) : emailStatus === 'error' ? icon({ name: 'circle-exclamation', style: 'solid' }) : icon({ name: 'user', style: 'solid' })}
               error={emailStatus === 'error' ? true : false}
               errorMessage={errorMessage ? errorMessage : undefined}
               onChange={handleCheckEmail} 
-              disabled={userType === 'SELF' ? false : true}
+              disabled={formData.isOnlineUser ? false : true}
             />
           </div>
-          <div>
-            <label className={`block mb-2 text-sm font-medium dark:text-white ${userType === 'SELF' ? 'text-gray-900' : 'text-gray-400'}`}>Passwort</label>
-            <input type='password' disabled={userType === 'SELF' ? false : true} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+          <div className={`${!formData.isOnlineUser ? 'blur-sm' : null}`}>
+            <label className={`block mb-2 text-sm font-medium dark:text-white ${formData.isOnlineUser ? 'text-gray-900' : 'text-gray-400'}`}>Passwort</label>
+            <input type='password' disabled={formData.isOnlineUser ? false : true} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
           </div>
         </div>
         <div className="flex items-center space-x-4">

@@ -7,7 +7,7 @@ interface BadgeProps {
 
 const Badge: FunctionComponent<BadgeProps> = ({ children, color }) => {
   return (
-    <span className='px-2 text-xs border rounded-full text-center' style={{ backgroundColor: color }}>
+    <span className='px-2 text-xs rounded-full text-center' style={{ backgroundColor: color }}>
       {children}
     </span>
   )
