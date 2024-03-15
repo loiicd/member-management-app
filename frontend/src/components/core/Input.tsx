@@ -44,8 +44,8 @@ const Input: FunctionComponent<InputProps> = ({ label, placeholder, disabled = f
           </div> 
           : null
         }
-        {errorMessage ? <div className='text-sm text-red-500 pt-2'>{errorMessage}</div> : null}
       </div>
+      {errorMessage ? <div className='text-sm text-red-500 pt-2'>{errorMessage}</div> : null}
     </div>
   )
 }

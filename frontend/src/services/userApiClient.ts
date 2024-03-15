@@ -6,12 +6,12 @@ export class UserApiClient extends BaseApiClient {
 
   public async getUser(id: string): Promise<User> {
     const response = await this.axiosInstance.get(`user/${id}`)
-    return { ...response.data, birthdate: new Date(response.data.birthdate) }
+    return { ...response.data, birthdate: new Date(response.data.birthdate), created_at: new Date(response.data.created_at), updated_at: new Date(response.data.updated_at) }
   }
 
   public async getUsers(searchTerm: string | null, sortAttribute: string | null = 'firstname', sortDirection: string | null = 'ASC', filter: string | null = '', page: string | null = '1'): Promise<UserApiResponse> {
     const response = await this.axiosInstance.get('user', { params: { searchTerm, sortAttribute, sortDirection, filter, page } })
-    const data = response.data.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate) }))
+    const data = response.data.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate), created_at: new Date(response.data.created_at), updated_at: new Date(response.data.updated_at) }))
     return { ...response.data, data }
   }
 

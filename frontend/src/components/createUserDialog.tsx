@@ -38,6 +38,31 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ accountId 
     webaccess: false
   })
 
+  const handleClose = () => {
+    resetFormData()
+    resetErrors()
+    setOpen(false)
+  }
+
+  const resetFormData = () => {
+    setFormData({
+      firstname: undefined, 
+      lastname: undefined, 
+      birthdate: undefined, 
+      address: undefined, 
+      email: undefined, 
+      phone: undefined, 
+      isOnlineUser: true, 
+      webaccess: false
+    })
+  }
+
+  const resetErrors = () => {
+    setInputError({ firstname: false, lastname: false })
+    setEmailStatus('initial')
+    setErrorMessage(undefined)
+  }
+
   const handleChange = (field: keyof UserFormData) => (event: ChangeEvent<HTMLInputElement>) => {
     const { value, checked, type } = event.target
     setFormData({ 
@@ -107,7 +132,7 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ accountId 
   return (
     <>
       <Button onClick={() => setOpen(true)}>++++ Neu</Button>
-      <Modal open={open} onClose={() => setOpen(false)} title='Neuen User erstellen'>
+      <Modal open={open} onClose={handleClose} title='Neuen User erstellen'>
         <div className='py-6 grid grid-cols-2 gap-4'>
           <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(true)}>
             <div className='text-center'>
@@ -129,7 +154,7 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ accountId 
         <div className='grid gap-4 mb-4 sm:grid-cols-2'>
           <Input type='text' value={formData.firstname} label='Vorname' onChange={handleChange('firstname')} error={inputError.firstname} />
           <Input type='text' value={formData.lastname} label='Nachname' onChange={handleChange('lastname')} error={inputError.lastname} />
-          <Input type='date' value={formData.birthdate?.toString()} label='Geburtsdatum' onChange={handleChange('birthdate')} />
+          <Input type='date' value={formData.birthdate?.toISOString().split('T')[0]} label='Geburtsdatum' onChange={handleChange('birthdate')} />
           <Input type='text' value={formData.address} label='Adresse' onChange={handleChange('address')} />
           <Input type='text' value={formData.email} label='E-Mail' onChange={handleChange('email')} />
           <Input type='text' value={formData.phone} label='Telefon' onChange={handleChange('phone')} />

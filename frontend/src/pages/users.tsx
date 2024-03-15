@@ -56,6 +56,7 @@ const UsersPage: FunctionComponent = () => {
         handleChangeTotalEntries(data.total)
         urlParams.set('page', data.page.toString())
         setUrlParams(urlParams)
+        console.log(users)
       })
   }, [accountId, authParams, urlParams])
 

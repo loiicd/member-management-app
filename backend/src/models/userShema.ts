@@ -11,6 +11,8 @@ export const UserShema = z.object({
   phone:          z.string().optional().nullable(),
   isOnlineUser:   z.boolean(),
   webaccess:      z.boolean(),
+  createdAt:      z.string(),
+  updatedAt:      z.string(),
   qualifications: z.array(QualificationShema),
 })
 export type UserType = z.infer<typeof UserShema>

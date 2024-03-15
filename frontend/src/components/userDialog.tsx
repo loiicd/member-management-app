@@ -171,7 +171,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
         <div className='grid gap-4 mb-4 sm:grid-cols-2'>
           <Input type='text' value={formData.firstname} label='Vorname' onChange={handleChange('firstname')} error={firstnameInputError} />
           <Input type='text' value={formData.lastname} label='Nachname' onChange={handleChange('lastname')} error={lastnameInputError} />
-          <Input type='date' value={formData.birthdate?.toString()} label='Geburtsdatum' onChange={handleChange('birthdate')} />
+          <Input type='date' value={formData.birthdate?.toISOString().split('T')[0]} label='Geburtsdatum' onChange={handleChange('birthdate')} />
           <Input type='text' value={formData.address} label='Adresse' onChange={handleChange('address')} />
           <Input type='text' value={formData.email} label='E-Mail' onChange={handleChange('email')} />
           <Input type='text' value={formData.phone} label='Telefon' onChange={handleChange('phone')} />

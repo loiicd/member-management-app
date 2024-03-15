@@ -3,7 +3,6 @@ import { User } from '../types/user'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getUser } from '../services/user'
 import UserDialog from '../components/userDialog'
-import Typography from '../components/base/typography'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import PasswordDialog from '../components/passwordDialog'
@@ -43,6 +42,9 @@ const UserPage = () => {
       .catch((error) => alert(error))
       .finally(() => setIsDeletingUser(false))
   }
+
+  console.log(user?.created_at)
+  console.log(typeof user?.created_at)
 
   return (
     <StandardLayout accountId={accountId}>
@@ -101,6 +103,18 @@ const UserPage = () => {
               </div>  
               <div className='col-span-1'>
                 <p className='text-base'>*********** { user ? <PasswordDialog userId={user?.id} /> : null}</p>
+              </div>
+            </div>
+            <div className='border-b my-4'></div>
+            <h3 className='text-xl'>Intern</h3>
+            <div className='grid grid-cols-4'>
+              <div className='col-span-1'>
+                <p className='text-base'>Erstellt am:</p>
+                <p className='text-base'>Zuletzt geändert am:</p>
+              </div>  
+              <div className='col-span-1'>
+                <p className='text-base'>{user?.created_at.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric' })} Uhr</p>
+                <p className='text-base'>{user?.updated_at.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric' })} Uhr</p>
               </div>
             </div>
           </div>

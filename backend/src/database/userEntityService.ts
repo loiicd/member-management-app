@@ -65,7 +65,7 @@ export class UserEntityService {
 
   async update(user: UserType): Promise<void> {
     const client = await connect()
-    const query = `UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, is_online_user = $7, webaccess = $8 WHERE id = $9`
+    const query = `UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, is_online_user = $7, webaccess = $8, updated_at = now()::timestamp WHERE id = $9`
     const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess, user.id]
     await client.query(query, values)
     await client.end()
@@ -75,7 +75,7 @@ export class UserEntityService {
     const salt = bcryptjs.genSaltSync()
     const hashedPassword = bcryptjs.hashSync(password+salt)
     const client = await connect()
-    const query = 'UPDATE public."user" SET password = $1, passwordsalt = $2 WHERE id = $3'
+    const query = 'UPDATE public."user" SET password = $1, passwordsalt = $2, updated_at = now()::timestamp WHERE id = $3'
     const values = [hashedPassword, salt, userId]
     await client.query(query, values)
     await client.end()
@@ -121,7 +121,7 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
     const newSearchTerm = searchTerm.trim().split(' ').join(':* & ')
     if (filter.length === 0) {
       query = `
-        SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess
+        SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
         FROM public."user"
         LEFT JOIN public."user_account_rel"
         ON id = user_account_rel.user_id
@@ -131,7 +131,7 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
         LIMIT 5 OFFSET ${(page - 1) * 5}`
     } else {
       query = `
-        SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess
+        SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
         FROM public."user"
         LEFT JOIN public."user_account_rel"
         ON id = user_account_rel.user_id
@@ -174,7 +174,7 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
   } else {
     if (filter.length === 0) {
       query = `
-        SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess
+        SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
         FROM public."user"
         LEFT JOIN public."user_account_rel"
         ON id = user_id
@@ -183,7 +183,7 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
         LIMIT 5 OFFSET ${(page - 1) * 5}`
     } else {
       query = `
-        SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess
+        SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
         FROM public."user"
         LEFT JOIN public."user_account_rel"
         ON id = user_id
@@ -225,7 +225,7 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
 
 const selectUserById = async (client: Client, userId: string): Promise<UserType> => {
   const query = `
-    SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess
+    SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
     FROM public."user" 
     WHERE id = $1`
   const user = await client.query(query, [userId])
@@ -259,7 +259,7 @@ const insertUser = async (client: Client, accountId: string, user: UserFormDataT
   try {
     await client.query('BEGIN')
     const userId = uuidv4()
-    const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)'
+    const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now()::timestamp, now()::timestamp)'
     const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess]
     const query2 = 'INSERT INTO public."user_account_rel" (user_id, account_id, is_admin) VALUES ($1, $2, false)'
     const values2 = [userId, accountId]
