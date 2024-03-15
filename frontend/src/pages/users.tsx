@@ -113,7 +113,6 @@ const UsersPage: FunctionComponent = () => {
         <h2>Test</h2>
         <div className='flex justify-between gap-2'>
           <Input placeholder='Suche ...' value={searchTerm != null ? searchTerm : undefined} onChange={handleSearch} startIcon={icon({ name: 'search', style: 'solid' })} />
-          <UserDialog type='insert' accountId={accountId} />
           <CreateUserDialog accountId={accountId} />
           <Dropwdown text='Qualifikation' counter={searchFilter ? searchFilter.split('%').length : undefined}>
             <ul className='py-2'>

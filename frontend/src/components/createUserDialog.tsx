@@ -103,7 +103,6 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ accountId 
 
   const handleCheckEmail = (event: ChangeEvent<HTMLInputElement>) => {
     if (typingTimeout) clearTimeout(typingTimeout)
-
     const timeout = setTimeout(() => {
       setEmailStatus('loading')
       if (event.target.value) {
@@ -131,7 +130,7 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ accountId 
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>++++ Neu</Button>
+      <Button onClick={() => setOpen(true)}>+ Neu</Button>
       <Modal open={open} onClose={handleClose} title='Neuen User erstellen'>
         <div className='py-6 grid grid-cols-2 gap-4'>
           <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(true)}>
