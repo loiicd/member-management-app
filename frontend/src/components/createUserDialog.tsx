@@ -1,36 +1,33 @@
-import { ChangeEvent, FC, useEffect, useState } from 'react'
-import Modal from './base/modal'
-import { getUser, updateUser } from '../services/user'
+import { ChangeEvent, FunctionComponent, useState } from 'react'
+import { AxiosError } from 'axios'
 import { UserApiClient } from '../services/userApiClient'
-import Button from './core/Button'
+import { UserFormData } from '../types/user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
+import Button from './core/Button'
 import Input from './core/Input'
-import { AxiosError } from 'axios'
+import Modal from './base/modal'
 
-type Test = {
-  firstname?: string,
-  lastname?: string,
-  birthdate?: Date,
-  address?: string,
-  email?: string,
-  phone?: string,
-  isOnlineUser: boolean
-  webaccess: boolean
+type InputErrorObject = {
+  firstname: boolean
+  lastname: boolean
 }
 
-interface UserDialogProps {
-  type: 'insert' | 'update'
-  userId?: string
+type EmailStatus = 'initial' | 'loading' | 'success' | 'error'
+
+interface CreateUserDialogProps {
   accountId: string
 }
 
-const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
-  const [open, setOpen] = useState<boolean>(false)
-
+const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ accountId }) => {
   const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
 
-  const [formData, setFormData] = useState<Test>({
+  const [open, setOpen] = useState<boolean>(false)
+  const [inputError, setInputError] = useState<InputErrorObject>({ firstname: false, lastname: false })
+  const [emailStatus, setEmailStatus] = useState<EmailStatus>('initial')
+  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
+  const [formData, setFormData] = useState<UserFormData>({
     firstname: undefined, 
     lastname: undefined, 
     birthdate: undefined, 
@@ -41,82 +38,43 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
     webaccess: false
   })
 
-  const [firstnameInputError, setFirstnameInputError] = useState<boolean>(false)
-  const [lastnameInputError, setLastnameInputError] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (type === 'update' && userId) {
-      // @ts-ignore
-      getUser(userId)
-        .then((data) => {
-          setFormData(data)
-        })
-        .catch((error) => alert(error))
-    }
-  }, [type, userId])
-
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
-
-  const handleChange = (field: keyof Test) => (event: ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [field]: event.target.value,
+  const handleChange = (field: keyof UserFormData) => (event: ChangeEvent<HTMLInputElement>) => {
+    const { value, checked, type } = event.target
+    setFormData({ 
+      ...formData, 
+      [field]: type === 'checkbox' ? checked : value 
     })
   }
 
-  const handleChangeIsOnlineUser = (isOnlineUser: boolean) => {
-    setFormData({
-      ...formData,
-      isOnlineUser: isOnlineUser,
-    })
-  }
+  const handleChangeIsOnlineUser = (isOnlineUser: boolean) => setFormData({ ...formData, isOnlineUser: isOnlineUser })
 
-  const handleWebaccessChange = (field: keyof Test) => (event: ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [field]: event.target.checked,
-    })
-  }
+  const handleSave = async () => {
+    const errors: InputErrorObject = { firstname: false, lastname: false }
+    if (!formData.firstname) errors.firstname = true
+    if (!formData.lastname) errors.lastname = true
 
-  const handleSave = () => {
-    if (formData.firstname && formData.lastname) {
-      if (type === 'insert') {
-         // @ts-ignore
-        userApiClient.createUser(formData)
-          .then((response) => {
-            // switch (response.data.type) {
-            //   case 'userCreated':
-            //     alert('User wurde erstellt!')
-            //     break
-            //   case 'mailExists':
-            //     alert(`User ist bereits registriert! Wollen sie den User mit dem Account verknüpfen? - ${response.data.userId}`)
-            //     break
-            //   case 'relExists':
-            //     alert(`User ist bereits mit dem Account verknüpft! - ${response.data.userId}`)
-            //     break
-            // }
-          })
-          .catch((error) => {
-            alert(error)
-          })
-      } else {
-        if (userId) {
-          // @ts-ignore
-          updateUser({id: userId, ...formData})
-            .then(handleClose)
-            .catch((error) => alert(error))
+    setInputError(errors)
+
+    const hasInputErrors = Object.values(errors).some(error => error)
+    if (!hasInputErrors) {
+      try {
+        const response = await userApiClient.createUser(formData)
+        switch (response.type) {
+          case 'userCreated':
+            alert('User wurde erstellt!')
+            break
+          case 'mailExists':
+            alert(`User ist bereits registriert! Wollen sie den User mit dem Account verknüpfen? - ${response.userId}`)
+            break
+          case 'relExists':
+            alert(`User ist bereits mit dem Account verknüpft! - ${response.userId}`)
+            break
         }
+      } catch (error) {
+        alert(error)
       }
-    } else {
-      if (!formData.firstname) { setFirstnameInputError(true) }
-      if (!formData.lastname) { setLastnameInputError(true) } 
     }
   }
-
-  const [emailStatus, setEmailStatus] = useState<'initial' | 'loading' | 'success' | 'error'>('initial')
-  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
   const handleCheckEmail = (event: ChangeEvent<HTMLInputElement>) => {
     if (typingTimeout) clearTimeout(typingTimeout)
@@ -148,8 +106,8 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
 
   return (
     <>
-      <Button onClick={handleOpen}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</Button>
-      <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert User' : 'Update User'}>
+      <Button onClick={() => setOpen(true)}>++++ Neu</Button>
+      <Modal open={open} onClose={() => setOpen(false)} title='Neuen User erstellen'>
         <div className='py-6 grid grid-cols-2 gap-4'>
           <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(true)}>
             <div className='text-center'>
@@ -169,14 +127,14 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
           </div>
         </div>
         <div className='grid gap-4 mb-4 sm:grid-cols-2'>
-          <Input type='text' value={formData.firstname} label='Vorname' onChange={handleChange('firstname')} error={firstnameInputError} />
-          <Input type='text' value={formData.lastname} label='Nachname' onChange={handleChange('lastname')} error={lastnameInputError} />
+          <Input type='text' value={formData.firstname} label='Vorname' onChange={handleChange('firstname')} error={inputError.firstname} />
+          <Input type='text' value={formData.lastname} label='Nachname' onChange={handleChange('lastname')} error={inputError.lastname} />
           <Input type='date' value={formData.birthdate?.toString()} label='Geburtsdatum' onChange={handleChange('birthdate')} />
           <Input type='text' value={formData.address} label='Adresse' onChange={handleChange('address')} />
           <Input type='text' value={formData.email} label='E-Mail' onChange={handleChange('email')} />
           <Input type='text' value={formData.phone} label='Telefon' onChange={handleChange('phone')} />
           <label className="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" checked={formData.webaccess} className="sr-only peer" onChange={handleWebaccessChange('webaccess')} />
+            <input type="checkbox" checked={formData.webaccess} className="sr-only peer" onChange={handleChange('webaccess')} />
             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
             <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Online Zugang</span>
           </label>
@@ -211,4 +169,4 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
   )
 }
 
-export default UserDialog
+export default CreateUserDialog

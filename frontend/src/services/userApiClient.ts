@@ -1,4 +1,4 @@
-import { UserApiResponse } from '../types/apiResponse'
+import { ApiResponse, UserApiResponse } from '../types/apiResponse'
 import { User, UserFormData } from '../types/user'
 import { BaseApiClient } from './baseApiClient'
 
@@ -15,8 +15,8 @@ export class UserApiClient extends BaseApiClient {
     return { ...response.data, data }
   }
 
-  public async createUser(userFormData: UserFormData): Promise<any> {
-    return await this.axiosInstance.post('user', userFormData)
+  public async createUser(userFormData: UserFormData): Promise<ApiResponse> {
+    return (await this.axiosInstance.post('user', userFormData)).data
   }
 
   public async updatePassword(userId: string, newPassword: string): Promise<void> {

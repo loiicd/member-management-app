@@ -14,6 +14,7 @@ import { getqualifications } from '../services/qualification'
 import { Qualification } from '../types/qualification'
 import UserTable from '../components/userTable'
 import Input from '../components/core/Input'
+import CreateUserDialog from '../components/createUserDialog'
 
 const sortAttributes = ['firstname', 'lastname',  'birthdate', 'address', 'webaccess'] as const
 export type SortAttribute = typeof sortAttributes[number]
@@ -112,6 +113,7 @@ const UsersPage: FunctionComponent = () => {
         <div className='flex justify-between gap-2'>
           <Input placeholder='Suche ...' value={searchTerm != null ? searchTerm : undefined} onChange={handleSearch} startIcon={icon({ name: 'search', style: 'solid' })} />
           <UserDialog type='insert' accountId={accountId} />
+          <CreateUserDialog accountId={accountId} />
           <Dropwdown text='Qualifikation' counter={searchFilter ? searchFilter.split('%').length : undefined}>
             <ul className='py-2'>
               {qualifications.map((qualification) => (
