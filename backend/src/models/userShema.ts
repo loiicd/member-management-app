@@ -13,6 +13,7 @@ export const UserShema = z.object({
   webaccess:      z.boolean(),
   createdAt:      z.string(),
   updatedAt:      z.string(),
+  login_email:    z.string().optional().nullable(),
   qualifications: z.array(QualificationShema),
 })
 export type UserType = z.infer<typeof UserShema>

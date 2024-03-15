@@ -6,7 +6,6 @@ import { useAuthUser } from 'react-auth-kit'
 import { UserApiClient } from '../services/userApiClient'
 import PageHead from '../components/pageHead'
 import Button from '../components/core/Button'
-import UserDialog from '../components/userDialog'
 import Dropwdown from '../components/dropdown'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -15,6 +14,7 @@ import { Qualification } from '../types/qualification'
 import UserTable from '../components/userTable'
 import Input from '../components/core/Input'
 import CreateUserDialog from '../components/createUserDialog'
+import InviteUserDialog from '../components/inviteUserDialog'
 
 const sortAttributes = ['firstname', 'lastname',  'birthdate', 'address', 'webaccess'] as const
 export type SortAttribute = typeof sortAttributes[number]
@@ -34,6 +34,8 @@ const UsersPage: FunctionComponent = () => {
   const [qualifications, setQualifications] = useState<Qualification[]>([])
   const [totalEntries, setTotalEntries] = useState<number>(0)
   const [urlParams, setUrlParams] = useSearchParams()
+  const [openCreateUserDialog, setOpenCreateUserDialog] = useState<boolean>(false)
+  const [openInviteUserDialog, setOpenInviteUserDialog] = useState<boolean>(false)
 
   const sortAttribute = urlParams.get('sortAttribute')
   const sortDirection = urlParams.get('sortDirection')
@@ -43,6 +45,9 @@ const UsersPage: FunctionComponent = () => {
 
   if (!accountId) throw new Error('Account ID is required')
   if (!authParams) throw new Error('Auth Params is required')
+
+  const handleCloseCreateUserDialog = () => setOpenCreateUserDialog(false)
+  const handleCloseInviteUserDialog = () => setOpenInviteUserDialog(false)
 
   useEffect(() => {
     getqualifications(accountId)
@@ -113,14 +118,25 @@ const UsersPage: FunctionComponent = () => {
         <h2>Test</h2>
         <div className='flex justify-between gap-2'>
           <Input placeholder='Suche ...' value={searchTerm != null ? searchTerm : undefined} onChange={handleSearch} startIcon={icon({ name: 'search', style: 'solid' })} />
-          <CreateUserDialog accountId={accountId} />
+          <Dropwdown text='Hinzufügen'>
+            <ul className='py-2'>
+              <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer' onClick={() => setOpenCreateUserDialog(true)}>
+                <FontAwesomeIcon icon={icon({ name: 'plus', style: 'solid' })} className='w-4 h-4' />
+                <span className='ms-2'>Neu erstellen</span>
+              </li>
+              <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer' onClick={() => setOpenInviteUserDialog(true)}>
+                <FontAwesomeIcon icon={icon({ name: 'id-card', style: 'solid' })} className='w-4 h-4' />
+                <span className='ms-2'>Bestehenden einladen</span>
+              </li>
+            </ul>
+          </Dropwdown>
           <Dropwdown text='Qualifikation' counter={searchFilter ? searchFilter.split('%').length : undefined}>
             <ul className='py-2'>
               {qualifications.map((qualification) => (
                 <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer' onClick={() => toggleSearchFilter(qualification.id)}>
                   {searchFilter?.includes(qualification.id) ? 
                     <>
-                      <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='w-4' />
+                      <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='w-4 h-4' />
                       <span className='ms-2'>{qualification.name}</span>
                     </>
                     : <span className='ms-6'>{qualification.name}</span>
@@ -143,6 +159,8 @@ const UsersPage: FunctionComponent = () => {
         resetSearchFilter={resetSearchFilter}
         handleChangePagination={handleChangePagination}
       />
+      <CreateUserDialog isOpen={openCreateUserDialog} accountId={accountId} close={handleCloseCreateUserDialog} />
+      <InviteUserDialog isOpen={openInviteUserDialog} accountId={accountId} close={handleCloseInviteUserDialog} />
     </StandardLayout>
   )
 }

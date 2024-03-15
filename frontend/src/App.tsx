@@ -4,11 +4,11 @@ import UserPage from './pages/user'
 import LoginPage from './pages/login'
 import { RequireAuth } from 'react-auth-kit'
 import SettingsGeneralPage from './pages/settingsGeneral'
-import RegisterPage from './pages/register'
 import LandingPage from './pages/landing'
 import UsersPage from './pages/users'
 import SetPasswordPage from './pages/setPassword'
 import SettingsQualificationPage from './pages/settingsQualification'
+import RegisterUserPage from './pages/registerUser'
 
 const App = () => {
   return (
@@ -23,7 +23,7 @@ const App = () => {
         <Route path=':accountId/users' element={<RequireAuth loginPath='/login'><UsersPage /></RequireAuth>} />
         <Route path=':accountId/user/:id' element={<RequireAuth loginPath='/login'><UserPage /></RequireAuth>} />
         <Route path='/login' element={<LoginPage />} />
-        <Route path='/register' element={<RegisterPage />} />
+        <Route path='/register' element={<RegisterUserPage />} />
         <Route path='/setpassword/:userId' element={<SetPasswordPage />} />
       </Routes>
     </BrowserRouter>

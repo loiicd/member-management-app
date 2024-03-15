@@ -43,6 +43,22 @@ export class UserEntityService {
     }
   }
 
+  async getOneByEmail(email: string): Promise<UserType> {
+    const client = await connect()
+    try {
+      await client.query('BEGIN')
+      const user = await selectUserByEmail(client, email)
+      user.qualifications = await selectQualifications(client, user.id)
+      await client.query('COMMIT')
+      return user
+    } catch (error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally {
+      await client.end()
+    }
+  }
+
   async insert(accountId: string, user: UserFormDataType): Promise<ApiResponse> {
     const client = await connect()
     const userWithMail = await checkIfMailExists(client, user.email)
@@ -229,6 +245,15 @@ const selectUserById = async (client: Client, userId: string): Promise<UserType>
     FROM public."user" 
     WHERE id = $1`
   const user = await client.query(query, [userId])
+  return user.rows[0]
+}
+
+const selectUserByEmail = async (client: Client, email: string): Promise<UserType> => {
+  const query = `
+    SELECT id, firstname, lastname, birthdate, address, email, login_email phone, is_online_user, webaccess, created_at, updated_at
+    FROM public."user" 
+    WHERE login_email = $1`
+  const user = await client.query(query, [email])
   return user.rows[0]
 }
 

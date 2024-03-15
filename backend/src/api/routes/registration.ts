@@ -12,4 +12,10 @@ router.post('/', tryCatchMiddleware(async (req: Request, res: Response) => {
   res.status(200).send('Successfully registered')
 }))
 
+router.post('/user/', tryCatchMiddleware(async (req: Request, res: Response) => {
+  const data = req.body
+  authenticateService.registerUser(data.email, data.password, data.firstname, data.lastname)
+  res.status(200).send('Successfully registered')
+}))
+
 export default router

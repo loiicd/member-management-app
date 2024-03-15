@@ -64,6 +64,14 @@ router.get('/email/:email', tryCatchMiddleware(async (req: Request, res: Respons
   res.status(200).send({ emailExists })
 }))
 
+router.post('/orgrel/:email', tryCatchMiddleware(async (req: Request, res: Response) => {
+  const email = validateEmail(req.params.email)
+  const accountId = validateUUID(req.headers.accountid)
+  const user = await userEntityService.getOneByEmail(email)
+  userEntityService.addAccountRelation(user.id, accountId)
+  res.status(200).send('success')
+}))
+
 export default router
 
 interface RequestData {
