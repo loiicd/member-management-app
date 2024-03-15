@@ -22,6 +22,8 @@ const UserPage = () => {
   const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
   const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false)
 
+  const [tab, setTab] = useState<'general' | 'qualifications'>('general')
+
   if (!accountId) throw new Error('Account ID is required')
   if (!id) throw new Error('User ID is required')
 
@@ -53,61 +55,67 @@ const UserPage = () => {
       <div className='grid grid-cols-12 gap-4'>
         <div className='col-span-2'>
           <ul>
-            <li className='px-3 py-2 rounded-lg cursor-pointer bg-gray-200 text-sm font-semibold'>
+            <li className={`px-3 py-2 rounded-lg cursor-pointer text-sm ${tab === 'general' ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-200 text-slate-500'}`} onClick={() => setTab('general')}>
               <FontAwesomeIcon icon={icon({ name: 'table', style: 'solid' })} className='pe-2' />
               Allgemein
             </li>
-            <li className='px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-200 text-sm text-slate-500'>
+            <li className={`px-3 py-2 rounded-lg cursor-pointer text-sm ${tab === 'qualifications' ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-200 text-slate-500'}`} onClick={() => setTab('qualifications')}>
               <FontAwesomeIcon icon={icon({ name: 'user-graduate', style: 'solid' })} className='pe-2' />
               Qualifikationen
             </li>
           </ul>
         </div>
-        <div className='col-span-8'>
-          <h2 className='text-2xl'>Allgemein</h2>
-          <div className='grid grid-cols-4'>
-            <div className='col-span-1'>
-              <p className='text-base'>Name:</p>  
-              <p className='text-base'>Geburtsdatum:</p>
-              <p className='text-base'>Online Zugang:</p>
-            </div>  
-            <div className='col-span-1'>
-              <p className='text-base'>{user?.firstname} {user?.lastname}</p>
-              <p className='text-base'>{user?.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</p>
-              <p className='text-base'>{user?.webaccess ? 'Ja' : 'Nein'}</p>
+
+        {tab === 'general' ? 
+          <div className='col-span-8'>
+            <h2 className='text-2xl'>Allgemein</h2>
+            <div className='grid grid-cols-4'>
+              <div className='col-span-1'>
+                <p className='text-base'>Name:</p>  
+                <p className='text-base'>Geburtsdatum:</p>
+                <p className='text-base'>Online Zugang:</p>
+              </div>  
+              <div className='col-span-1'>
+                <p className='text-base'>{user?.firstname} {user?.lastname}</p>
+                <p className='text-base'>{user?.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</p>
+                <p className='text-base'>{user?.webaccess ? 'Ja' : 'Nein'}</p>
+              </div>
+            </div>
+            <div className='border-b my-4'></div>
+            <h3 className='text-xl'>Kontaktdaten</h3>
+            <div className='grid grid-cols-4'>
+              <div className='col-span-1'>
+                <p className='text-base'>E-Mail:</p>
+                <p className='text-base'>Telefon:</p>
+              </div>  
+              <div className='col-span-1'>
+                <p className='text-base'>{user?.email}</p>
+                <p className='text-base'>{user?.phone}</p>
+              </div>
+            </div>
+            <div className='border-b my-4'></div>
+            <h3 className='text-xl'>Secruity</h3>
+            <div className='grid grid-cols-4'>
+              <div className='col-span-1'>
+                <p className='text-base'>Passwort:</p>
+              </div>  
+              <div className='col-span-1'>
+                <p className='text-base'>*********** { user ? <PasswordDialog userId={user?.id} /> : null}</p>
+              </div>
             </div>
           </div>
-          <div className='border-b my-4'></div>
-          <h3 className='text-xl'>Kontaktdaten</h3>
-          <div className='grid grid-cols-4'>
-            <div className='col-span-1'>
-              <p className='text-base'>E-Mail:</p>
-              <p className='text-base'>Telefon:</p>
-            </div>  
-            <div className='col-span-1'>
-              <p className='text-base'>{user?.email}</p>
-              <p className='text-base'>{user?.phone}</p>
-            </div>
+        : null}
+
+        {tab === 'qualifications' ? 
+          <div className='col-span-8'>
+            <h2 className='text-2xl'>Einsatzqualifikationen</h2>
+            {user?.qualifications.map((qualifiaction) => (
+              <p className='text-base'>{qualifiaction.name}</p>  
+            ))}
           </div>
-          <div className='border-b my-4'></div>
-          <h3 className='text-xl'>Secruity</h3>
-          <div className='grid grid-cols-4'>
-            <div className='col-span-1'>
-              <p className='text-base'>Passwort:</p>
-            </div>  
-            <div className='col-span-1'>
-              <p className='text-base'>*********** { user ? <PasswordDialog userId={user?.id} /> : null}</p>
-            </div>
-          </div>
-        </div>
+        : null}
       </div>
 
-      <div className='border rounded-lg border-zinc-600 mt-2 p-4'>
-        <Typography variant='h4'>Einsatzqualifikationen</Typography>
-        {user?.qualifications.map((qualification) => (
-          <Typography variant='text'>{qualification.name}</Typography>
-        ))}
-      </div>
       <ApproveDialog 
         title='User wirklich löschen?' 
         open={openApproveDialog} 

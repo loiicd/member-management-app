@@ -61,13 +61,7 @@ router.get('/accounts/:id', tryCatchMiddleware(async (req: Request, res: Respons
 router.get('/email/:email', tryCatchMiddleware(async (req: Request, res: Response) => {
   const email = validateEmail(req.params.email)
   const emailExists = await userEntityService.checkEmail(email)
-
-  if (emailExists) {
-    res.statusMessage = 'E-Mail bereits vergeben!'
-    res.status(403).send('E-Mail bereits vergeben!')
-  } else {
-    res.status(200).send('success')
-  }
+  res.status(200).send({ emailExists })
 }))
 
 export default router

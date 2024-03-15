@@ -119,17 +119,20 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
   const handleCheckEmail = (event: ChangeEvent<HTMLInputElement>) => {
-    if (typingTimeout) {
-      clearTimeout(typingTimeout)
-    }
+    if (typingTimeout) clearTimeout(typingTimeout)
 
     const timeout = setTimeout(() => {
       setEmailStatus('loading')
       if (event.target.value) {
         userApiClient.checkEMail(event.target.value)
-          .then(() => {
-            setErrorMessage(undefined)
-            setEmailStatus('success')
+          .then((emailExists) => {
+            if (!emailExists) {
+              setErrorMessage(undefined)  
+              setEmailStatus('success')
+            } else {
+              setErrorMessage('E-Mail exestiert bereits!')
+              setEmailStatus('error')  
+            }
           })
           .catch((error: AxiosError) => {
             setErrorMessage(error.response?.statusText)
@@ -203,7 +206,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
             <label className={`block mb-2 text-sm font-medium dark:text-white ${formData.isOnlineUser ? 'text-gray-900' : 'text-gray-400'}`}>Account E-Mail</label>
             <Input 
               spinningEndIcon={emailStatus === 'loading' ? true : false} 
-              endIcon={emailStatus === 'loading' ? icon({ name: 'spinner', style: 'solid' }) : emailStatus === 'success' ? icon({ name: 'check', style: 'solid' }) : emailStatus === 'error' ? icon({ name: 'circle-exclamation', style: 'solid' }) : icon({ name: 'user', style: 'solid' })}
+              endIcon={emailStatus === 'loading' ? icon({ name: 'spinner', style: 'solid' }) : emailStatus === 'success' ? icon({ name: 'check', style: 'solid' }) : emailStatus === 'error' ? icon({ name: 'circle-exclamation', style: 'solid' }) : undefined}
               error={emailStatus === 'error' ? true : false}
               errorMessage={errorMessage ? errorMessage : undefined}
               onChange={handleCheckEmail} 
@@ -214,6 +217,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
             <label className={`block mb-2 text-sm font-medium dark:text-white ${formData.isOnlineUser ? 'text-gray-900' : 'text-gray-400'}`}>Passwort</label>
             <input type='password' disabled={formData.isOnlineUser ? false : true} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
           </div>
+          <div className='col-span-2 text-base text-gray-600'>Diese Daten sind erforderlich, damit sich der User selbständig anmelden kann</div>
         </div>
         <div className="flex items-center space-x-4">
           <button type="button" className="text-green-600 inline-flex items-center hover:text-white border border-green-600 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-900" onClick={handleSave}>

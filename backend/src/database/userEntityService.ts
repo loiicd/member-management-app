@@ -105,7 +105,7 @@ export class UserEntityService {
   async checkEmail(email: string): Promise<boolean> {
     const client = await connect()
     const query = `
-      SELECT id, email
+      SELECT id, login_email
       FROM public."user"
       WHERE email = $1
     `

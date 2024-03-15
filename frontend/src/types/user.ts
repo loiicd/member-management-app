@@ -24,17 +24,16 @@ export type UserFormData = {
   webaccess: boolean
 }
 
-
-interface OnlineUser extends CoreUserData {
-  userType:       'ONLINE_USER'
-  accountEmail:    string
+interface OnlineUser extends CoreUser {
+  isOnlineUser: true
+  loginEmail: string
 }
 
-interface OrganisationUser extends CoreUserData {
-  userType:       'OFFLINE_USER'
+interface OfflineUser extends CoreUser {
+  isOnlineUser: false
 }
 
-type CoreUserData = {
+type CoreUser = {
   id:             string,
   firstname:      string,
   lastname:       string
@@ -46,4 +45,4 @@ type CoreUserData = {
   qualifications: Qualification[]
 }
 
-type Test = OrganisationUser | OnlineUser
+type UserFinished = OnlineUser | OfflineUser

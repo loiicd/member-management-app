@@ -58,7 +58,6 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, so
               {sortAttribute === 'webaccess' && sortDirection === 'DESC' ? <FontAwesomeIcon icon={icon({ name: 'arrow-up-wide-short', style: 'solid' })} className='ps-2' /> : null}
               {sortAttribute !== 'webaccess' ? <FontAwesomeIcon icon={icon({ name: 'arrow-up-z-a', style: 'solid' })} className='ps-2 text-slate-50' /> : null}
             </th>
-            <th className='ps-3 py-2 pe-4'></th>
           </tr>
         </thead>
         <tbody>
@@ -70,7 +69,6 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, so
               <td className='ps-3 py-2 pe-3'>{user.address}</td>
               <td className='ps-3 py-2 pe-3'>{user.qualifications.map((qualification) => <Badge color={qualification.color}>{qualification.abbreviation}</Badge>)}</td>
               <td className='ps-3 py-2 pe-3'>{user.webaccess ? <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='text-lime-500' /> : <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} className='text-red-500' />}</td>
-              <td className='ps-3 py-2 pe-4 flex items-center justify-end'><IconButton icon={icon({ name: 'pen', style: 'solid' })}/></td>
             </tr>
           ))}
           {users.length === 0 ? 
