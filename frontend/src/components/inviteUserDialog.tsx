@@ -3,6 +3,7 @@ import { UserApiClient } from '../services/userApiClient'
 import Input from './core/Input'
 import Modal from './base/modal'
 import Button from './core/Button'
+import { AccountApiClient } from '../services/accountApiClient'
 
 interface InviteUserDialogProps {
   isOpen: boolean
@@ -12,6 +13,7 @@ interface InviteUserDialogProps {
 
 const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, close, accountId }) => {
   const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
+  const accountApiClient = new AccountApiClient('http://localhost:3002', undefined, accountId)
 
   const emailInputRef = useRef<HTMLInputElement>(null)
 
@@ -22,7 +24,12 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
   const handleTest = () => {
     const email = emailInputRef.current?.value
     if (!email) return
-    userApiClient.createUserOrgRel(email)
+    // userApiClient.createUserOrgRel(email)
+    try {
+      accountApiClient.addUser(accountId, email)
+    } catch (error) {
+      alert(error)
+    }
   }
 
   return (
