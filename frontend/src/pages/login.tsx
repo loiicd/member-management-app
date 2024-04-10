@@ -95,7 +95,7 @@ const LoginPage = () => {
             </div>
             <p className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500 cursor-pointer" onClick={() => alert('Nicht implementiert!')}>Passwort vergessen?</p>
           </div>
-          <button onClick={handleLogin} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Anmelden</button>
+          <button id='loginButton' onClick={handleLogin} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Anmelden</button>
           <p className="text-sm font-light text-gray-500 dark:text-gray-400">
             Kein Account? <p onClick={() => navigate('/register')} className="cursor-pointer font-medium text-primary-600 hover:underline dark:text-primary-500">Registrieren</p>
           </p>

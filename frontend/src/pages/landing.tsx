@@ -32,7 +32,7 @@ const LandingPage = () => {
         Member Management App
       </p>
       {accounts.map((account: any) => (
-        <div className="w-full bg-white rounded-2xl shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mb-4 cursor-pointer hover:bg-gray-700" onClick={() => navigate(`/${account.id}/dashboard`)}>
+        <div id='organizationCard' className="w-full bg-white rounded-2xl shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mb-4 cursor-pointer hover:bg-gray-700" onClick={() => navigate(`/${account.id}/dashboard`)}>
           <div className="p-4 space-y-4 md:space-y-4 sm:p-4">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               {account.organisation_name}
