@@ -1,4 +1,4 @@
-import { FunctionComponent, useRef } from 'react'
+import { FunctionComponent, useRef, useState } from 'react'
 import { UserApiClient } from '../services/userApiClient'
 import Input from './core/Input'
 import Modal from './base/modal'
@@ -15,6 +15,8 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
   const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
   const accountApiClient = new AccountApiClient('http://localhost:3002', undefined, accountId)
 
+  const [showError, setShowError] = useState<false | any>(false)
+
   const emailInputRef = useRef<HTMLInputElement>(null)
 
   const handleClose = () => {
@@ -24,11 +26,10 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
   const handleTest = () => {
     const email = emailInputRef.current?.value
     if (!email) return
-    // userApiClient.createUserOrgRel(email)
     try {
       accountApiClient.addUser(accountId, email)
     } catch (error) {
-      alert(error)
+      setShowError(error)
     }
   }
 
@@ -38,6 +39,7 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
         <Input type='text' label='E-Mail' ref={emailInputRef} />
         <Button onClick={handleTest}>Einladen</Button>
       </div>
+      {showError && <div className='text-red-600'>{showError}</div>}
     </Modal>
   )
 }
