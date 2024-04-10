@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { useNavigate } from 'react-router-dom'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import Menu from './core/Menu'
 
 interface SidebarProps {
   accountId: string
@@ -29,24 +30,12 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ accountId }) => {
   return (
     <aside id='default-sidebar' className='fixed top-0 left-0 z-40 w-64 h-screen pt-16 transition-transform -translate-x-full sm:translate-x-0' aria-label='Sidenav'>
       <div className='overflow-y-auto py-5 px-3 h-full bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700'>
-        <ul className='space-y-2'>
-          <li>
-            <Button 
-              startIcon={icon({ name: 'house', style: 'solid' })}
-              onClick={() => navigate(`/${accountId}/dashboard`)}
-            >
-              Dashboard
-            </Button>
-          </li>
-          <li>
-            <Button 
-              startIcon={icon({ name: 'users', style: 'solid' })}
-              onClick={() => navigate(`/${accountId}/users`)}
-            >
-              Mitglieder
-            </Button>
-          </li>
-        </ul>
+        <Menu 
+          items={[
+            { name: 'Dashboard', active: false, icon: icon({ name: 'house', style: 'solid' }), onClick: () => navigate(`/${accountId}/dashboard`) },
+            { name: 'Mitglieder', active: false, icon: icon({ name: 'users', style: 'solid' }), onClick: () => navigate(`/${accountId}/users`) }
+          ]}
+        />
       </div>
       <div className='hidden absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full lg:flex bg-white dark:bg-gray-800 z-20 border-r border-gray-200 dark:border-gray-700'>
           <p className='inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-600' onClick={() => navigate('/')} >

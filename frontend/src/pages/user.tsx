@@ -3,7 +3,6 @@ import { User } from '../types/user'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getUser } from '../services/user'
 import UserDialog from '../components/userDialog'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import PasswordDialog from '../components/passwordDialog'
 import StandardLayout from '../layout/standard'
@@ -11,6 +10,7 @@ import PageHead from '../components/pageHead'
 import Button from '../components/core/Button'
 import ApproveDialog from '../components/approveDialog'
 import { UserApiClient } from '../services/userApiClient'
+import Menu from '../components/core/Menu'
 
 const UserPage = () => {
   const navigate = useNavigate()
@@ -43,9 +43,6 @@ const UserPage = () => {
       .finally(() => setIsDeletingUser(false))
   }
 
-  console.log(user?.created_at)
-  console.log(typeof user?.created_at)
-
   return (
     <StandardLayout accountId={accountId}>
       <PageHead title={`${user?.firstname} ${user?.lastname}`}>
@@ -56,66 +53,48 @@ const UserPage = () => {
       </PageHead>
       <div className='grid grid-cols-12 gap-4'>
         <div className='col-span-2'>
-          <ul>
-            <li className={`px-3 py-2 rounded-lg cursor-pointer text-sm ${tab === 'general' ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-200 text-slate-500'}`} onClick={() => setTab('general')}>
-              <FontAwesomeIcon icon={icon({ name: 'table', style: 'solid' })} className='pe-2' />
-              Allgemein
-            </li>
-            <li className={`px-3 py-2 rounded-lg cursor-pointer text-sm ${tab === 'qualifications' ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-200 text-slate-500'}`} onClick={() => setTab('qualifications')}>
-              <FontAwesomeIcon icon={icon({ name: 'user-graduate', style: 'solid' })} className='pe-2' />
-              Qualifikationen
-            </li>
-          </ul>
+          <Menu
+            items={[
+              { name: 'Allgemein', active: tab === 'general', icon: icon({ name: 'table', style: 'solid' }), onClick: () => setTab('general') },
+              { name: 'Qualifikationen', active: tab === 'qualifications', icon: icon({ name: 'user-graduate', style: 'solid' }), onClick: () => setTab('qualifications') }
+            ]}
+          />
         </div>
 
         {tab === 'general' ? 
           <div className='col-span-8'>
             <h2 className='text-2xl'>Allgemein</h2>
-            <div className='grid grid-cols-4'>
-              <div className='col-span-1'>
-                <p className='text-base'>Name:</p>  
-                <p className='text-base'>Geburtsdatum:</p>
-                <p className='text-base'>Online Zugang:</p>
-              </div>  
-              <div className='col-span-1'>
-                <p className='text-base'>{user?.firstname} {user?.lastname}</p>
-                <p className='text-base'>{user?.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</p>
-                <p className='text-base'>{user?.webaccess ? 'Ja' : 'Nein'}</p>
-              </div>
-            </div>
-            <div className='border-b my-4'></div>
-            <h3 className='text-xl'>Kontaktdaten</h3>
-            <div className='grid grid-cols-4'>
-              <div className='col-span-1'>
-                <p className='text-base'>E-Mail:</p>
-                <p className='text-base'>Telefon:</p>
-              </div>  
-              <div className='col-span-1'>
-                <p className='text-base'>{user?.email}</p>
-                <p className='text-base'>{user?.phone}</p>
-              </div>
-            </div>
-            <div className='border-b my-4'></div>
-            <h3 className='text-xl'>Secruity</h3>
-            <div className='grid grid-cols-4'>
-              <div className='col-span-1'>
-                <p className='text-base'>Passwort:</p>
-              </div>  
-              <div className='col-span-1'>
-                <p className='text-base'>*********** { user ? <PasswordDialog userId={user?.id} /> : null}</p>
-              </div>
-            </div>
-            <div className='border-b my-4'></div>
-            <h3 className='text-xl'>Intern</h3>
-            <div className='grid grid-cols-4'>
-              <div className='col-span-1'>
-                <p className='text-base'>Erstellt am:</p>
-                <p className='text-base'>Zuletzt geändert am:</p>
-              </div>  
-              <div className='col-span-1'>
-                <p className='text-base'>{user?.created_at.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric' })} Uhr</p>
-                <p className='text-base'>{user?.updated_at.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric' })} Uhr</p>
-              </div>
+
+            <div className="flow-root mt-4">
+              <dl className="-my-3 divide-y divide-gray-300 text-sm">
+                <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+                  <dt className="font-medium text-gray-900">Name</dt>
+                  <dd className="text-gray-700 sm:col-span-2">{user?.firstname} {user?.lastname}</dd>
+                  <dt className="font-medium text-gray-900">Geburtsdatum</dt>
+                  <dd className="text-gray-700 sm:col-span-2">{user?.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</dd>
+                  <dt className="font-medium text-gray-900">Online Zugang</dt>
+                  <dd className="text-gray-700 sm:col-span-2">{user?.webaccess ? 'Ja' : 'Nein'}</dd>
+                </div>
+
+                <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+                  <dt className="font-medium text-gray-900">E-Mail</dt>
+                  <dd className="text-gray-700 sm:col-span-2">{user?.email}</dd>
+                  <dt className="font-medium text-gray-900">Telefon</dt>
+                  <dd className="text-gray-700 sm:col-span-2">{user?.phone}</dd>
+                </div>
+
+                <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+                  <dt className="font-medium text-gray-900">Passwort</dt>
+                  <dd className="text-gray-700 sm:col-span-2">*********** { user ? <PasswordDialog userId={user?.id} /> : null}</dd>
+                </div>
+
+                <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+                  <dt className="font-medium text-gray-900">Erstellt am</dt>
+                  <dd className="text-gray-700 sm:col-span-2">{user?.created_at.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric' })} Uhr</dd>
+                  <dt className="font-medium text-gray-900">Zuletzt geändert am</dt>
+                  <dd className="text-gray-700 sm:col-span-2">{user?.updated_at.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric' })} Uhr</dd>
+                </div>
+              </dl>
             </div>
           </div>
         : null}
