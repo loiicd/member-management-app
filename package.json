@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "8.2.0"
+    "concurrently": "8.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.4"
   }
 }
