@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe('create new user', () => {
   it('create new user', () => {
     cy.visit('/')

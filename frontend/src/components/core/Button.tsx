@@ -11,10 +11,15 @@ interface ButtonProps {
   onClick?: () => void
   loading?: boolean
 }
+// "inline-flex -space-x-px overflow-hidden rounded-md border bg-white shadow-sm"
+// "inline-block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative"
 
 const Button: FunctionComponent<ButtonProps> = ({ startIcon, endIcon, variant = 'contained', children, onClick, loading = false }) => {
   return (
-    <button className={`px-3 h-8 rounded-md ${variant === 'contained' ? 'border' : null} hover:bg-gray-200`} onClick={onClick}>
+    <button 
+      className={`-space-x-px overflow-hidden rounded-md ${variant === 'contained' ? 'border' : null} bg-white shadow-sm px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative`}
+      onClick={onClick}
+    >
       {loading ? <FontAwesomeIcon className='w-4 h-4 mr-2 animate-spin' icon={icon({ name: 'spinner', style: 'solid' })} /> : null}
       {startIcon && !loading ? <FontAwesomeIcon className='w-4 h-4 mr-2' icon={startIcon} /> : null}
       {children}
