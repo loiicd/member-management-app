@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "ts-node src/api/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "resetDB": "ts-node operations/resetDatabase.ts"
   },
   "dependencies": {
     "bcryptjs": "2.4.3",
