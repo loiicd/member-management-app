@@ -1,19 +1,29 @@
 /// <reference types="cypress" />
+import { login } from '../handler/loginHandler'
 
 describe('create new user', () => {
-  it('create new user', () => {
-    cy.visit('/')
-    cy.get('input[type="email"]').type('admin@example.com')
-    cy.get('input[type="password"]').type('Passwort')
-    cy.get('#loginButton').click()
+  beforeEach(() => {
+    login()
+  })
 
-    cy.get('#organizationCard').should('have.text','Beispiel Organisation')
-    cy.get('#organizationCard').click()
+  it('create new user', () => {
+    cy.wait(1000)
 
     cy.get('#toggleSidebar').click()
-    cy.contains('button', 'Mitglieder').click()
+    cy.contains('li', 'Mitglieder').click()
+
+    cy.wait(1000)
 
     cy.contains('button', 'Hinzufügen').click()
     cy.contains('span', 'Neu erstellen').click()
+
+    cy.fixture('userData.json').then((userData) => {
+      cy.get('#firstnameInput').type(userData.firstname)
+      cy.get('#lastnameInput').type(userData.lastname)
+      cy.get('#birthdateInput').type(userData.birthdate).type('{enter}')
+      cy.get('#addressInput').type(userData.address)
+      cy.get('#emailInput').type(userData.email)
+      cy.get('#phoneInput').type(userData.phone)
+    })
   })
 })

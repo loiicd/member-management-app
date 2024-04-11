@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { forwardRef } from "react"
 
 interface InputProps {
+  id?: string
   label?: string
   placeholder?: string
   disabled?: boolean
@@ -18,7 +19,7 @@ interface InputProps {
   spinningEndIcon?: boolean
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({ label, placeholder, disabled = false, type = 'text', required = false, value, error = false, errorMessage, onChange, startIcon, endIcon, spinningStartIcon = false, spinningEndIcon = false }, ref) => (
+const Input = forwardRef<HTMLInputElement, InputProps>(({ id, label, placeholder, disabled = false, type = 'text', required = false, value, error = false, errorMessage, onChange, startIcon, endIcon, spinningStartIcon = false, spinningEndIcon = false }, ref) => (
   <div>
     {label ? <label className='block text-sm font-medium leading-6 text-black dark:text-white'>{ label }</label> : null}
     <div className='relative'>
@@ -29,6 +30,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ label, placeholder, di
         : null
       }
       <input 
+        id={id}
         ref={ref}
         type={type}
         value={value === null ? undefined : typeof value === 'object' ? value.toString() : value} 

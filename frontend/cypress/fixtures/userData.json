@@ -1,0 +1,7 @@
+{
+  "firstname": "John",
+  "lastname": "Doe",
+  "birthdate": "1980-01-01",
+  "address": "123 Main St",
+  "email": "john.doe@example.com"
+}

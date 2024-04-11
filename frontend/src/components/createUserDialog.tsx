@@ -149,12 +149,12 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
         </div>
       </div>
       <div className='grid gap-4 mb-4 sm:grid-cols-2'>
-        <Input type='text' value={formData.firstname} label='Vorname' onChange={handleChange('firstname')} error={inputError.firstname} />
-        <Input type='text' value={formData.lastname} label='Nachname' onChange={handleChange('lastname')} error={inputError.lastname} />
-        <Input type='date' value={formData.birthdate?.toISOString().split('T')[0]} label='Geburtsdatum' onChange={handleChange('birthdate')} />
-        <Input type='text' value={formData.address} label='Adresse' onChange={handleChange('address')} />
-        <Input type='text' value={formData.email} label='E-Mail' onChange={handleChange('email')} />
-        <Input type='text' value={formData.phone} label='Telefon' onChange={handleChange('phone')} />
+        <Input id='firstnameInput' type='text' value={formData.firstname} label='Vorname' onChange={handleChange('firstname')} error={inputError.firstname} />
+        <Input id='lastnameInput' type='text' value={formData.lastname} label='Nachname' onChange={handleChange('lastname')} error={inputError.lastname} />
+        <Input id='birthdateInput' type='date' value={formData.birthdate?.toISOString().split('T')[0]} label='Geburtsdatum' onChange={handleChange('birthdate')} />
+        <Input id='addressInput' type='text' value={formData.address} label='Adresse' onChange={handleChange('address')} />
+        <Input id='emailInput' type='text' value={formData.email} label='E-Mail' onChange={handleChange('email')} />
+        <Input id='phoneInput' type='text' value={formData.phone} label='Telefon' onChange={handleChange('phone')} />
         <label className="relative inline-flex items-center cursor-pointer">
           <input type="checkbox" checked={formData.webaccess} className="sr-only peer" onChange={handleChange('webaccess')} />
           <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
