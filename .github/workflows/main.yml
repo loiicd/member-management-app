@@ -81,14 +81,12 @@ jobs:
         node-version: 20
 
     - name: Install Dependencies
-      run: |
-        cd backend
-        npm install
+      run: npm install
+      working-directory: backend
 
     - name: Build
-      run: |
-        cd backend
-        npm run build
+      run: npm run build
+      working-directory: backend
 
   deployment:
     runs-on: ubuntu-latest
