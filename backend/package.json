@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "ts-node src/api/index.ts",
+    "build": "tsc",
     "test": "jest",
     "resetDB": "ts-node operations/resetDatabase.ts"
   },
