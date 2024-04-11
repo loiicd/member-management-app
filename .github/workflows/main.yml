@@ -29,6 +29,10 @@ jobs:
   frontend-integration-tests:
     runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
   backend-unit-tests:
     runs-on: ubuntu-latest
 
@@ -51,6 +55,10 @@ jobs:
 
   backend-integration-tests:
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
   frontend-build:
     runs-on: ubuntu-latest
