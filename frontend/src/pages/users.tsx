@@ -28,7 +28,6 @@ export type UrlParamKey = typeof urlParamKeys[number]
 const UsersPage: FunctionComponent = () => {
   const { accountId } = useParams()
   const authParams = useAuthUser()()
-  const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
 
   const [users, setUsers] = useState<User[]>([])
   const [qualifications, setQualifications] = useState<Qualification[]>([])
@@ -55,6 +54,7 @@ const UsersPage: FunctionComponent = () => {
   }, [accountId, authParams])
 
   useEffect(() => {
+    const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
     userApiClient.getUsers(searchTerm, sortAttribute, sortDirection, urlParams.get('searchFilter'), urlParams.get('page'))
       .then(data => {
         setUsers(data.data)
@@ -63,7 +63,7 @@ const UsersPage: FunctionComponent = () => {
         setUrlParams(urlParams)
         console.log(users)
       })
-  }, [accountId, authParams, searchTerm, setUrlParams, sortAttribute, sortDirection, urlParams, userApiClient, users])
+  }, [accountId, authParams, searchTerm, setUrlParams, sortAttribute, sortDirection, urlParams, users])
 
   const toggleSearchFilter = (attribute: string): void => {
     const list = searchFilter ? searchFilter.split('%') : []
