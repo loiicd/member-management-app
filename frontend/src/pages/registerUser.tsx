@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { checkEmail, registerUser } from '../services/authenticate'
 import AuthenticateLayout from '../layout/authenticate'
 import Input from '../components/core/Input'
-import { Axios, AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 
 type ErrorObject = {
   email: string | undefined

@@ -1,7 +1,6 @@
 import { FunctionComponent, ReactNode, useState } from 'react'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Button from './core/Button'
-import Menu from './core/Menu'
 
 interface DropwdownProps {
   text: string

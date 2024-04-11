@@ -21,9 +21,9 @@ const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type
 
   const [formData, setFormData] = useState<Test>({name: undefined, abbreviation: undefined, color: '#FF3B30'})
 
-  const [color, setColor] = useState<string>('#FF3B30')
+  // const [color, setColor] = useState<string>('#FF3B30')
 
-  const changeColor = (color: string) => setColor(color)
+  // const changeColor = (color: string) => setColor(color)
 
   useEffect(() => {
     if (type === 'update' && qualificationId) {

@@ -1,5 +1,5 @@
 import { FunctionComponent, useRef, useState } from 'react'
-import { UserApiClient } from '../services/userApiClient'
+// import { UserApiClient } from '../services/userApiClient'
 import Input from './core/Input'
 import Modal from './base/modal'
 import Button from './core/Button'
@@ -12,7 +12,7 @@ interface InviteUserDialogProps {
 }
 
 const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, close, accountId }) => {
-  const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
+  // const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
   const accountApiClient = new AccountApiClient('http://localhost:3002', undefined, accountId)
 
   const [showError, setShowError] = useState<false | any>(false)
