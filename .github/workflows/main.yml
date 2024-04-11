@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  frontend-tests:
+  frontend-unit-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,8 +25,11 @@ jobs:
 
     - name: Run Jest Tests
       run: npm run test --prefix frontend
+  
+  frontend-integration-tests:
+    runs-on: ubuntu-latest
 
-  backend-tests:
+  backend-unit-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -46,9 +49,12 @@ jobs:
     - name: Run Jest Tests
       run: npm run test --prefix backend
 
+  backend-integration-tests:
+    runs-on: ubuntu-latest
+
   frontend-build:
     runs-on: ubuntu-latest
-    needs: frontend-tests
+    needs: [frontend-unit-tests, frontend-integration-tests]
 
     steps:
     - name: Checkout Repository
@@ -69,7 +75,7 @@ jobs:
 
   backend-build:
     runs-on: ubuntu-latest
-    needs: backend-tests
+    needs: [backend-unit-tests, backend-integration-tests]
 
     steps:
     - name: Checkout Repository
