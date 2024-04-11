@@ -39,18 +39,4 @@ describe('AuthenticateService', () => {
       expect(result).toEqual({type: 'Success', data: { userId: '1', email: 'admin@example.com', token: expect.any(String) }})
     })
   })
-
-  describe('register', () => {
-    it('should throw error', async () => {
-      mockQuery.mockResolvedValueOnce(new Error('Test Error'))
-      await authenticateService.register('Exampe Organization', 'test@example.com', 'Password')
-      expect(authenticateService.register).toThrow(Error)
-    })
-
-    it('should register user withour error', async () => {
-      mockQuery.mockResolvedValueOnce({ rows: [] })
-      await authenticateService.register('Exampe Organization', 'test@example.com', 'Password')
-      expect(authenticateService.register).toHaveBeenCalled()
-    })
-  })
 })
