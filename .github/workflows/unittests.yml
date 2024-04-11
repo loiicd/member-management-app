@@ -45,3 +45,45 @@ jobs:
 
     - name: Run Jest Tests
       run: npm run test --prefix backend
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    needs: frontend-tests
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 14
+
+    - name: Install Dependencies
+      run: |
+        cd frontend
+        npm install
+
+    - name: Build
+      run: npm run build --prefix frontend
+
+  backend-build:
+    runs-on: ubuntu-latest
+    needs: backend-tests
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 14
+
+    - name: Install Dependencies
+      run: |
+        cd backend
+        npm install
+
+    - name: Build
+      run: npm run build --prefix backend
