@@ -18,7 +18,7 @@ export class AuthenticateService {
       WHERE login_email = '${email}'`
     const result = await client.query(query)
     const user = result.rows[0]
-    const userFound = !!user
+    const userFound = !!user 
     client.end()
     if (!userFound) return { type: 'Error' }
     if (!user.password) return { type: 'PasswordMissed', data: { userId: user.id } }

@@ -14,7 +14,7 @@ describe('AuthenticateService', () => {
   })
 
   describe('login', () => {
-    it('should return null if user is not found', async () => {
+    it('should return Object with Error if user is not found', async () => {
       connectMock.mockResolvedValueOnce(mockClient)
       mockQuery.mockResolvedValueOnce({ rows: [] })
 
@@ -23,9 +23,7 @@ describe('AuthenticateService', () => {
 
       const result = await authenticateService.login(email, password)
 
-      expect(result).toBeNull()
+      expect(result).toEqual({ type: 'Error' })
     })
-
-    
   })
 })
