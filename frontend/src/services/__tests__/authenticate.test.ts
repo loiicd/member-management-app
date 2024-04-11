@@ -17,15 +17,17 @@ describe('authenticate', () => {
     config: {},
   }
 
-  it('call login with right url', async () => {
+  beforeEach(() => {
     axiosPostMock.mockResolvedValueOnce(goodResponse)
+  })
+
+  it('call login with right url', async () => {
     await login(email, password)
     expect(axiosPostMock).toHaveBeenCalledTimes(1)
     expect(axiosPostMock).toHaveBeenCalledWith(expectedUrl, expectedBody)
   })
 
   it('return right data', async () => {
-    axiosPostMock.mockResolvedValueOnce(goodResponse)
     const result = await login(email, password)
     expect(result).toEqual({"config": {}, "data": "mocked data", "headers": {}, "status": 200, "statusText": "OK"})
   })
