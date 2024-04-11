@@ -86,7 +86,9 @@ jobs:
         npm install
 
     - name: Build
-      run: npm run build --prefix backend
+      run: |
+        cd backend
+        npm run build
 
   deployment:
     runs-on: ubuntu-latest
