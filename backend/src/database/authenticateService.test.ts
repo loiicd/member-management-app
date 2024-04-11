@@ -25,5 +25,17 @@ describe('AuthenticateService', () => {
 
       expect(result).toEqual({ type: 'Error' })
     })
+
+    it('should return Object with Success & Data if user is found', async () => {
+      connectMock.mockResolvedValueOnce(mockClient)
+      mockQuery.mockResolvedValueOnce({ rows: [{ id: 1, email: 'test@example.com' }] })
+
+      const email = 'test@example.com'
+      const password = 'password123'
+
+      const result = await authenticateService.login(email, password)
+
+      expect(result).toEqual({ type: 'Success', data: { id: 1, email: 'test@example.com' } })
+    })
   })
 })
