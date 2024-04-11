@@ -13,7 +13,9 @@ const resultDataOne = {
     email: 'max.mustermann@example.com',
     phone: '1234567890',
     webaccess: true,
-    qualifications: []
+    qualifications: [],
+    created_at: '2022-01-01',
+    updated_at: '2022-01-01',
 }
 const resultDataMany = [
   {
@@ -25,7 +27,9 @@ const resultDataMany = [
     email: 'max.mustermann@example.com',
     phone: '1234567890',
     webaccess: true,
-    qualifications: []
+    qualifications: [],
+    created_at: '2022-01-01',
+    updated_at: '2022-01-01',
   },
   {
     id: '456',
@@ -36,7 +40,9 @@ const resultDataMany = [
     email: 'erika.musterfrau@example.com',
     phone: '0987654321',
     webaccess: true,
-    qualifications: []
+    qualifications: [],
+    created_at: '2022-01-01',
+    updated_at: '2022-01-01',
   }
 ]
 
@@ -69,8 +75,45 @@ const authorization: Authorization = {
   accountId: '987'
 }
 
-const expectedResponseData = {"address": "Musterstraße 1, 12345 Musterstadt", "birthdate": new Date('1981-05-08'), "email": "max.mustermann@example.com", "firstname": "Max", "id": "123", "lastname": "Mustermann", "qualifications": [], "phone": "1234567890", "webaccess": true}
-const expectedResponseDataMany = [{"address": "Musterstraße 1, 12345 Musterstadt", "birthdate": new Date ('1981-05-08'), "email": "max.mustermann@example.com", "firstname": "Max", "id": "123", "lastname": "Mustermann", "qualifications": [], "phone": "1234567890", "webaccess": true}, {"address": "Musterstraße 2, 12345 Musterstadt", "birthdate": new Date ('1990-10-04'), "email": "erika.musterfrau@example.com", "firstname": "Erika", "id": "456", "lastname": "Musterfrau", "qualifications": [], "phone": "0987654321", "webaccess": true}]
+const expectedResponseData = {
+  "address": "Musterstraße 1, 12345 Musterstadt", 
+  "birthdate": new Date('1981-05-08'), 
+  "email": "max.mustermann@example.com", 
+  "firstname": "Max", 
+  "id": "123", 
+  "lastname": "Mustermann", 
+  "qualifications": [], 
+  "phone": "1234567890", 
+  "webaccess": true,
+  "created_at": new Date('2022-01-01'),
+  "updated_at": new Date('2022-01-01'),
+}
+const expectedResponseDataMany = [
+  {
+    "address": "Musterstraße 1, 12345 Musterstadt", 
+    "birthdate": new Date ('1981-05-08'), 
+    "email": "max.mustermann@example.com", 
+    "firstname": "Max", 
+    "id": "123", 
+    "lastname": "Mustermann", 
+    "qualifications": [], 
+    "phone": "1234567890", 
+    "webaccess": true,
+    "created_at": new Date('2022-01-01'),
+    "updated_at": new Date('2022-01-01'),
+  }, {
+    "address": "Musterstraße 2, 12345 Musterstadt", 
+    "birthdate": new Date ('1990-10-04'), 
+    "email": "erika.musterfrau@example.com", 
+    "firstname": "Erika", 
+    "id": "456", 
+    "lastname": "Musterfrau", 
+    "qualifications": [], 
+    "phone": "0987654321", 
+    "webaccess": true,
+    "created_at": new Date('2022-01-01'),
+    "updated_at": new Date('2022-01-01'),
+  }]
 
 describe('getUser', () => {
   const axiosGetMock = axios.get as jest.Mock
@@ -93,16 +136,17 @@ describe('getUser', () => {
 
 describe('getUsers', () => {
   const axiosGetMock = axios.get as jest.Mock
-  const expectedUrlWithSearchTerm = 'http://localhost:3002/user?searchTerm=test'
+  const expectedUrlWithSearchTerm = 'http://localhost:3002/user'
+  const expectedBodyWithSearchTerm = {"params": {"accountId": "987", "searchTerm": "test"}}
   const expectedUrlWithoutSearchTerm = 'http://localhost:3002/user'
-  const accountId = '123'
+  const expectedBodyWithoutSearchTerm = {"params": {"accountId": "987", "searchTerm": undefined}}
 
   it('call getUsers with right url with search term', async () => {
     const searchTerm = 'test'
     axiosGetMock.mockResolvedValueOnce(goodResponseMany)
     await getUsers(authorization, searchTerm)
     expect(axiosGetMock).toHaveBeenCalledTimes(1)
-    expect(axiosGetMock).toHaveBeenCalledWith(expectedUrlWithSearchTerm)
+    expect(axiosGetMock).toHaveBeenCalledWith(expectedUrlWithSearchTerm, expectedBodyWithSearchTerm)
   })
 
   it('call getUsers with right url without search term', async () => {
@@ -110,7 +154,7 @@ describe('getUsers', () => {
     axiosGetMock.mockResolvedValueOnce(goodResponseMany)
     await getUsers(authorization, searchTerm)
     expect(axiosGetMock).toHaveBeenCalledTimes(1)
-    expect(axiosGetMock).toHaveBeenCalledWith(expectedUrlWithoutSearchTerm)
+    expect(axiosGetMock).toHaveBeenCalledWith(expectedUrlWithoutSearchTerm, expectedBodyWithoutSearchTerm)
   })
 
   it('return data from response', async () => {

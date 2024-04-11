@@ -11,7 +11,7 @@ export const getUser = async (id: string): Promise<User> => {
 export const getUsers = async (authorization: Authorization, searchTerm: string | undefined): Promise<User[]> => {
   const url = 'http://localhost:3002/user'
   const response = await axios.get(url, { params: { accountId: authorization.accountId, searchTerm } })
-  return response.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate), created_at: new Date(response.data.created_at), updated_at: new Date(response.data.updated_at) }))
+  return response.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate), created_at: new Date(user.created_at), updated_at: new Date(user.updated_at) }))
 }
 
 export const putPassword = async (userId: string, password: string): Promise<void> => {
