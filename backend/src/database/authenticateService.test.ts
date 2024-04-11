@@ -28,7 +28,7 @@ describe('AuthenticateService', () => {
 
     it('should return PasswordMissed if user has now password', async () => {
       connectMock.mockResolvedValueOnce(mockClient)
-      mockQuery.mockResolvedValueOnce({ rows: [{ id: 1, email: 'test@example.com' }] })
+      mockQuery.mockResolvedValueOnce({ rows: [{ id: '1', email: 'test@example.com', password: null, passwordsalt: null }] })
 
       const email = 'test@example.com'
       const password = 'password123'
@@ -40,10 +40,10 @@ describe('AuthenticateService', () => {
 
     it('should return Success & Data if user found', async () => {
       connectMock.mockResolvedValueOnce(mockClient)
-      mockQuery.mockResolvedValueOnce({ rows: [{ id: 1, email: 'test@example.com', password: 'password123' }] })
+      mockQuery.mockResolvedValueOnce({ rows: [{ id: '1', email: 'test@example.com', password: '$2a$10$DOyVPpgyw2zUxyPl4I4Kpu5Dg73QcaimXXhHFBjd15qxzc2WPOzYW', passwordsalt: '$2a$10$jR5kyQ2QHqtYYs2ZGD7bGO' }] })
 
-      const email = 'test@example.com'
-      const password = 'password123'
+      const email = 'admin@example.com'
+      const password = 'Passwort'
 
       const result = await authenticateService.login(email, password)
 
