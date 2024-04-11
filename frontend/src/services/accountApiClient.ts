@@ -3,7 +3,7 @@ import { BaseApiClient } from './baseApiClient'
 
 export class AccountApiClient extends BaseApiClient {
 
-  async getAccounts(accountId: string): Promise<Account> {
+  async getAccount(accountId: string): Promise<Account> {
     return (await this.axiosInstance.get(`account/${accountId}`)).data
   }
 

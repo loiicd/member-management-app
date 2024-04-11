@@ -24,7 +24,7 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, so
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-200">
       <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
-        <thead className="ltr:text-left rtl:text-right">
+        <thead>
           <tr>
             <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 cursor-pointer" onClick={() => handleChangeSort('firstname')}>
               Vorname

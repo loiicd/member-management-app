@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom'
 import StandardLayout from '../layout/standard'
 import { useEffect, useState } from 'react'
-import { getAccount } from '../services/account'
 import { Account } from '../types/account'
 import PageHead from '../components/pageHead'
+import { AccountApiClient } from '../services/accountApiClient'
 
 const DashboardPage = () => {
   const { accountId } = useParams()
@@ -12,7 +12,8 @@ const DashboardPage = () => {
   if (!accountId) throw new Error('Account ID is required')
 
   useEffect(() => {
-    getAccount(accountId)
+    const accountApiClient = new AccountApiClient('http://localhost:3002', undefined, accountId)
+    accountApiClient.getAccount(accountId)
       .then(data => setAccount(data))
   }, [accountId])
   
