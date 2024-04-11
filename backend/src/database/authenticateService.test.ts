@@ -35,7 +35,19 @@ describe('AuthenticateService', () => {
 
       const result = await authenticateService.login(email, password)
 
-      expect(result).toEqual({ type: 'Success', data: { type: 'PasswordMissed', data: { userId: '1' }}})
+      expect(result).toEqual({ type: 'PasswordMissed', data: { userId: '1' } })
+    })
+
+    it('should return Success & Data if user found', async () => {
+      connectMock.mockResolvedValueOnce(mockClient)
+      mockQuery.mockResolvedValueOnce({ rows: [{ id: 1, email: 'test@example.com', password: 'password123' }] })
+
+      const email = 'test@example.com'
+      const password = 'password123'
+
+      const result = await authenticateService.login(email, password)
+
+      expect(result).toEqual({type: 'Success', data: { userId: '1', email: 'test@example.com', token: expect.any(String) }})
     })
   })
 })
