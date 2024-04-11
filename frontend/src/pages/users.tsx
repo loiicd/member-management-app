@@ -63,7 +63,7 @@ const UsersPage: FunctionComponent = () => {
         setUrlParams(urlParams)
         console.log(users)
       })
-  }, [accountId, authParams, urlParams])
+  }, [accountId, authParams, searchTerm, setUrlParams, sortAttribute, sortDirection, urlParams, userApiClient, users])
 
   const toggleSearchFilter = (attribute: string): void => {
     const list = searchFilter ? searchFilter.split('%') : []
