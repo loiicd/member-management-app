@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { getUser, getUsers, postUser, putPassword, updateUser, deleteUser } from '../user'
+import { getUser, getUsers, putPassword, updateUser } from '../user'
+import { Authorization } from '../../types/authorization'
 
 jest.mock('axios')
 
@@ -62,6 +63,12 @@ const goodResponse = {
   config: {},
 }
 
+const authorization: Authorization = {
+  userId: '123',
+  email: 'max.mustermann@example.com',
+  accountId: '987'
+}
+
 const expectedResponseData = {"address": "Musterstraße 1, 12345 Musterstadt", "birthdate": new Date('1981-05-08'), "email": "max.mustermann@example.com", "firstname": "Max", "id": "123", "lastname": "Mustermann", "qualifications": [], "phone": "1234567890", "webaccess": true}
 const expectedResponseDataMany = [{"address": "Musterstraße 1, 12345 Musterstadt", "birthdate": new Date ('1981-05-08'), "email": "max.mustermann@example.com", "firstname": "Max", "id": "123", "lastname": "Mustermann", "qualifications": [], "phone": "1234567890", "webaccess": true}, {"address": "Musterstraße 2, 12345 Musterstadt", "birthdate": new Date ('1990-10-04'), "email": "erika.musterfrau@example.com", "firstname": "Erika", "id": "456", "lastname": "Musterfrau", "qualifications": [], "phone": "0987654321", "webaccess": true}]
 
@@ -93,7 +100,7 @@ describe('getUsers', () => {
   it('call getUsers with right url with search term', async () => {
     const searchTerm = 'test'
     axiosGetMock.mockResolvedValueOnce(goodResponseMany)
-    await getUsers(accountId, searchTerm)
+    await getUsers(authorization, searchTerm)
     expect(axiosGetMock).toHaveBeenCalledTimes(1)
     expect(axiosGetMock).toHaveBeenCalledWith(expectedUrlWithSearchTerm)
   })
@@ -101,7 +108,7 @@ describe('getUsers', () => {
   it('call getUsers with right url without search term', async () => {
     const searchTerm = undefined
     axiosGetMock.mockResolvedValueOnce(goodResponseMany)
-    await getUsers(accountId, searchTerm)
+    await getUsers(authorization, searchTerm)
     expect(axiosGetMock).toHaveBeenCalledTimes(1)
     expect(axiosGetMock).toHaveBeenCalledWith(expectedUrlWithoutSearchTerm)
   })
@@ -109,25 +116,8 @@ describe('getUsers', () => {
   it('return data from response', async () => {
     const searchTerm = undefined
     axiosGetMock.mockResolvedValueOnce(goodResponseMany)
-    const data = await getUsers(accountId, searchTerm)
+    const data = await getUsers(authorization, searchTerm)
     expect(data).toEqual(expectedResponseDataMany)
-  })
-})
-
-describe('postUser', () => {
-  const axiosPostMock = axios.post as jest.Mock
-  const user = {
-    firstname: 'test',
-    lastname: 'test',
-    webaccess: true,
-  }
-  const expectedUrl = 'http://localhost:3002/user'
-
-  it('call postUser with right url & data', async () => {
-    axiosPostMock.mockResolvedValueOnce(goodResponse)
-    await postUser(user)
-    expect(axiosPostMock).toHaveBeenCalledTimes(1)
-    expect(axiosPostMock).toHaveBeenCalledWith(expectedUrl, user)
   })
 })
 
@@ -152,7 +142,10 @@ describe('updateUser', () => {
     firstname: 'test',
     lastname: 'test',
     webaccess: true,
-    qualifications: []
+    qualifications: [],
+    isOnlineUser: true,
+    created_at: new Date(),
+    updated_at: new Date()
   }
   const expectedUrl = 'http://localhost:3002/user'
 
@@ -161,18 +154,5 @@ describe('updateUser', () => {
     await updateUser(user)
     expect(axiosPutMock).toHaveBeenCalledTimes(1)
     expect(axiosPutMock).toHaveBeenCalledWith(expectedUrl, user)
-  })
-})
-
-describe('deleteUser', () => {
-  const axiosDeleteMock = axios.delete as jest.Mock
-  const userId = '123'
-  const expectedUrl = `http://localhost:3002/user/${userId}`
-
-  it('call deleteUser with right url', async () => {
-    axiosDeleteMock.mockResolvedValueOnce(goodResponse)
-    await deleteUser(userId)
-    expect(axiosDeleteMock).toHaveBeenCalledTimes(1)
-    expect(axiosDeleteMock).toHaveBeenCalledWith(expectedUrl)
   })
 })
