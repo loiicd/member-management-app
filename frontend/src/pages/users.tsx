@@ -5,7 +5,6 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import { useAuthUser } from 'react-auth-kit'
 import { UserApiClient } from '../services/userApiClient'
 import PageHead from '../components/pageHead'
-import Button from '../components/core/Button'
 import Dropwdown from '../components/dropdown'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -15,6 +14,7 @@ import UserTable from '../components/userTable'
 import Input from '../components/core/Input'
 import CreateUserDialog from '../components/createUserDialog'
 import InviteUserDialog from '../components/inviteUserDialog'
+import Menu from '../components/core/Menu'
 
 const sortAttributes = ['firstname', 'lastname',  'birthdate', 'address', 'webaccess'] as const
 export type SortAttribute = typeof sortAttributes[number]
@@ -112,23 +112,28 @@ const UsersPage: FunctionComponent = () => {
   return (
     <StandardLayout accountId={accountId}>
       <PageHead title='Mitglieder'>
-        <Button>Test</Button>
+        {/* <Button>Test</Button> */}
       </PageHead>
       <div className='py-4 flex justify-between'>
         <h2>Test</h2>
         <div className='flex justify-between gap-2'>
           <Input placeholder='Suche ...' value={searchTerm != null ? searchTerm : undefined} onChange={handleSearch} startIcon={icon({ name: 'search', style: 'solid' })} />
           <Dropwdown text='Hinzufügen'>
-            <ul className='py-2'>
-              <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer' onClick={() => setOpenCreateUserDialog(true)}>
-                <FontAwesomeIcon icon={icon({ name: 'plus', style: 'solid' })} className='w-4 h-4' />
-                <span className='ms-2'>Neu erstellen</span>
-              </li>
-              <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer' onClick={() => setOpenInviteUserDialog(true)}>
-                <FontAwesomeIcon icon={icon({ name: 'id-card', style: 'solid' })} className='w-4 h-4' />
-                <span className='ms-2'>Bestehenden einladen</span>
-              </li>
-            </ul>
+            <div className='p-2'>
+              <Menu 
+                items={[{
+                  name: 'Neu erstellen',
+                  icon: icon({ name: 'plus', style: 'solid' }),
+                  onClick: () => setOpenCreateUserDialog(true),
+                  active: false
+                }, {
+                  name: 'Bestehenden einladen',
+                  icon: icon({ name: 'id-card', style: 'solid' }),
+                  onClick: () => setOpenInviteUserDialog(true),
+                  active: false
+                }]}
+              />
+            </div>
           </Dropwdown>
           <Dropwdown text='Qualifikation' counter={searchFilter ? searchFilter.split('%').length : undefined}>
             <ul className='py-2'>

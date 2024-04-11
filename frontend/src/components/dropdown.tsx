@@ -1,6 +1,7 @@
 import { FunctionComponent, ReactNode, useState } from 'react'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Button from './core/Button'
+import Menu from './core/Menu'
 
 interface DropwdownProps {
   text: string
@@ -21,7 +22,11 @@ const Dropwdown: FunctionComponent<DropwdownProps> = ({ text, counter, children 
       >
         {text} {counter && <span className='bg-slate-200 rounded-full px-1 text-sm'>{counter}</span>}
       </Button>
-      {open && <div className='absolute bg-white mt-2 z-50 rounded-lg shadow'>{children}</div>}
+      {open ? 
+        <div className='absolute z-10 mt-2 rounded-md border border-gray-100 bg-white shadow-lg'>
+          {children}
+        </div>
+      : null}
     </div>
   )
 }
