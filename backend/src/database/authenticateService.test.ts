@@ -32,11 +32,25 @@ describe('AuthenticateService', () => {
     })
 
     it('should return Success & Data if user found', async () => {
-      mockQuery.mockResolvedValueOnce({ rows: [{ id: '1', email: 'test@example.com', password: '$2a$10$DOyVPpgyw2zUxyPl4I4Kpu5Dg73QcaimXXhHFBjd15qxzc2WPOzYW', passwordsalt: '$2a$10$jR5kyQ2QHqtYYs2ZGD7bGO' }] })
+      mockQuery.mockResolvedValueOnce({ rows: [{ id: '1', email: 'admin@example.com', password: '$2a$10$DOyVPpgyw2zUxyPl4I4Kpu5Dg73QcaimXXhHFBjd15qxzc2WPOzYW', passwordsalt: '$2a$10$jR5kyQ2QHqtYYs2ZGD7bGO' }] })
       const email = 'admin@example.com'
       const password = 'Passwort'
       const result = await authenticateService.login(email, password)
-      expect(result).toEqual({type: 'Success', data: { userId: '1', email: 'test@example.com', token: expect.any(String) }})
+      expect(result).toEqual({type: 'Success', data: { userId: '1', email: 'admin@example.com', token: expect.any(String) }})
+    })
+  })
+
+  describe('register', () => {
+    it('should throw error', async () => {
+      mockQuery.mockResolvedValueOnce(new Error('Test Error'))
+      await authenticateService.register('Exampe Organization', 'test@example.com', 'Password')
+      expect(authenticateService.register).toThrow(Error)
+    })
+
+    it('should register user withour error', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] })
+      await authenticateService.register('Exampe Organization', 'test@example.com', 'Password')
+      expect(authenticateService.register).toHaveBeenCalled()
     })
   })
 })
