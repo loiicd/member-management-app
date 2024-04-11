@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import Typography from "../components/base/typography"
-import { getqualifications } from "../services/qualification"
 import { Qualification } from "../types/qualification"
 import QualificationDialog from "../components/qualificationDialog"
 import { useNavigate, useParams } from "react-router-dom"
@@ -9,20 +8,20 @@ import PageHead from "../components/pageHead"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { icon } from "@fortawesome/fontawesome-svg-core/import.macro"
 import IconButton from "../components/iconButton"
+import { QualificationApiClient } from "../services/qualificationApiClient"
 
 const SettingsQualificationPage = () => {
   const [qualifications, setqualifications] = useState<Qualification[]>([])
   const { accountId } = useParams()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (accountId) {
-      getqualifications(accountId)
-        .then((result) => setqualifications(result) ) 
-    }
-  }, [accountId])
-
   if (!accountId) throw new Error('Account ID is required')
+
+  useEffect(() => {
+    const qualificationApiClient = new QualificationApiClient('http://localhost:3002', undefined, accountId)
+    qualificationApiClient.getQualifications(accountId)
+      .then(result => setqualifications(result)) 
+  }, [accountId])
 
   return (
     <StandardLayout accountId={accountId}>

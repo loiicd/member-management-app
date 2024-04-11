@@ -47,6 +47,17 @@ const NewSidebar: FunctionComponent<SidebarProps> = ({ accountId }) => {
                 </p>
               </li>
             </ul>
+
+            <ul className="space-y-1 border-gray-100 pt-4">
+              <li>
+                <p className="cursor-pointer group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700" onClick={() => navigate(`/${accountId}/settings/general`)}>
+                <FontAwesomeIcon icon={icon({ name: 'gear', style: 'solid' })} />
+                  <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
+                    Einstellungen
+                  </span>
+                </p>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

@@ -8,13 +8,13 @@ import PageHead from '../components/pageHead'
 import Dropwdown from '../components/dropdown'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { getqualifications } from '../services/qualification'
 import { Qualification } from '../types/qualification'
 import UserTable from '../components/userTable'
 import Input from '../components/core/Input'
 import CreateUserDialog from '../components/createUserDialog'
 import InviteUserDialog from '../components/inviteUserDialog'
 import Menu from '../components/core/Menu'
+import { QualificationApiClient } from '../services/qualificationApiClient'
 
 const sortAttributes = ['firstname', 'lastname',  'birthdate', 'address', 'webaccess'] as const
 export type SortAttribute = typeof sortAttributes[number]
@@ -49,8 +49,9 @@ const UsersPage: FunctionComponent = () => {
   const handleCloseInviteUserDialog = () => setOpenInviteUserDialog(false)
 
   useEffect(() => {
-    getqualifications(accountId)
-      .then((data) => setQualifications(data))
+    const qualificationApiClient = new QualificationApiClient('http://localhost:3002', undefined, accountId)
+    qualificationApiClient.getQualifications(accountId)
+      .then(data => setQualifications(data))
   }, [accountId, authParams])
 
   useEffect(() => {
@@ -61,9 +62,9 @@ const UsersPage: FunctionComponent = () => {
         handleChangeTotalEntries(data.total)
         urlParams.set('page', data.page.toString())
         setUrlParams(urlParams)
-        console.log(users)
+        console.log('users', users)
       })
-  }, [accountId, authParams, searchTerm, setUrlParams, sortAttribute, sortDirection, urlParams, users])
+  }, [accountId, authParams, searchTerm, sortAttribute, sortDirection, urlParams])
 
   const toggleSearchFilter = (attribute: string): void => {
     const list = searchFilter ? searchFilter.split('%') : []

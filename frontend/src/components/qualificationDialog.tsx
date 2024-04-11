@@ -1,8 +1,8 @@
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
 import Modal from './base/modal'
 import Input from './base/input'
-import { postqualification } from '../services/qualification'
 import Button from './core/Button'
+import { QualificationApiClient } from '../services/qualificationApiClient'
 
 type Test = {
   name: string | undefined,
@@ -57,7 +57,8 @@ const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type
     if (formData.name) {
       if (type === 'insert') {
         // @ts-ignore
-        postqualification(accountId, formData)
+        const qualificationApiClient = new QualificationApiClient('http://localhost:3002', undefined, accountId)
+        qualificationApiClient.postQualification(accountId, formData)
           .then(handleClose)
           .catch((error) => alert(error))
       } else {
