@@ -1,6 +1,11 @@
 import { Account } from '../types/account'
 import { BaseApiClient } from './baseApiClient'
 
+type ApiResponse = {
+  type: string
+  message: string
+}
+
 export class AccountApiClient extends BaseApiClient {
 
   async getAccount(accountId: string): Promise<Account> {

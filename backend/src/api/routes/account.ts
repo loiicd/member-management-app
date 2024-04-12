@@ -19,7 +19,7 @@ router.post('/user', tryCatchMiddleware(async (req: Request, res: Response) => {
   const loginEmail = validateEmail(req.body.loginEmail)
   const user = await userEntityService.getOneByEmail(loginEmail)
   accountEntityService.addUserById(accountId, user.id)
-  res.status(200).send('Success')
+  res.sendStatus(201)
 }))
 
 export default router

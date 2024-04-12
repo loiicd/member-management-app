@@ -1,5 +1,6 @@
 import { AccountType } from '../models/accountShema'
 import { connect } from './db'
+import { ValidateError } from './validateError'
 
 export class AccountEntityService {
   async getOneById(id: string): Promise<AccountType> {
@@ -27,7 +28,7 @@ export class AccountEntityService {
       await client.query('COMMIT')
     } catch (error) {
       await client.query('ROLLBACK')
-      throw error
+      throw new ValidateError('USER_ALREADY_IN_ACCOUNT', 'User already in account')
     } finally {
       await client.end()
     }

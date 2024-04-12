@@ -6,6 +6,7 @@ import { Client } from 'pg'
 import { QualificationType } from '../models/qualificationShema'
 import { ApiResponse } from '../types/apiResponse'
 import { DataBaseResponse } from '../types/DataBaseResponse'
+import { ValidateError } from './validateError'
 
 export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
 export type SortDirection = 'ASC' | 'DESC'
@@ -48,11 +49,15 @@ export class UserEntityService {
     try {
       await client.query('BEGIN')
       const user = await selectUserByEmail(client, email)
+      if (!user) { 
+        throw new ValidateError('USER_NOT_FOUND', 'User not found')
+      }
       user.qualifications = await selectQualifications(client, user.id)
       await client.query('COMMIT')
       return user
     } catch (error) {
       await client.query('ROLLBACK')
+      console.log('Error:', error)
       throw error
     } finally {
       await client.end()
