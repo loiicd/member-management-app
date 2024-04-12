@@ -32,7 +32,7 @@ router.post('/',tryCatchMiddleware(async (req: Request, res: Response) => {
 router.put('/',tryCatchMiddleware(async (req: Request, res: Response) => {
   const user = validateUser(req.body)
   await userEntityService.update(user)
-  res.status(200).send('User updated')
+  res.sendStatus(201)
 }))
 
 // Update password
@@ -40,14 +40,14 @@ router.put('/password/:id',tryCatchMiddleware(async (req: Request, res: Response
   const userId = validateUUID(req.params.id)
   const password = validateString(req.body.newPassword)
   await userEntityService.updatePassword(userId, password)
-  res.status(200).send('Password updated')
+  res.sendStatus(201)
 }))
 
 // Delete user
 router.delete('/:id', tryCatchMiddleware(async (req: Request, res: Response) => {
   const id = validateUUID(req.params.id)
   await userEntityService.delete(id)
-  res.status(200).send('User deleted')
+  res.sendStatus(201)
 }))
 
 // Get accounts by user ID
@@ -69,7 +69,7 @@ router.post('/orgrel/:email', tryCatchMiddleware(async (req: Request, res: Respo
   const accountId = validateUUID(req.headers.accountid)
   const user = await userEntityService.getOneByEmail(email)
   userEntityService.addAccountRelation(user.id, accountId)
-  res.status(200).send('success')
+  res.sendStatus(201)
 }))
 
 export default router
