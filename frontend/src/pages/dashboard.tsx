@@ -20,7 +20,11 @@ const DashboardPage = () => {
   return (
     <StandardLayout accountId={accountId}>
       <PageHead title={`Dashboard - ${account?.organisation_name}`}></PageHead>
-      <div className='h-screen'></div>
+      <div className='h-screen'>
+        <div className='border rounded'>
+          <p>Hello</p>
+        </div>
+      </div>
     </StandardLayout>
   )
 }

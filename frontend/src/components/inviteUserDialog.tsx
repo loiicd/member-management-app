@@ -1,6 +1,6 @@
 import { FunctionComponent, useRef, useState } from 'react'
 import Input from './core/Input'
-import Modal from './base/modal'
+import Modal from './core/Modal'
 import Button from './core/Button'
 import { AccountApiClient } from '../services/accountApiClient'
 
@@ -32,8 +32,8 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
   }
 
   return (
-    <Modal open={isOpen} onClose={handleClose} title='User hinzufügen'>
-      <div className='flex justify-between align-bottom'>
+    <Modal open={isOpen} onClose={handleClose} title='User hinzufügen' size='sm'>
+      <div className='flex flex-col justify-between gap-4'>
         <Input type='text' label='E-Mail' ref={emailInputRef} />
         <Button onClick={handleTest}>Einladen</Button>
       </div>

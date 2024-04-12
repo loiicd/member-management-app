@@ -1,5 +1,5 @@
 import { FC, useRef, useState } from 'react'
-import Modal from './base/modal'
+import Modal from './core/Modal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { UserApiClient } from '../services/userApiClient'

@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react'
-import Modal from './base/modal'
+import Modal from './core/Modal'
 import Button from './core/Button'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 

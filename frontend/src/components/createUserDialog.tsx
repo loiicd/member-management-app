@@ -5,7 +5,7 @@ import { UserFormData } from '../types/user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Input from './core/Input'
-import Modal from './base/modal'
+import Modal from './core/Modal'
 
 type InputErrorObject = {
   firstname: boolean
@@ -129,7 +129,7 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
   }
 
   return (
-    <Modal open={isOpen} onClose={handleClose} title='Neuen User erstellen'>
+    <Modal open={isOpen} onClose={handleClose} title='Neuen User erstellen' size='xl'>
       <div className='py-6 grid grid-cols-2 gap-4'>
         <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(true)}>
           <div className='text-center'>

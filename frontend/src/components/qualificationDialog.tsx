@@ -1,5 +1,5 @@
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
-import Modal from './base/modal'
+import Modal from './core/Modal'
 import Input from './base/input'
 import Button from './core/Button'
 import { QualificationApiClient } from '../services/qualificationApiClient'
