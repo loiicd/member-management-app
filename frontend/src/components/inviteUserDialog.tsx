@@ -3,7 +3,6 @@ import { AccountApiClient } from '../services/accountApiClient'
 import Input from './core/Input'
 import Modal from './core/Modal'
 import Button from './core/Button'
-import { AxiosError } from 'axios'
 
 interface InviteUserDialogProps {
   isOpen: boolean
@@ -23,13 +22,17 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
     setIsLoading(true)
     const email = emailInputRef.current?.value
     if (!email) {
-      setShowError('E-Mail darf nicht leer sein')
-      setIsLoading(false)
+      handleEmptyEmail()
       return
     } 
     accountApiClient.addUser(accountId, email)
       .catch(error => setShowError(error.response.data.message))
       .finally(() => setIsLoading(false))
+  }
+
+  const handleEmptyEmail = () => {
+    setShowError('E-Mail darf nicht leer sein')
+    setIsLoading(false)
   }
 
   return (

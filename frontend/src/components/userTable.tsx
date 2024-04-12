@@ -66,7 +66,7 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, so
               <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.lastname}</td>
               <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
               <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.address}</td>
-              <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.qualifications.map((qualification) => <Badge color={qualification.color}>{qualification.abbreviation}</Badge>)}</td>
+              <td className='whitespace-nowrap px-4 py-2 text-gray-700'><div className='flex gap-2'>{user.qualifications.map((qualification) => <Badge color={qualification.color}>{qualification.abbreviation}</Badge>)}</div></td>
               <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.webaccess ? <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='text-lime-500' /> : <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} className='text-red-500' />}</td>
             </tr>
           ))}
