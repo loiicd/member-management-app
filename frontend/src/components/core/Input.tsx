@@ -39,7 +39,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ id, label, placeholder
         onChange={onChange}
         disabled={disabled}
         className={`w-full rounded-md border-gray-200 shadow-sm sm:text-sm ${startIcon ? 'ps-10' : null} ${endIcon ? 'pe-10' : null}`}
-        // className={`bg-slate-50 h-8 border ${startIcon ? 'ps-10' : null} ${endIcon ? 'pe-10' : null} ${error ? 'border-red-500 dark:border-red-500' : 'border-zinc-200 dark:border-zinc-600'} hover:border-zinc-400 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-3 dark:bg-zinc-800 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500  dark:focus:border-blue-500`}
       />
       {endIcon ? 
         <div className='absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none sm:text-sm'>
@@ -48,7 +47,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ id, label, placeholder
         : null
       }
     </div>
-    {errorMessage ? <div className='text-sm text-red-500 pt-2'>{errorMessage}</div> : null}
+    {errorMessage ? <div className='text-sm text-red-500 pt-2 '>{errorMessage}</div> : null}
     </div>
 ))
 

@@ -1,4 +1,4 @@
-type ErrorName = 'USER_NOT_FOUND' | 'USER_ALREADY_IN_ACCOUNT'
+type ErrorName = 'USER_NOT_FOUND' | 'USER_ALREADY_IN_ACCOUNT' | 'EMAIL_ALREADY_EXISTS'
 
 export class ValidateError extends Error {
   name: ErrorName

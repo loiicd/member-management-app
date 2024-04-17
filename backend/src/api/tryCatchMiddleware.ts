@@ -17,6 +17,8 @@ export const tryCatchMiddleware = (handler: (req: Request, res: Response, next: 
             return res.status(404).send({ errorType: 'User not found', message: 'User exestiert nicht' })
           case 'USER_ALREADY_IN_ACCOUNT':
             return res.status(409).send({ errorType: 'User already in Acc', message: 'User ist bereits mit Acc verknüpft' })
+          case 'EMAIL_ALREADY_EXISTS':
+            return res.status(409).send({ errorType: 'Email already exists', message: 'E-Mail exestiert bereits' })
         }
       } else {
         res.status(500).send({ errorType: 'Internal Server Error', message: 'Internal Server Error' })

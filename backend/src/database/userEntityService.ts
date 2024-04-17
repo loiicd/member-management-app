@@ -132,7 +132,7 @@ export class UserEntityService {
     `
     const result = await client.query(query, [email])
     await client.end()
-    return result.rowCount === 1 ? true : false
+    return result.rowCount !== 0 ? false : true
   }
 }
 
@@ -274,7 +274,7 @@ const selectQualifications = async (client: Client, userId: string): Promise<Qua
 }
 
 const checkIfMailExists = async (client: Client, email: string): Promise<any | null> => {
-  const response = await client.query('SELECT id, email, ARRAY_AGG(account_id) as account_ids FROM public."user" RIGHT JOIN public."user_account_rel" ON id = user_id WHERE email = $1 GROUP BY id', [email])
+  const response = await client.query('SELECT id, login_email, ARRAY_AGG(account_id) as account_ids FROM public."user" RIGHT JOIN public."user_account_rel" ON id = user_id WHERE email = $1 GROUP BY id', [email])
   console.log(response.rows)
   if (response.rows.length = 1) return response.rows[0]
   return null

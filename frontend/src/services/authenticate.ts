@@ -12,13 +12,12 @@ export const register = async (organisationName: string, email: string, password
   return response
 }
 
-export const checkEmail = async (email: string): Promise<boolean> => {
+export const checkIfLoginEmailExists = async (email: string): Promise<boolean> => {
   const response = await axios.get(`http://localhost:3002/user/email/${email}`)
   return response.data.emailExists
 }
 
-export const registerUser =  async (email: string, password: string, firstname: string, lastname: string): Promise<AxiosResponse> => {
+export const registerUser =  async (loginEmail: string, password: string, firstname: string, lastname: string): Promise<void> => {
   const url = 'http://localhost:3002/registration/user'
-  const response = await axios.post(url, { email, password, firstname, lastname })
-  return response
+  await axios.post(url, { loginEmail, password, firstname, lastname })
 }

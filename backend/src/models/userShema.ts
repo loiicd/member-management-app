@@ -35,3 +35,11 @@ export const UserLoginShema = z.object({
   password:       z.string(),
 })
 export type UserLoginType = z.infer<typeof UserLoginShema>
+
+export const UserRegistrationShema = z.object({
+  loginEmail:     z.string().email(),
+  password:       z.string(),
+  firstname:      z.string(),
+  lastname:       z.string()
+})
+export type UserRegistrationType = z.infer<typeof UserRegistrationShema>
