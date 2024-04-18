@@ -6,12 +6,6 @@ export const login = async (email: string | undefined, password: string | undefi
   return response
 }
 
-export const register = async (organisationName: string, email: string, password: string): Promise<AxiosResponse> => {
-  const url = 'http://localhost:3002/registration'
-  const response = await axios.post(url, { organisationName, email, password })
-  return response
-}
-
 export const checkIfLoginEmailExists = async (email: string): Promise<boolean> => {
   const response = await axios.get(`http://localhost:3002/user/email/${email}`)
   return response.data.emailExists

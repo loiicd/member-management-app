@@ -11,8 +11,6 @@ interface ButtonProps {
   onClick?: () => void
   loading?: boolean
 }
-// "inline-flex -space-x-px overflow-hidden rounded-md border bg-white shadow-sm"
-// "inline-block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative"
 
 const Button: FunctionComponent<ButtonProps> = ({ startIcon, endIcon, variant = 'contained', children, onClick, loading = false }) => {
   return (

@@ -38,7 +38,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ id, label, placeholder
         required={required} 
         onChange={onChange}
         disabled={disabled}
-        className={`w-full rounded-md border-gray-200 shadow-sm sm:text-sm ${startIcon ? 'ps-10' : null} ${endIcon ? 'pe-10' : null}`}
+        className={`w-full rounded-md ${error ? 'border-red-600' : 'border-gray-200'} shadow-sm sm:text-sm ${startIcon ? 'ps-10' : null} ${endIcon ? 'pe-10' : null}`}
       />
       {endIcon ? 
         <div className='absolute inset-y-0 end-0 flex items-center pe-3.5 pointer-events-none sm:text-sm'>

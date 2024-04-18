@@ -1,59 +1,30 @@
-import { FunctionComponent, useRef, useState } from 'react'
-import { registerUser } from '../services/authenticate'
 import { useNavigate } from 'react-router-dom'
+import { AccountApiClient } from '../services/accountApiClient'
+import { useRef, useState } from 'react'
 import Input from '../components/core/Input'
+import { useAuthUser } from 'react-auth-kit'
 
-type ErrorObject = {
-  email: string | undefined
-  password: string | undefined
-  firstname: string | undefined
-  lastname: string | undefined
-}
-
-const RegisterUserPage: FunctionComponent = () => {
+const RegisterAccountPage = () => {
   const navigate = useNavigate()
-  const [errors, setErrors] = useState<ErrorObject>({ email: undefined, password: undefined, firstname: undefined, lastname: undefined})
+  const authParams = useAuthUser()()
+  const accountApiClient = new AccountApiClient('http://localhost:3002', undefined, undefined)
 
-  const emailInputRef = useRef<HTMLInputElement>(null)
-  const passwordInputRef = useRef<HTMLInputElement>(null)
-  const passwordConfirmationInputRef = useRef<HTMLInputElement>(null)
-  const firstnameInputRef = useRef<HTMLInputElement>(null)
-  const lastnameInputRef = useRef<HTMLInputElement>(null)
+  const organisationNameInputRef = useRef<HTMLInputElement>(null)
+
+  const [organisationNameError, setOrganisationNameError] = useState<string | undefined>(undefined)
 
   const handleSubmit = () => {
-    const email = emailInputRef.current?.value
-    const password = passwordInputRef.current?.value
-    const passwordConfirmation = passwordConfirmationInputRef.current?.value
-    const firstname = firstnameInputRef.current?.value
-    const lastname = lastnameInputRef.current?.value
+    const organisationName = organisationNameInputRef.current?.value
 
-    validateInput(email, 'email', 'Bitte E-Mail eingeben')
-    validateInput(password, 'password', 'Bitte Passwort eingeben')
-    validateInput(passwordConfirmation, 'passwordConfirmation', 'Bitte Passwort eingeben')
-    validateInput(firstname, 'firstname', 'Bitte Vorname eingeben')
-    validateInput(lastname, 'lastname', 'Bitte Nachname eingeben')
-
-    if (password !== passwordConfirmation) {
-      setErrors((prevErrors) => ({ ...prevErrors, password: 'Passwörter sind nicht identisch' }))
+    if (!organisationName) {
+      setOrganisationNameError('Bitte Organisationsname eingeben')
       return
     }
+    if (!authParams) return
 
-    if (!email || !password || !firstname || !lastname) return
-
-    registerUser(email, password, firstname, lastname)
-      .then(() => navigate('/login'))
-      .catch((error) => {
-        switch(error.response.data.errorType) {
-          case 'Email already exists':
-            setErrors({ ...errors, email: error.response.data.message })
-        }
-      })
-  }
-
-  const validateInput = (value: string | undefined, errorKey: string, errorMessage: string): void => {
-    if (!value) {
-      setErrors((prevErrors) => ({ ...prevErrors, [errorKey]: errorMessage }))
-    }
+    accountApiClient.createAccount(organisationName, authParams.id)
+      .then(() => navigate('/'))
+      .catch((error) => console.error(error))
   }
 
   return (
@@ -86,7 +57,7 @@ const RegisterUserPage: FunctionComponent = () => {
             </div>
 
             <h1 className="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-              Welcome to Member Management App
+              Neue Organisation erstellen
             </h1>
 
             <p className="mt-4 leading-relaxed text-gray-500">
@@ -95,54 +66,13 @@ const RegisterUserPage: FunctionComponent = () => {
             </p>
 
             <div className="mt-8 grid grid-cols-6 gap-6">
-              <div className="col-span-6 sm:col-span-3">
-                <Input 
-                  id='firstnameInput' 
-                  label='Vorname' 
-                  type='text' 
-                  ref={firstnameInputRef} 
-                  error={errors.firstname ? true : false} 
-                  errorMessage={errors.firstname} 
-                />
-              </div>
-              <div className="col-span-6 sm:col-span-3">
-                <Input 
-                  id='lastnameInput' 
-                  label='Nachname' 
-                  type='text' 
-                  ref={lastnameInputRef} 
-                  error={errors.lastname ? true : false} 
-                  errorMessage={errors.lastname} 
-                />
-              </div>
               <div className="col-span-6">
                 <Input 
-                  id='emailInput'
-                  label='E-Mail' 
+                  label='Organisationsname' 
                   type='text' 
-                  ref={emailInputRef} 
-                  error={errors.email ? true : false} 
-                  errorMessage={errors.email} 
-                />
-              </div>
-              <div className="col-span-6 sm:col-span-3">
-                <Input 
-                  id='passwordInput' 
-                  label='Passwort' 
-                  type='password' 
-                  ref={passwordInputRef} 
-                  error={errors.password ? true : false} 
-                  errorMessage={errors.password} 
-                />
-              </div>
-              <div className="col-span-6 sm:col-span-3">
-                <Input 
-                  id='passwordConfirmationInput' 
-                  label='Passwort wiederholen' 
-                  type='password' 
-                  ref={passwordConfirmationInputRef} 
-                  error={errors.password ? true : false} 
-                  errorMessage={errors.password} 
+                  ref={organisationNameInputRef}
+                  error={organisationNameError ? true : false}
+                  errorMessage={organisationNameError}
                 />
               </div>
               <div className='col-span-6'>
@@ -157,11 +87,8 @@ const RegisterUserPage: FunctionComponent = () => {
                   className='inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500'
                   onClick={handleSubmit}
                 >
-                  Account erstellen
+                  Organisation erstellen
                 </button>
-                <p className='mt-4 text-sm text-gray-500 sm:mt-0'>
-                  Du hast bereits ein Konto? <span className='text-gray-700 hover:underline cursor-pointer' onClick={() => navigate('/login')}>Melde dich hier an</span>.
-                </p>
               </div>
             </div>
           </div>
@@ -171,4 +98,4 @@ const RegisterUserPage: FunctionComponent = () => {
   )
 }
 
-export default RegisterUserPage
+export default RegisterAccountPage

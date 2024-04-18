@@ -1,6 +1,5 @@
 import { AccountType } from '../models/accountShema'
 import { connect } from './db'
-import { ValidateError } from './validateError'
 
 export class AccountEntityService {
   async getOneById(id: string): Promise<AccountType> {
@@ -19,6 +18,21 @@ export class AccountEntityService {
     }
   }
 
+  async create(id: string, name: string) {
+    const client = await connect()
+    try {
+      await client.query('BEGIN')
+      const query = 'INSERT INTO public."account" (id, organisation_name) VALUES ($1, $2)'
+      await client.query(query, [id, name])
+      await client.query('COMMIT')
+    } catch (error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally {
+      await client.end()
+    }
+  }
+
   async addUserById(accountId: string, userId: string): Promise<void> {
     const client = await connect()
     try {
@@ -28,7 +42,7 @@ export class AccountEntityService {
       await client.query('COMMIT')
     } catch (error) {
       await client.query('ROLLBACK')
-      throw new ValidateError('USER_ALREADY_IN_ACCOUNT', 'User already in account')
+      throw error
     } finally {
       await client.end()
     }

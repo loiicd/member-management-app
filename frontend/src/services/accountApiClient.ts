@@ -10,4 +10,8 @@ export class AccountApiClient extends BaseApiClient {
   async addUser(accountId: string, loginEmail: string): Promise<void> {
     await this.axiosInstance.post('account/user', { accountId, loginEmail })
   }
+
+  async createAccount(organisationName: string, userId: string): Promise<void> {
+    await this.axiosInstance.post('account', { organisationName, userId })
+  }
 }

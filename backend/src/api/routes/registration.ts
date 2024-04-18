@@ -9,12 +9,6 @@ const router = express.Router()
 const userEntityService = new UserEntityService
 const authenticateService = new AuthenticateService
 
-router.post('/', tryCatchMiddleware(async (req: Request, res: Response) => {
-  const data = req.body
-  await authenticateService.register(data.organisationName, data.email, data.password)
-  res.sendStatus(201)
-}))
-
 router.post('/user/', tryCatchMiddleware(async (req: Request, res: Response) => {
   const data = UserRegistrationShema.parse(req.body)
   const test = await userEntityService.checkEmail(data.loginEmail)

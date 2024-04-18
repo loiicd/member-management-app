@@ -126,13 +126,13 @@ export class UserEntityService {
   async checkEmail(email: string): Promise<boolean> {
     const client = await connect()
     const query = `
-      SELECT id, login_email
+      SELECT login_email
       FROM public."user"
       WHERE email = $1
     `
     const result = await client.query(query, [email])
     await client.end()
-    return result.rowCount !== 0 ? false : true
+    return result.rowCount != 0 ? true : false
   }
 }
 
