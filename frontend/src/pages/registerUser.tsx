@@ -106,15 +106,16 @@ const RegisterUserPage: FunctionComponent = () => {
 
             <div className="mt-8 grid grid-cols-6 gap-6">
               <div className="col-span-6 sm:col-span-3">
-                <Input label='Vorname' type='text' ref={firstnameInputRef} error={errors.firstname ? true : false} />
+                <Input id='firstnameInput' label='Vorname' type='text' ref={firstnameInputRef} error={errors.firstname ? true : false} />
               </div>
 
               <div className="col-span-6 sm:col-span-3">
-                <Input label='Nachname' type='text' ref={lastnameInputRef} error={errors.lastname ? true : false} />
+                <Input id='lastnameInput' label='Nachname' type='text' ref={lastnameInputRef} error={errors.lastname ? true : false} />
               </div>
 
               <div className="col-span-6">
                 <Input 
+                  id='emailInput'
                   label='E-Mail' 
                   type='text' 
                   ref={emailInputRef} 
@@ -124,11 +125,11 @@ const RegisterUserPage: FunctionComponent = () => {
               </div>
 
               <div className="col-span-6 sm:col-span-3">
-                <Input label='Passwort' type='password' ref={passwordInputRef} error={errors.password ? true : false} errorMessage={errors.password} />
+                <Input id='passwordInput' label='Passwort' type='password' ref={passwordInputRef} error={errors.password ? true : false} errorMessage={errors.password} />
               </div>
 
               <div className="col-span-6 sm:col-span-3">
-                <Input label='Passwort wiederholen' type='password' ref={passwordConfirmationInputRef} error={errors.password ? true : false} errorMessage={errors.password} />
+                <Input id='passwordConfirmationInput' label='Passwort wiederholen' type='password' ref={passwordConfirmationInputRef} error={errors.password ? true : false} errorMessage={errors.password} />
               </div>
 
               <div className="col-span-6">
@@ -139,6 +140,7 @@ const RegisterUserPage: FunctionComponent = () => {
 
               <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                 <button
+                  id='registerButton'
                   className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
                   onClick={handleSubmit}
                 >
