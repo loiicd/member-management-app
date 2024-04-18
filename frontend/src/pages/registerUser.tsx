@@ -54,6 +54,8 @@ const RegisterUserPage: FunctionComponent = () => {
     const password = passwordInputRef.current?.value
     const passwordConfirmation = passwordConfirmationInputRef.current?.value
 
+    validateInput(password, 'password', 'Bitte Passwort eingeben')
+
     if (password !== passwordConfirmation) {
       setErrors(prevErrors => ({ ...prevErrors, password: 'Passwörter sind nicht identisch' }))
       return false
@@ -112,7 +114,7 @@ const RegisterUserPage: FunctionComponent = () => {
                   label='Vorname' 
                   type='text' 
                   ref={firstnameInputRef} 
-                  error={errors.firstname ? true : false} 
+                  error={!!errors.firstname} 
                   errorMessage={errors.firstname} 
                 />
               </div>
@@ -122,7 +124,7 @@ const RegisterUserPage: FunctionComponent = () => {
                   label='Nachname' 
                   type='text' 
                   ref={lastnameInputRef} 
-                  error={errors.lastname ? true : false} 
+                  error={!!errors.lastname} 
                   errorMessage={errors.lastname} 
                 />
               </div>
@@ -132,7 +134,7 @@ const RegisterUserPage: FunctionComponent = () => {
                   label='E-Mail' 
                   type='text' 
                   ref={emailInputRef} 
-                  error={errors.email ? true : false} 
+                  error={!!errors.email} 
                   errorMessage={errors.email} 
                 />
               </div>
@@ -142,7 +144,7 @@ const RegisterUserPage: FunctionComponent = () => {
                   label='Passwort' 
                   type='password' 
                   ref={passwordInputRef} 
-                  error={errors.password ? true : false} 
+                  error={!!errors.password} 
                   errorMessage={errors.password} 
                 />
               </div>
@@ -152,7 +154,7 @@ const RegisterUserPage: FunctionComponent = () => {
                   label='Passwort wiederholen' 
                   type='password' 
                   ref={passwordConfirmationInputRef} 
-                  error={errors.password ? true : false} 
+                  error={!!errors.password} 
                   errorMessage={errors.password} 
                 />
               </div>
