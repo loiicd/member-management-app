@@ -161,6 +161,7 @@ const UsersPage: FunctionComponent = () => {
         sortDirection={sortDirection}
         currentPage={page ? Number(page) : 1}
         totalEntries={totalEntries}
+        accountId={accountId}
         handleChangeSort={handleChangeSort}
         resetSearchFilter={resetSearchFilter}
         handleChangePagination={handleChangePagination}

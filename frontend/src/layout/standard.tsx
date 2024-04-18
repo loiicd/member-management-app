@@ -18,7 +18,7 @@ const StandardLayout: FunctionComponent<StandardLayoutProps> = ({ accountId, chi
   return (
     <main className='min-h-screen flex flex-col justify-between bg-gray-50 dark:bg-gray-900'>
       <div>
-        <Header toogleSidebar={toogleSidebar} />
+        <Header accountId={accountId} toogleSidebar={toogleSidebar} />
         <div className='container mx-auto'>
           <NewSidebar accountId={accountId} />
           { children }
