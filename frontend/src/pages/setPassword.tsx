@@ -2,6 +2,7 @@ import { FunctionComponent, forwardRef, useRef, useState } from 'react'
 import AuthenticateLayout from '../layout/authenticate'
 import { UserApiClient } from '../services/userApiClient'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useAuthHeader } from 'react-auth-kit'
 
 interface InputElementProps {
   label: string,
@@ -23,12 +24,13 @@ const InputElement = forwardRef<HTMLInputElement, InputElementProps>(({label, ty
 
 const SetPasswordPage: FunctionComponent = () => {
   const { userId } = useParams()
+  const authToken = useAuthHeader()()
   const navigate = useNavigate()
   const [error, setError] = useState<boolean>(false)
   const password1InputRef = useRef<HTMLInputElement>(null)
   const password2InputRef = useRef<HTMLInputElement>(null)
 
-  const userApiClient = new UserApiClient('http://localhost:3002', undefined, undefined)
+  const userApiClient = new UserApiClient('http://localhost:3002', authToken, undefined)
 
   const handleSetPassword = () => {
     if (!userId) return

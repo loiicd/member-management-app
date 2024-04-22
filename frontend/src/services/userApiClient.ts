@@ -3,7 +3,7 @@ import { User, UserFormData } from '../types/user'
 import { BaseApiClient } from './baseApiClient'
 
 export class UserApiClient extends BaseApiClient {
-
+  
   public async getUser(id: string): Promise<User> {
     const response = await this.axiosInstance.get(`user/${id}`)
     return { ...response.data, birthdate: new Date(response.data.birthdate), created_at: new Date(response.data.created_at), updated_at: new Date(response.data.updated_at) }

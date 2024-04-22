@@ -2,15 +2,22 @@ import express, { Request, Response } from 'express'
 import { SortAttribute, SortDirection, UserEntityService } from '../../database/userEntityService'
 import { tryCatchMiddleware } from '../tryCatchMiddleware'
 import { validateFilter, validatePageNumber, validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateEmail, validateUser, validateUserFormData } from '../validate'
-import { SessionService } from '../../database/sessionService'
 import { validateUserAuth } from '../../functions/validateUserAuth'
 
 const router = express.Router()
 const userEntityService = new UserEntityService
-const sessionService = new SessionService
 
 // Get one by ID
 router.get('/:id', tryCatchMiddleware(async (req: Request, res: Response) => {
+  const authToken = validateString(req.headers.authorization)
+  const accountId = validateUUID(req.headers.accountid)
+  
+  const userIsAuthorized = await validateUserAuth(authToken, accountId)
+  if (!userIsAuthorized) {
+    res.sendStatus(401)
+    return
+  }
+
   const userId = validateUUID(req.params.id)
   const user = await userEntityService.getOneById(userId)
   res.status(200).send(user)
@@ -22,7 +29,6 @@ router.get('/', tryCatchMiddleware(async (req: Request, res: Response) => {
   const accountId = validateUUID(req.headers.accountid)
 
   const userIsAuthorized = await validateUserAuth(authToken, accountId)
-
   if (!userIsAuthorized) {
     res.sendStatus(401)
     return

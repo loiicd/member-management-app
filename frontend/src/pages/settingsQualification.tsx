@@ -9,16 +9,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { icon } from "@fortawesome/fontawesome-svg-core/import.macro"
 import IconButton from "../components/iconButton"
 import { QualificationApiClient } from "../services/qualificationApiClient"
+import { useAuthHeader } from "react-auth-kit"
 
 const SettingsQualificationPage = () => {
   const [qualifications, setqualifications] = useState<Qualification[]>([])
   const { accountId } = useParams()
+  const authToken = useAuthHeader()()
   const navigate = useNavigate()
 
   if (!accountId) throw new Error('Account ID is required')
 
   useEffect(() => {
-    const qualificationApiClient = new QualificationApiClient('http://localhost:3002', undefined, accountId)
+    const qualificationApiClient = new QualificationApiClient('http://localhost:3002', authToken, accountId)
     qualificationApiClient.getQualifications(accountId)
       .then(result => setqualifications(result)) 
   }, [accountId])

@@ -1,12 +1,12 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 import Modal from './core/Modal'
-import { getUser, updateUser } from '../services/user'
 import { UserApiClient } from '../services/userApiClient'
 import Button from './core/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Input from './core/Input'
 import { AxiosError } from 'axios'
+import { useAuthHeader } from 'react-auth-kit'
 
 type Test = {
   firstname?: string,
@@ -26,9 +26,10 @@ interface UserDialogProps {
 }
 
 const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
+  const authToken = useAuthHeader()()
   const [open, setOpen] = useState<boolean>(false)
 
-  const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
+  const userApiClient = new UserApiClient('http://localhost:3002', authToken, accountId)
 
   const [formData, setFormData] = useState<Test>({
     firstname: undefined, 
@@ -46,8 +47,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
 
   useEffect(() => {
     if (type === 'update' && userId) {
-      // @ts-ignore
-      getUser(userId)
+      userApiClient.getUser(userId)
         .then((data) => {
           setFormData(data)
         })
@@ -105,7 +105,6 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
           // @ts-ignore
           updateUser({id: userId, ...formData})
             .then(handleClose)
-            .catch((error) => alert(error))
         }
       }
     } else {

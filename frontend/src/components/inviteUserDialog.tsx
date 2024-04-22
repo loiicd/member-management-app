@@ -3,6 +3,7 @@ import { AccountApiClient } from '../services/accountApiClient'
 import Input from './core/Input'
 import Modal from './core/Modal'
 import Button from './core/Button'
+import { useAuthHeader } from 'react-auth-kit'
 
 interface InviteUserDialogProps {
   isOpen: boolean
@@ -11,7 +12,8 @@ interface InviteUserDialogProps {
 }
 
 const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, close, accountId }) => {
-  const accountApiClient = new AccountApiClient('http://localhost:3002', undefined, accountId)
+  const authToken = useAuthHeader()()
+  const accountApiClient = new AccountApiClient('http://localhost:3002', authToken, accountId)
   const [showError, setShowError] = useState<false | any>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const emailInputRef = useRef<HTMLInputElement>(null)

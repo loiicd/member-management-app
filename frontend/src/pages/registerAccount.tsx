@@ -2,12 +2,13 @@ import { useNavigate } from 'react-router-dom'
 import { AccountApiClient } from '../services/accountApiClient'
 import { useRef, useState } from 'react'
 import Input from '../components/core/Input'
-import { useAuthUser } from 'react-auth-kit'
+import { useAuthHeader, useAuthUser } from 'react-auth-kit'
 
 const RegisterAccountPage = () => {
   const navigate = useNavigate()
   const authParams = useAuthUser()()
-  const accountApiClient = new AccountApiClient('http://localhost:3002', undefined, undefined)
+  const authToken = useAuthHeader()()
+  const accountApiClient = new AccountApiClient('http://localhost:3002', authToken, undefined)
 
   const organisationNameInputRef = useRef<HTMLInputElement>(null)
 

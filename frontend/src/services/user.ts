@@ -1,18 +1,5 @@
 import axios from 'axios'
 import { User } from '../types/user'
-import { Authorization } from '../types/authorization'
-
-export const getUser = async (id: string): Promise<User> => {
-  const url = `http://localhost:3002/user/${id}`
-  const response = await axios.get(url)
-  return { ...response.data, birthdate: new Date(response.data.birthdate), created_at: new Date(response.data.created_at), updated_at: new Date(response.data.updated_at) }
-}
-
-export const getUsers = async (authorization: Authorization, searchTerm: string | undefined): Promise<User[]> => {
-  const url = 'http://localhost:3002/user'
-  const response = await axios.get(url, { params: { accountId: authorization.accountId, searchTerm } })
-  return response.data.map((user: any) => ({ ...user, birthdate: new Date(user.birthdate), created_at: new Date(user.created_at), updated_at: new Date(user.updated_at) }))
-}
 
 export const putPassword = async (userId: string, password: string): Promise<void> => {
   const url = `http://localhost:3002/user/password/${userId}?password=${password}`

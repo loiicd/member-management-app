@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Input from './core/Input'
 import Modal from './core/Modal'
+import { useAuthHeader } from 'react-auth-kit'
 
 type InputErrorObject = {
   firstname: boolean
@@ -21,7 +22,8 @@ interface CreateUserDialogProps {
 }
 
 const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, close, accountId }) => {
-  const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
+  const authToken = useAuthHeader()()
+  const userApiClient = new UserApiClient('http://localhost:3002', authToken, accountId)
 
   const [inputError, setInputError] = useState<InputErrorObject>({ firstname: false, lastname: false })
   const [emailStatus, setEmailStatus] = useState<EmailStatus>('initial')

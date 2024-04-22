@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { User } from '../types/user'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getUser } from '../services/user'
 import UserDialog from '../components/userDialog'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import PasswordDialog from '../components/passwordDialog'
@@ -11,11 +10,13 @@ import Button from '../components/core/Button'
 import ApproveDialog from '../components/approveDialog'
 import { UserApiClient } from '../services/userApiClient'
 import Menu from '../components/core/Menu'
+import { useAuthHeader } from 'react-auth-kit'
 
 const UserPage = () => {
   const navigate = useNavigate()
   const { accountId, id } = useParams()
-  const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
+  const authToken = useAuthHeader()()
+  const userApiClient = new UserApiClient('http://localhost:3002', authToken, accountId)
 
   const [user, setUser] = useState<User | null>(null)
   const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
@@ -27,7 +28,8 @@ const UserPage = () => {
   if (!id) throw new Error('User ID is required')
 
   useEffect(() => {
-    getUser(id).then((data) => setUser(data))
+    userApiClient.getUser(id)
+      .then(data => setUser(data))
   }, [id])
 
   const handleDeleteClick = () => setOpenApproveDialog(true)

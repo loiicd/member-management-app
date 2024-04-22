@@ -5,6 +5,7 @@ import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { UserApiClient } from '../services/userApiClient'
 import { useParams } from 'react-router-dom'
 import Button from './core/Button'
+import { useAuthHeader } from 'react-auth-kit'
 
 interface PasswordDialogProps {
   userId: string
@@ -12,9 +13,10 @@ interface PasswordDialogProps {
 
 const PasswordDialog: FC<PasswordDialogProps> = ({ userId }) => {
   const { accountId } = useParams()
+  const authToken = useAuthHeader()()
   const [open, setOpen] = useState<boolean>(false)
 
-  const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
+  const userApiClient = new UserApiClient('http://localhost:3002', authToken,  accountId)
 
   const password1InputRef = useRef<HTMLInputElement>(null)
   const password2InputRef = useRef<HTMLInputElement>(null)

@@ -13,8 +13,4 @@ export class BaseApiClient {
       }
     })
   }
-
-  public setAuthToken(authToken: string | undefined) {
-    this.axiosInstance.defaults.headers.Authorization = `Bearer ${authToken}`
-  }
 }
