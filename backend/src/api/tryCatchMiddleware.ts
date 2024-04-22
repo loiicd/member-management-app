@@ -20,8 +20,10 @@ export const tryCatchMiddleware = (handler: (req: Request, res: Response, next: 
           case 'EMAIL_ALREADY_EXISTS':
             return res.status(409).send({ errorType: 'Email already exists', message: 'E-Mail exestiert bereits' })
         }
+      } else if (error instanceof Error && error.message === 'Invalid Credentials') {
+        res.sendStatus(401)
       } else {
-        res.status(500).send({ errorType: 'Internal Server Error', message: 'Internal Server Error' })
+        res.sendStatus(500)
       }
     }
   }

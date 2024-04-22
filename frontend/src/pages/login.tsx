@@ -36,32 +36,18 @@ const LoginPage = () => {
     try {
       const response = await login(email, password)
 
-      switch (response.status) {
-        case 200:
-          signIn({
-            token: response.data.token,
-            expiresIn: 3600,
-            tokenType: 'Bearer',
-            authState: { email: response.data.email, id: response.data.userId }
-          })
-          navigate('/')
-          break
-        case 303:
-          navigate(`/setpassword/${response.data.userId}`)
-          break
-        case 401:
-          setError(true)
-          if (passwordInputRef.current) passwordInputRef.current.value = ''
-          break
-      }
+      signIn({
+        token: response.data.token,
+        expiresIn: 3600,
+        tokenType: 'Bearer',
+        authState: { email: response.data.email, id: response.data.userId }
+      })
+      navigate('/')
     } catch (error) {
       console.log('Error', error)
 
       if (error instanceof AxiosError) {
         switch (error.response?.status) {
-          case 303:
-            navigate(`/setpassword/${error.response.data.userId}`)
-            break
           case 401:
             setError(true)
             if (passwordInputRef.current) passwordInputRef.current.value = ''
