@@ -1,21 +1,24 @@
 import { useNavigate } from 'react-router-dom'
-import { useAuthUser, useSignOut } from 'react-auth-kit'
-import { useEffect, useState } from 'react'
-import { getUserAccounts } from '../services/user'
+import { useAuthHeader, useAuthUser, useSignOut } from 'react-auth-kit'
+import { useEffect, useMemo, useState } from 'react'
+import { UserApiClient } from '../services/userApiClient'
 
 const LandingPage = () => {
   const navigate = useNavigate()
   const signOut = useSignOut()
+
+  const authToken = useAuthHeader()()
   const [accounts, setAccounts] = useState<any>([])
+  const userApiClient = useMemo(() => new UserApiClient('http://localhost:3002', authToken, undefined), [authToken])
 
   const authParams = useAuthUser()()
   
   useEffect(() => {
     if (authParams) {
-      getUserAccounts(authParams.id)
+      userApiClient.getUserAccounts(authParams.id)
         .then((data) => setAccounts(data))
     }
-  }, [authParams])
+  }, [authParams, userApiClient])
 
   const handleSignOut = () => {
     signOut()

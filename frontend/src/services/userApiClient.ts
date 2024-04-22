@@ -35,4 +35,9 @@ export class UserApiClient extends BaseApiClient {
   public async createUserOrgRel(email: string): Promise<void> {
     await this.axiosInstance.post(`user/orgrel/${email}`)   
   }
+
+  public async getUserAccounts(userId: string): Promise<any> {
+    const response = await this.axiosInstance.get(`user/accounts/${userId}`)
+    return response.data
+  }
 }

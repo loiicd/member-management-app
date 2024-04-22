@@ -22,6 +22,8 @@ export const tryCatchMiddleware = (handler: (req: Request, res: Response, next: 
         }
       } else if (error instanceof Error && error.message === 'Invalid Credentials') {
         res.sendStatus(401)
+      } else if (error instanceof Error && error.message === 'Unauthorized Access') {
+        res.sendStatus(401)
       } else {
         res.sendStatus(500)
       }

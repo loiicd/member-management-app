@@ -40,10 +40,6 @@ const PasswordDialog: FC<PasswordDialogProps> = ({ userId }) => {
     if (password1 === password2) {
       //@ts-ignore
       userApiClient.updatePassword(userId, password1)
-      
-      
-      // await putPassword(userId, password1)
-
       handleClose()
       return
     }
