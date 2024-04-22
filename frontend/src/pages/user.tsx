@@ -36,18 +36,18 @@ const UserPage = () => {
     setIsDeletingUser(true)
     userApiClient.deleteUser(id)
       .then(() => {
-        navigate('/44484414-a4db-4717-8507-26f5296409dd/users')
+        navigate(`/${accountId}/users`)
         setOpenApproveDialog(false)
-      }) //  HardCoded URL ACCOUNT
-      .catch((error) => alert(error))
+      })
+      .catch(error => alert(error))
       .finally(() => setIsDeletingUser(false))
   }
 
   return (
     <StandardLayout accountId={accountId}>
-      <PageHead title={`${user?.firstname} ${user?.lastname}`}>
+      <PageHead title={`${user?.firstname} ${user?.lastname}`}> 
         <div className='flex justify-end gap-2'>
-          <UserDialog type='update' userId={user?.id} accountId={accountId}/>
+          <UserDialog type='update' userId={user?.id} accountId={accountId} />
           <Button onClick={handleDeleteClick}>Löschen</Button>
         </div>
       </PageHead>

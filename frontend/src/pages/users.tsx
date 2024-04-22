@@ -1,20 +1,20 @@
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
-import StandardLayout from '../layout/standard'
 import { User } from '../types/user'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useAuthUser } from 'react-auth-kit'
 import { UserApiClient } from '../services/userApiClient'
-import PageHead from '../components/pageHead'
-import Dropwdown from '../components/dropdown'
+import { QualificationApiClient } from '../services/qualificationApiClient'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Qualification } from '../types/qualification'
+import StandardLayout from '../layout/standard'
+import PageHead from '../components/pageHead'
+import Dropwdown from '../components/dropdown'
 import UserTable from '../components/userTable'
 import Input from '../components/core/Input'
 import CreateUserDialog from '../components/createUserDialog'
 import InviteUserDialog from '../components/inviteUserDialog'
 import Menu from '../components/core/Menu'
-import { QualificationApiClient } from '../services/qualificationApiClient'
 
 const sortAttributes = ['firstname', 'lastname',  'birthdate', 'address', 'webaccess'] as const
 export type SortAttribute = typeof sortAttributes[number]
@@ -112,9 +112,7 @@ const UsersPage: FunctionComponent = () => {
 
   return (
     <StandardLayout accountId={accountId}>
-      <PageHead title='Mitglieder'>
-        {/* <Button>Test</Button> */}
-      </PageHead>
+      <PageHead title='Mitglieder' />
       <div className='py-4 flex justify-between'>
         <h2>Test</h2>
         <div className='flex justify-between gap-2'>
