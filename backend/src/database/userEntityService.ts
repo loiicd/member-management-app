@@ -135,6 +135,14 @@ export class UserEntityService {
     const values = [email]
     return (await this.executeQueryWithTransaction(query, values)).rows[0]
   }
+
+  async createUser(user: UserFormDataType): Promise<string> {
+    const id = uuidv4()
+    const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, login_email, is_online_user, webaccess, password, passwordsalt, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, now()::timestamp, now()::timestamp)'
+    const values = [id, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.login_email, user.isOnlineUser, user.webaccess, user.password, user.passwordsalt]
+    await this.executeQueryWithTransaction(query, values)
+    return id
+  }
 }
 
 const selectUsers = async (client: Client, accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[], page: number): Promise<DataBaseResponse> => {

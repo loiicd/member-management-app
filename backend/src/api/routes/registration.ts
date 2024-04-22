@@ -1,21 +1,13 @@
 import express, { Request, Response } from 'express'
 import { tryCatchMiddleware } from '../tryCatchMiddleware'
-import { AuthenticateService } from '../../database/authenticateService'
-import { UserRegistrationShema } from '../../../src/models/userShema'
-import { UserEntityService } from '../../../src/database/userEntityService'
-import { ValidateError } from '../../../src/database/validateError'
+import { UserRegistrationShema } from '../../models/userShema'
+import { registrationHandler } from '../../handler/registrationHandler'
 
 const router = express.Router()
-const userEntityService = new UserEntityService
-const authenticateService = new AuthenticateService
 
 router.post('/user/', tryCatchMiddleware(async (req: Request, res: Response) => {
-  const data = UserRegistrationShema.parse(req.body)
-  const test = await userEntityService.checkEmail(data.loginEmail)
-  if (test) {
-    throw new ValidateError('EMAIL_ALREADY_EXISTS', 'E-Mail exestiert bereits')
-  }
-  await authenticateService.registerUser(data.loginEmail, data.password, data.firstname, data.lastname)
+  const user = UserRegistrationShema.parse(req.body)
+  await registrationHandler(user)
   res.sendStatus(201)
 }))
 

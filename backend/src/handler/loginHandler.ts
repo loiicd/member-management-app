@@ -2,7 +2,6 @@ import { UserEntityService } from '../database/userEntityService'
 import * as jwt from 'jsonwebtoken'
 import bcryptjs from 'bcryptjs'
 import { SessionService } from '../database/sessionService'
-import { ValidateError } from '../database/validateError'
 
 const userEntityService = new UserEntityService()
 const sessionService = new SessionService()
