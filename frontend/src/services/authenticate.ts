@@ -6,6 +6,11 @@ export const login = async (email: string | undefined, password: string | undefi
   return response
 }
 
+export const logout = async (userId: string): Promise<void> => {
+  const url = 'http://localhost:3002/authenticate/logout'
+  await axios.delete(url, { data: { userId } })
+}
+
 export const checkIfLoginEmailExists = async (email: string): Promise<boolean> => {
   const response = await axios.get(`http://localhost:3002/user/email/${email}`)
   return response.data.emailExists

@@ -1,8 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { useNavigate } from 'react-router-dom'
-import { useSignOut } from 'react-auth-kit'
+import { useAuthUser, useSignOut } from 'react-auth-kit'
 import { FunctionComponent } from 'react'
+import { logout } from '../services/authenticate'
 
 interface SidebarProps {
   accountId: string
@@ -12,8 +13,13 @@ const NewSidebar: FunctionComponent<SidebarProps> = ({ accountId }) => {
   const navigate = useNavigate()
   const signOut = useSignOut()
 
+  const authParams = useAuthUser()()
+
   const handleSignOut = () => {
     signOut()
+    if (authParams) {
+      logout(authParams.id)
+    }
     navigate('/login')  
   }
 

@@ -8,7 +8,7 @@ export class BaseApiClient {
       baseURL,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: authToken ? `Bearer ${authToken}` : undefined,
+        Authorization: authToken,
         accountid: accountId
       }
     })

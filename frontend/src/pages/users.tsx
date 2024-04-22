@@ -1,7 +1,7 @@
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
 import { User } from '../types/user'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { useAuthUser } from 'react-auth-kit'
+import { useAuthHeader, useAuthUser } from 'react-auth-kit'
 import { UserApiClient } from '../services/userApiClient'
 import { QualificationApiClient } from '../services/qualificationApiClient'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
@@ -28,6 +28,9 @@ export type UrlParamKey = typeof urlParamKeys[number]
 const UsersPage: FunctionComponent = () => {
   const { accountId } = useParams()
   const authParams = useAuthUser()()
+  const authToken = useAuthHeader()()
+
+  console.log(authToken)
 
   const [users, setUsers] = useState<User[]>([])
   const [qualifications, setQualifications] = useState<Qualification[]>([])
@@ -49,22 +52,21 @@ const UsersPage: FunctionComponent = () => {
   const handleCloseInviteUserDialog = () => setOpenInviteUserDialog(false)
 
   useEffect(() => {
-    const qualificationApiClient = new QualificationApiClient('http://localhost:3002', undefined, accountId)
+    const qualificationApiClient = new QualificationApiClient('http://localhost:3002', authToken, accountId)
     qualificationApiClient.getQualifications(accountId)
       .then(data => setQualifications(data))
-  }, [accountId, authParams])
+  }, [accountId, authParams, authToken])
 
   useEffect(() => {
-    const userApiClient = new UserApiClient('http://localhost:3002', undefined, accountId)
+    const userApiClient = new UserApiClient('http://localhost:3002', authToken, accountId)
     userApiClient.getUsers(searchTerm, sortAttribute, sortDirection, urlParams.get('searchFilter'), urlParams.get('page'))
       .then(data => {
         setUsers(data.data)
         handleChangeTotalEntries(data.total)
         urlParams.set('page', data.page.toString())
         setUrlParams(urlParams)
-        console.log('users', users)
       })
-  }, [accountId, authParams, searchTerm, sortAttribute, sortDirection, urlParams])
+  }, [accountId, authParams, searchTerm, sortAttribute, sortDirection, urlParams, authToken])
 
   const toggleSearchFilter = (attribute: string): void => {
     const list = searchFilter ? searchFilter.split('%') : []

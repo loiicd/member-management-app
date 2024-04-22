@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS "user_account_rel" CASCADE;
 DROP TABLE IF EXISTS "user" CASCADE;
 DROP TABLE IF EXISTS "qualification" CASCADE;
 DROP TABLE IF EXISTS "account" CASCADE;
+DROP TABLE IF EXISTS "user_session" CASCADE;
 
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
@@ -58,6 +59,15 @@ CREATE TABLE "user_qualification_rel" (
   FOREIGN KEY (user_id) REFERENCES "user" (id),
   FOREIGN KEY (qualification_id) REFERENCES "qualification" (id),
   FOREIGN KEY (account_id) REFERENCES "account" (id)
+);
+
+CREATE TABLE "user_session" (
+  id text NOT NULL,
+  user_id text NOT NULL,
+  token text NOT NULL,
+  created_at timestamp NOT NULL DEFAULT now()::timestamp,
+  expires_at timestamp NOT NULL,
+  PRIMARY KEY (id)
 );
 
 CREATE INDEX searchvectorindex ON "user" USING gin(searchvector);

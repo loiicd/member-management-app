@@ -7,6 +7,7 @@ import { QualificationType } from '../models/qualificationShema'
 import { ApiResponse } from '../types/apiResponse'
 import { DataBaseResponse } from '../types/DataBaseResponse'
 import { ValidateError } from './validateError'
+import { AccountType } from '../models/accountShema'
 
 export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
 export type SortDirection = 'ASC' | 'DESC'
@@ -109,7 +110,7 @@ export class UserEntityService {
     await client.end()
   }
 
-  async getAccounts(userId: string): Promise<any> {
+  async getAccounts(userId: string): Promise<AccountType[]> {
     const client = await connect()
     const query = `
       SELECT id, organisation_name

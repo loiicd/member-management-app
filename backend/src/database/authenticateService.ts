@@ -52,6 +52,6 @@ export class AuthenticateService {
 const generateJsonWebToken = (userId: string, email: string): string => {
   const secretKey = 'your-secret-key'
   const payload = { userId, email }
-  const options: jwt.SignOptions = { expiresIn: '1m' }
+  const options: jwt.SignOptions = { expiresIn: '7d' }
   return jwt.sign(payload, secretKey, options)
 }
