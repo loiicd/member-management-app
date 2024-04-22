@@ -1,5 +1,5 @@
-import { AuthenticateService } from './authenticateService'
-import { connect } from './db'
+import { AuthenticateService } from '../authenticateService'
+import { connect } from '../db'
 
 jest.mock('./db')
 
