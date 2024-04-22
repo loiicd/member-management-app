@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import { validateString } from '../validate'
 import { SessionService } from '../../database/sessionService'
 import { UserEntityService } from '../../database/userEntityService'
 import { z } from 'zod'
@@ -8,7 +7,7 @@ const sessionService = new SessionService()
 const userEntityService = new UserEntityService()
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const authToken = validateString(req.headers.authorization)
+  const authToken = z.string().parse(req.headers.authorization)
   const accountId = z.string().optional().parse(req.headers.accountid)
 
   const splitAuthToken = authToken.split(' ')[1]

@@ -3,6 +3,7 @@ import Modal from './core/Modal'
 import Input from './base/input'
 import Button from './core/Button'
 import { QualificationApiClient } from '../services/qualificationApiClient'
+import { useAuthHeader } from 'react-auth-kit'
 
 type Test = {
   name: string | undefined,
@@ -18,6 +19,7 @@ interface qualificationDialogProps {
 
 const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type, qualificationId, accountId }) => {
   const [open, setOpen] = useState<boolean>(false)
+  const authToken = useAuthHeader()()
 
   const [formData, setFormData] = useState<Test>({name: undefined, abbreviation: undefined, color: '#FF3B30'})
 
@@ -57,7 +59,7 @@ const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type
     if (formData.name) {
       if (type === 'insert') {
         // @ts-ignore
-        const qualificationApiClient = new QualificationApiClient('http://localhost:3002', undefined, accountId)
+        const qualificationApiClient = new QualificationApiClient('http://localhost:3002', authToken, accountId)
         qualificationApiClient.postQualification(accountId, formData)
           .then(handleClose)
           .catch((error) => alert(error))
