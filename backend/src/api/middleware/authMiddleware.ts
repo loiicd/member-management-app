@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import { validateString } from './validate'
-import { SessionService } from '../database/sessionService'
-import { UserEntityService } from '../database/userEntityService'
+import { validateString } from '../validate'
+import { SessionService } from '../../database/sessionService'
+import { UserEntityService } from '../../database/userEntityService'
 import { z } from 'zod'
 
 const sessionService = new SessionService()

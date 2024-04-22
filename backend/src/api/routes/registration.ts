@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { tryCatchMiddleware } from '../tryCatchMiddleware'
+import { tryCatchMiddleware } from '../middleware/tryCatchMiddleware'
 import { UserRegistrationShema } from '../../models/userShema'
 import { registrationHandler } from '../../handler/registrationHandler'
 

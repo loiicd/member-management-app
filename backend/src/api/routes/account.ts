@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { tryCatchMiddleware } from '../tryCatchMiddleware'
+import { tryCatchMiddleware } from '../middleware/tryCatchMiddleware'
 import { validateEmail, validateUUID } from '../validate'
 import { AccountEntityService } from '../../database/accountEntityService'
 import { UserEntityService } from '../../database/userEntityService'

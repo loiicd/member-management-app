@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { ValidateError } from '../database/validateError'
+import { ValidateError } from '../../database/validateError'
 import { ZodError } from 'zod'
 
 export const tryCatchMiddleware = (handler: (req: Request, res: Response, next: NextFunction) => Promise<void>) =>
@@ -21,8 +21,6 @@ export const tryCatchMiddleware = (handler: (req: Request, res: Response, next: 
             return res.status(409).send({ errorType: 'Email already exists', message: 'E-Mail exestiert bereits' })
         }
       } else if (error instanceof Error && error.message === 'Invalid Credentials') {
-        res.sendStatus(401)
-      } else if (error instanceof Error && error.message === 'Unauthorized Access') {
         res.sendStatus(401)
       } else {
         res.sendStatus(500)

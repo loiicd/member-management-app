@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import { QualificationEntityService } from '../../database/qualificationEntityService'
-import { tryCatchMiddleware } from '../tryCatchMiddleware'
+import { tryCatchMiddleware } from '../middleware/tryCatchMiddleware'
 import { validatequalificationFormData, validateUUID } from '../validate'
 
 const router = express.Router()
