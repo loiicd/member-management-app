@@ -23,7 +23,7 @@ const SettingsQualificationPage = () => {
     const qualificationApiClient = new QualificationApiClient('http://localhost:3002', authToken, accountId)
     qualificationApiClient.getQualifications(accountId)
       .then(result => setqualifications(result)) 
-  }, [accountId])
+  }, [accountId, authToken])
 
   return (
     <StandardLayout accountId={accountId}>

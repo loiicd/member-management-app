@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { User } from '../types/user'
 import { useNavigate, useParams } from 'react-router-dom'
 import UserDialog from '../components/userDialog'
@@ -16,7 +16,8 @@ const UserPage = () => {
   const navigate = useNavigate()
   const { accountId, id } = useParams()
   const authToken = useAuthHeader()()
-  const userApiClient = new UserApiClient('http://localhost:3002', authToken, accountId)
+
+  const userApiClient = useMemo(() => new UserApiClient('http://localhost:3002', authToken, accountId), [accountId, authToken])
 
   const [user, setUser] = useState<User | null>(null)
   const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
@@ -30,7 +31,7 @@ const UserPage = () => {
   useEffect(() => {
     userApiClient.getUser(id)
       .then(data => setUser(data))
-  }, [id])
+  }, [id, userApiClient])
 
   const handleDeleteClick = () => setOpenApproveDialog(true)
 

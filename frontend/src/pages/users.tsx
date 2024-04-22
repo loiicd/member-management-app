@@ -30,8 +30,6 @@ const UsersPage: FunctionComponent = () => {
   const authParams = useAuthUser()()
   const authToken = useAuthHeader()()
 
-  console.log(authToken)
-
   const [users, setUsers] = useState<User[]>([])
   const [qualifications, setQualifications] = useState<Qualification[]>([])
   const [totalEntries, setTotalEntries] = useState<number>(0)

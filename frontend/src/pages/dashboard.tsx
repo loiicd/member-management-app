@@ -17,7 +17,7 @@ const DashboardPage = () => {
     const accountApiClient = new AccountApiClient('http://localhost:3002', authToken, accountId)
     accountApiClient.getAccount(accountId)
       .then(data => setAccount(data))
-  }, [accountId])
+  }, [accountId, authToken])
   
   return (
     <StandardLayout accountId={accountId}>
