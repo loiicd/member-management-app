@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 import { SortAttribute, SortDirection, UserEntityService } from '../../database/userEntityService'
 import { tryCatchMiddleware } from '../tryCatchMiddleware'
 import { validateFilter, validatePageNumber, validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateEmail, validateUser, validateUserFormData } from '../validate'
-import { validateUserAuth } from '../../functions/validateUserAuth'
+import { validateUserAuth } from '../../handler/validateUserAuth'
 
 const router = express.Router()
 const userEntityService = new UserEntityService

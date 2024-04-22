@@ -7,7 +7,6 @@ const router = express.Router()
 const qualificationEntityService = new QualificationEntityService
 
 router.get('/', tryCatchMiddleware(async (req: Request, res: Response) => {
-  console.log(req.query)
   const accountId = validateUUID(req.query.accountId)
   const qualifications = await qualificationEntityService.getAll(accountId)
   res.status(200).send(qualifications)
@@ -16,8 +15,8 @@ router.get('/', tryCatchMiddleware(async (req: Request, res: Response) => {
 router.post('/', tryCatchMiddleware(async (req: Request, res: Response) => {
   const accountId = validateUUID(req.params.accountId)
   const qualification = validatequalificationFormData(req.body.params.qualification)
-  await qualificationEntityService.insert(accountId, qualification)
-  res.status(200).send('Qualification created') 
+  await qualificationEntityService.createQualification(accountId, qualification)
+  res.sendStatus(201)
 }))
 
 export default router

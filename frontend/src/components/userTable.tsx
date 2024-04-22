@@ -25,7 +25,7 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, so
     <div className="overflow-x-auto rounded-lg border border-gray-200">
       <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
         <thead>
-          <tr>
+          <tr key='0'>
             <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 cursor-pointer" onClick={() => handleChangeSort('firstname')}>
               Vorname
               {sortAttribute === 'firstname' && sortDirection === 'ASC' ? <FontAwesomeIcon icon={icon({ name: 'arrow-down-a-z', style: 'solid' })} className='ps-2' /> : null}
@@ -61,13 +61,13 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, so
         </thead>
 
         <tbody className="divide-y divide-gray-200">
-          {users.map((user) => (
-            <tr className='cursor-pointer hover:bg-gray-50' onClick={() => navigate(`/${accountId}/user/${user.id}`)}>
+          {users.map((user, index) => (
+            <tr key={user.id + index} className='cursor-pointer hover:bg-gray-50' onClick={() => navigate(`/${accountId}/user/${user.id}`)}>
               <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.firstname}</td>
               <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.lastname}</td>
               <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
               <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.address}</td>
-              <td className='whitespace-nowrap px-4 py-2 text-gray-700'><div className='flex gap-2'>{user.qualifications.map((qualification) => <Badge color={qualification.color}>{qualification.abbreviation}</Badge>)}</div></td>
+              <td className='whitespace-nowrap px-4 py-2 text-gray-700'><div className='flex gap-2'>{user.qualifications.map((qualification, index) => <Badge key={user.id + qualification.id + index} color={qualification.color}>{qualification.abbreviation}</Badge>)}</div></td>
               <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.webaccess ? <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='text-lime-500' /> : <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} className='text-red-500' />}</td>
             </tr>
           ))}

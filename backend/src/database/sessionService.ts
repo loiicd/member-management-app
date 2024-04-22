@@ -31,14 +31,12 @@ export class SessionService {
   async isSessionValid(token: string): Promise<boolean> {
     const query = 'SELECT * FROM public."user_session" WHERE token = $1 AND expires_at > NOW()'
     const values = [token]
-    const result = await this.executeQueryWithTransaction(query, values)
-    return result.rows.length != 0 ? true : false
+    return (await this.executeQueryWithTransaction(query, values)).rows.length != 0 ? true : false
   }
 
   async getUserIdByToken(token: string): Promise<string> {
     const query = 'SELECT user_id FROM public."user_session" WHERE token = $1'
     const values = [token]
-    const result = await this.executeQueryWithTransaction(query, values)
-    return result.rows[0].user_id
+    return (await this.executeQueryWithTransaction(query, values)).rows[0].user_id
   }
 }

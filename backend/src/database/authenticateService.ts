@@ -1,36 +1,8 @@
 import { connect } from './db'
 import bcryptjs from 'bcryptjs'
-import * as jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
 
-type LoginResponse = SuccessResponse | PasswordMissedResponse | ErrorResponse
-
-type SuccessResponse = { type: 'Success', data: { userId: string, email: string, token: string } }
-type PasswordMissedResponse = { type: 'PasswordMissed', data: { userId: string } }
-type ErrorResponse = { type: 'Error' }
-
 export class AuthenticateService {
-  async login(email: string, password: string): Promise<LoginResponse> {
-    const client = await connect()
-    const query = `
-      SELECT id, login_email, password, passwordsalt
-      FROM public."user" 
-      WHERE login_email = '${email}'`
-    const result = await client.query(query)
-    const user = result.rows[0]
-    const userFound = !!user 
-    client.end()
-    if (!userFound) return { type: 'Error' }
-    if (!user.password) return { type: 'PasswordMissed', data: { userId: user.id } }
-    const passwordsMatch = bcryptjs.compareSync(password+user.passwordsalt, user.password)
-    if (passwordsMatch) {
-      const token = generateJsonWebToken(user.id, user.email)
-      return { type: 'Success', data: { userId: user.id, email: user.email, token: token }}
-    } else {
-      return { type: 'Error' }
-    }
-  }
-
   async registerUser(email: string, password: string, firstname: string, lastname: string): Promise<void> {
     const client = await connect()
     try {
@@ -47,11 +19,4 @@ export class AuthenticateService {
       await client.end()
     }
   }
-}
-
-const generateJsonWebToken = (userId: string, email: string): string => {
-  const secretKey = 'your-secret-key'
-  const payload = { userId, email }
-  const options: jwt.SignOptions = { expiresIn: '7d' }
-  return jwt.sign(payload, secretKey, options)
 }
