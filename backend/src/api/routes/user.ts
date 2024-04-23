@@ -3,9 +3,11 @@ import { SortAttribute, SortDirection, UserEntityService } from '../../database/
 import { tryCatchMiddleware } from '../middleware/tryCatchMiddleware'
 import { validateFilter, validatePageNumber, validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateEmail, validateUser, validateUserFormData } from '../validate'
 import { authMiddleware } from '../middleware/authMiddleware'
+import { AccountEntityService } from '../../database/accountEntityService'
 
 const router = express.Router()
 const userEntityService = new UserEntityService
+const accountEntityService = new AccountEntityService
 
 // Get one by ID
 router.get('/:id', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {

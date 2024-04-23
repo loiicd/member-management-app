@@ -9,7 +9,6 @@ export const validateUserLogin = (data: any): UserLoginType => UserLoginShema.pa
 
 export const validatequalificationFormData = (data: any): QualificationFormDataType => QualificationFormDataShema.parse(data)
 
-// const IDShema = z.string().uuid()   (Sollte normaler Weise UUID checken, aber das funktioniert nicht?!)
 const IDShema = z.string()
 export const validateUUID = (id: any): string => IDShema.parse(id)
 
