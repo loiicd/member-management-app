@@ -36,6 +36,7 @@ const UsersPage: FunctionComponent = () => {
   const [urlParams, setUrlParams] = useSearchParams()
   const [openCreateUserDialog, setOpenCreateUserDialog] = useState<boolean>(false)
   const [openInviteUserDialog, setOpenInviteUserDialog] = useState<boolean>(false)
+  const [loadingUsers, setLoadingUsers] = useState<boolean>(true)
 
   const sortAttribute = urlParams.get('sortAttribute')
   const sortDirection = urlParams.get('sortDirection')
@@ -56,6 +57,7 @@ const UsersPage: FunctionComponent = () => {
   }, [accountId, authParams, authToken])
 
   useEffect(() => {
+    setLoadingUsers(true)
     const userApiClient = new UserApiClient('http://localhost:3002', authToken, accountId)
     userApiClient.getUsers(searchTerm, sortAttribute, sortDirection, urlParams.get('searchFilter'), urlParams.get('page'))
       .then(data => {
@@ -64,6 +66,7 @@ const UsersPage: FunctionComponent = () => {
         urlParams.set('page', data.page.toString())
         setUrlParams(urlParams)
       })
+      .finally(() => setLoadingUsers(false))
   }, [accountId, authParams, searchTerm, sortAttribute, sortDirection, urlParams, authToken])
 
   const toggleSearchFilter = (attribute: string): void => {
@@ -155,6 +158,7 @@ const UsersPage: FunctionComponent = () => {
       </div>
       <UserTable 
         users={users}
+        loadingUsers={loadingUsers}
         sortAttribute={sortAttribute}
         sortDirection={sortDirection}
         currentPage={page ? Number(page) : 1}

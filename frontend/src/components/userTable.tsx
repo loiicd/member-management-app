@@ -8,6 +8,7 @@ import { SortAttribute } from '../pages/users'
 
 interface UserTableProps {
   users: User[]
+  loadingUsers: boolean
   sortAttribute: string | null
   sortDirection: string | null
   currentPage: number
@@ -18,7 +19,7 @@ interface UserTableProps {
   handleChangePagination: (page: number) => void
 }
 
-const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, sortDirection, currentPage, totalEntries, accountId, handleChangeSort, resetSearchFilter, handleChangePagination }) => {
+const UserTable: FunctionComponent<UserTableProps> = ({ users, loadingUsers, sortAttribute, sortDirection, currentPage, totalEntries, accountId, handleChangeSort, resetSearchFilter, handleChangePagination }) => {
   const navigate = useNavigate()
 
   return (
@@ -71,6 +72,7 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, sortAttribute, so
               <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.webaccess ? <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='text-lime-500' /> : <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} className='text-red-500' />}</td>
             </tr>
           ))}
+          {loadingUsers ? <tr><td colSpan={7} className='text-center py-4'><FontAwesomeIcon icon={icon({ name: 'spinner', style: 'solid' })} className='w-8 h-8 animate-spin' /></td></tr> : null}
         </tbody>
       </table>
       <tfoot className='bg-slate-50'>

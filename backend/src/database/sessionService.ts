@@ -13,6 +13,8 @@ export class SessionService {
     } catch(error) {
       await client.query('ROLLBACK')
       throw error
+    } finally {
+      await client.end()
     }
   }
 
