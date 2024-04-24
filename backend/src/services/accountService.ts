@@ -10,15 +10,15 @@ const userEntityService = new UserEntityService
 export class AccountService extends BaseService {
   async getOneById(accountId: string): Promise<AccountType> {
     return this.performTransaction(async (client) => {
-      return await accountEntityService.getOneById(client, accountId)
+      return await accountEntityService.selectAccount(client, accountId)
     })
   }
 
   async createAccount(organisationName: string, userId: string): Promise<void> {
     this.performTransaction(async (client) => {
       const accountId = uuidv4()
-      await accountEntityService.insert(client, accountId, organisationName)
-      await accountEntityService.addUserById(client, userId, accountId)
+      await accountEntityService.insertAccount(client, accountId, organisationName)
+      await accountEntityService.insertUserRel(client, userId, accountId)
     })
   }
   
@@ -28,7 +28,7 @@ export class AccountService extends BaseService {
       if (!user) {
         throw new Error('E-Mail exestiert nicht')
       }
-      await accountEntityService.addUserById(client, user.id, accountId)
+      await accountEntityService.insertUserRel(client, user.id, accountId)
     })
   }
 }

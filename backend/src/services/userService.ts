@@ -29,7 +29,7 @@ export class UserService extends BaseService {
       } else {
         const userId = uuidv4()
         await userEntityService.insertUser(client, userId, userFormData)
-        await accountEntityService.addUserById(client, userId, accountId)
+        await accountEntityService.insertUserRel(client, userId, accountId)
         return { type: 'userCreated' }
       }
     })
@@ -44,10 +44,10 @@ export class UserService extends BaseService {
 
       const accounts = await userEntityService.getAccounts(client, accountId)
       if (accounts.length > 1) {
-        await accountEntityService.removeUserById(client, accountId, userId)
+        await accountEntityService.deleteUserRel(client, accountId, userId)
         return 'User wurde aus Account entfernt'
       } else {
-        await accountEntityService.removeUserById(client, accountId, userId)
+        await accountEntityService.deleteUserRel(client, accountId, userId)
         await userEntityService.removeQualifications(client, userId)
         await userEntityService.deleteUser(client, userId)
         return 'User wurde gelöscht'
