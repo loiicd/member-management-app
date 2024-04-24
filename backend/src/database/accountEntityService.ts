@@ -47,4 +47,19 @@ export class AccountEntityService {
       await client.end()
     }
   }
+
+  async removeUserById(accountId: string, userId: string): Promise<void> {
+    const client = await connect()
+    try {
+      await client.query('BEGIN')
+      const query = 'DELETE FROM public."user_account_rel" WHERE user_id = $1 AND account_id = $2 AND is_admin = false'
+      await client.query(query, [userId, accountId])
+      await client.query('COMMIT')
+    } catch (error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally {
+      await client.end()
+    }
+  }
 }

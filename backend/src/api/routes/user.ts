@@ -4,6 +4,7 @@ import { tryCatchMiddleware } from '../middleware/tryCatchMiddleware'
 import { validateFilter, validatePageNumber, validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateEmail, validateUser, validateUserFormData } from '../validate'
 import { authMiddleware } from '../middleware/authMiddleware'
 import { AccountEntityService } from '../../database/accountEntityService'
+import { deleteUserHandler } from '../../handler/deleteUserHandler'
 
 const router = express.Router()
 const userEntityService = new UserEntityService
@@ -51,9 +52,10 @@ router.put('/password/:id', authMiddleware, tryCatchMiddleware(async (req: Reque
 
 // Delete user
 router.delete('/:id', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
-  const id = validateUUID(req.params.id)
-  await userEntityService.delete(id)
-  res.sendStatus(201)
+  const accountId = validateUUID(req.headers.accountid)
+  const userId = validateUUID(req.params.id)
+  const response = await deleteUserHandler(userId, accountId)
+  res.status(200).send(response)
 }))
 
 // Get accounts by user ID
