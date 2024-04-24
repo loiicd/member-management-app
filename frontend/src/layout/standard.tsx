@@ -18,7 +18,7 @@ const StandardLayout: FunctionComponent<StandardLayoutProps> = ({ accountId, chi
   return (
     <div className='min-h-screen flex flex-col justify-between bg-gray-50 dark:bg-gray-900'>
       <Header accountId={accountId} toogleSidebar={toogleSidebar} />
-      <div className='flex justify-between'>
+      <div className='flex justify-between flex-grow'>
         <Sidebar accountId={accountId} />
         <main className='container mx-auto py-8'>
           { children }
