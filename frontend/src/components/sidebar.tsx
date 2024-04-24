@@ -27,7 +27,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ accountId }) => {
     <div className="w-16 flex flex-col justify-between border-e bg-white">
       <div>
         <div className="inline-flex items-center justify-center w-16 h-16">
-          <span className="grid place-content-center rounded-lg bg-gray-100 text-xs text-gray-600 w-10 h-10">
+          <span className="grid place-content-center rounded-lg bg-gray-100 text-s font-semibold text-gray-600 w-10 h-10">
             BO
           </span>
         </div>

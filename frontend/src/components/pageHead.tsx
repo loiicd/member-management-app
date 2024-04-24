@@ -8,7 +8,7 @@ interface PageHeadProps {
 
 const PageHead: FunctionComponent<PageHeadProps> = ({ title, subTitle, children }) => {
   return (
-    <div className="mx-auto max-w-screen-xl py-8 sm:py-12">
+    <div className="mx-auto max-w-screen-xl py-2">
       <div className="sm:flex sm:items-center sm:justify-between">
         <div className="text-center sm:text-left">
           <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">{title}</h1>
