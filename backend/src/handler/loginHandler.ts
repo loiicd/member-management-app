@@ -1,13 +1,13 @@
-import { UserEntityService } from '../database/userEntityService'
 import * as jwt from 'jsonwebtoken'
 import bcryptjs from 'bcryptjs'
 import { SessionService } from '../database/sessionService'
+import { UserService } from '../services/userService'
 
-const userEntityService = new UserEntityService()
-const sessionService = new SessionService()
+const sessionService = new SessionService
+const userService = new UserService
 
 export const loginHandler = async (email: string, password: string): Promise<any> => {
-  const user = await userEntityService.getLoginDataByMail(email)
+  const user = await userService.getLoginDataByMail(email)
   const userExists = !!user
 
   if (!userExists) throw new Error('Invalid Credentials')

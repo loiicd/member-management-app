@@ -48,7 +48,7 @@ router.put('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Res
 router.put('/password/:id', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
   const userId = validateUUID(req.params.id)
   const password = validateString(req.body.newPassword)
-  await userEntityService.updatePassword(userId, password)
+  await userService.updatePassword(userId, password)
   res.sendStatus(201)
 }))
 

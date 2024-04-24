@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { ApiResponse } from '../types/apiResponse'
 import { BaseService } from './baseService'
 import { DataBaseResponse } from '../types/DataBaseResponse'
+import bcryptjs from 'bcryptjs'
 
 const userEntityService = new UserEntityService
 const accountEntityService = new AccountEntityService
@@ -35,7 +36,7 @@ export class UserService extends BaseService {
   }
 
   async deleteUser(userId: string, accountId: string): Promise<string> {
-    return await this.performTransaction(async (client) => {
+    return this.performTransaction(async (client) => {
       const user = await userEntityService.getOneById(client, userId)
       if (!user) {
         throw new Error('User exestiert nicht')
@@ -55,7 +56,7 @@ export class UserService extends BaseService {
   }
 
   async getUsers(accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[], page: number): Promise<DataBaseResponse> {
-    return await this.performTransaction(async (client) => {
+    return this.performTransaction(async (client) => {
       let users: UserType[] = []
       let totalEntries: number
       if (searchTerm) {
@@ -75,7 +76,7 @@ export class UserService extends BaseService {
   }
 
   async getUserById(userId: string): Promise<UserType[]> {
-    return await this.performTransaction(async (client) => {
+    return this.performTransaction(async (client) => {
       const user = await userEntityService.getOneById(client, userId)
       user.qualifications = await userEntityService.getQualifications(client, userId)
       return user
@@ -83,8 +84,23 @@ export class UserService extends BaseService {
   }
 
   async getAccounts(userId: string): Promise<AccountType[]> {
-    return await this.performTransaction(async (client) => {
+    return this.performTransaction(async (client) => {
       return await userEntityService.getAccounts(client, userId)
     })
   }
+
+  async updatePassword(userId: string, password: string): Promise<void> {
+    this.performTransaction(async (client) => {
+      const salt = bcryptjs.genSaltSync()
+      const hashedPassword = bcryptjs.hashSync(password+salt)  
+      await userEntityService.updatePassword(client, userId, hashedPassword, salt)
+    })
+  }
+
+  async getLoginDataByMail(email: string): Promise<any> {
+    return this.performTransaction(async (client) => {
+      await userEntityService.getLoginDataByMail(client, email)
+    })
+  }
+
 }
