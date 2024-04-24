@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import Typography from "../components/base/typography"
 import { Qualification } from "../types/qualification"
 import QualificationDialog from "../components/qualificationDialog"
 import { useNavigate, useParams } from "react-router-dom"
@@ -47,7 +46,7 @@ const SettingsQualificationPage = () => {
         </div>
         <div className='col-span-8'>
           <div className='flex justify-between'>
-            <Typography variant='h5'>Qualifikationen</Typography>
+            <p className='text-black dark:text-white'>Qualifikationen</p>
             <QualificationDialog type='insert' accountId={accountId as string} />
           </div>
           <div className='border rounded-md'>

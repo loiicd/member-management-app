@@ -22,7 +22,14 @@ interface UserTableProps {
 const UserTable: FunctionComponent<UserTableProps> = ({ users, loadingUsers, sortAttribute, sortDirection, currentPage, totalEntries, accountId, handleChangeSort, resetSearchFilter, handleChangePagination }) => {
   const navigate = useNavigate()
 
+  const pageNumbers = []
+
+  for (let i = 1; i <= Math.ceil(totalEntries / 25); i++) {
+    pageNumbers.push(i)
+ }
+
   return (
+    <>
     <div className="overflow-x-auto rounded-lg border border-gray-200">
       <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
         <thead>
@@ -72,33 +79,40 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, loadingUsers, sor
               <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{user.webaccess ? <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='text-lime-500' /> : <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} className='text-red-500' />}</td>
             </tr>
           ))}
-          {loadingUsers ? <tr><td colSpan={7} className='text-center py-4'><FontAwesomeIcon icon={icon({ name: 'spinner', style: 'solid' })} className='w-8 h-8 animate-spin' /></td></tr> : null}
+          {loadingUsers && users.length === 0 ? <tr><td colSpan={7} className='text-center py-4'><FontAwesomeIcon icon={icon({ name: 'spinner', style: 'solid' })} className='w-8 h-8 animate-spin' /></td></tr> : null}
         </tbody>
       </table>
-      <tfoot className='bg-slate-50'>
-        <tr>
-          <td colSpan={7}>
-            <div className='flex justify-end gap-2 p-4'>
-              {currentPage !== 1 ? 
-                <span className='hover:bg-slate-200 rounded h-6 px-2 text-center cursor-pointer' onClick={() => handleChangePagination(currentPage - 1)}><FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} className='me-2' />Previous</span>
-                : <span className='rounded h-6 px-2 text-center text-slate-500 cursor-not-allowed'><FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} className='me-2' />Previous</span>
-              }
-              {[...Array(currentPage - 1)].map((_, index) => (
-                <span className='hover:bg-slate-200 rounded h-6 w-6 text-center cursor-pointer' onClick={() => handleChangePagination(index + 1)}>{index + 1}</span>  
-              ))}
-              <span className='rounded-md h-6 w-6 bg-blue-500 text-white text-center cursor-pointer'>{currentPage}</span>
-              {/* {[...Array(Math.ceil(totalEntries / 5) - currentPage)].map((_, index) => (
-                <span className='hover:bg-slate-200 rounded h-6 w-6 text-center cursor-pointer' onClick={() => handleChangePagination(currentPage + index + 1)}>{currentPage + index + 1}</span>  
-              ))} */}
-              {currentPage !== Math.ceil(totalEntries / 5) ? 
-                <span className='hover:bg-slate-200 rounded h-6 px-2 text-center cursor-pointer' onClick={() => handleChangePagination(currentPage + 1)}>Next<FontAwesomeIcon icon={icon({ name: 'chevron-right', style: 'solid' })} className='ms-2' /></span>
-                : <span className='rounded h-6 px-2 text-center text-slate-500 cursor-not-allowed' onClick={() => handleChangePagination(currentPage + 1)}>Next<FontAwesomeIcon icon={icon({ name: 'chevron-right', style: 'solid' })} className='ms-2' /></span>
-              }
-            </div>
-          </td>
-        </tr>
-      </tfoot>
+  
+    <div className='rounded-b-lg border-t border-gray-200 px-4 py-2'>
+      <ol className='flex justify-end gap-1 text-xs font-medium'>
+        <li 
+          onClick={() => handleChangePagination(currentPage - 1)}
+          className="cursor-pointer inline-flex items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180 w-8 h-8"
+        >
+          <span className="sr-only">Prev Page</span>
+          <FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} className='w-3 h-3' />
+        </li>
+
+        {pageNumbers.map((pageNumber) => (
+          <li 
+            onClick={() => handleChangePagination(pageNumber)}
+            className={`cursor-pointer block rounded text-center leading-8 w-8 h-8 ${pageNumber === currentPage ? 'border-blue-600 bg-blue-600 text-white' : 'border-gray-100 bg-white text-gray-900'}`}
+          >
+            {pageNumber}
+          </li>
+        ))}
+  
+        <li 
+          onClick={() => handleChangePagination(currentPage + 1)}
+          className="cursor-pointer inline-flex items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180 w-8 h-8"
+        >
+          <span className="sr-only">Next Page</span>
+          <FontAwesomeIcon icon={icon({ name: 'chevron-right', style: 'solid' })} className='w-3 h-3' />
+        </li>
+      </ol>
     </div>
+  </div>
+  </>
   )
 }
 

@@ -1,6 +1,6 @@
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
 import Modal from './core/Modal'
-import Input from './base/input'
+import Input from './core/Input'
 import Button from './core/Button'
 import { QualificationApiClient } from '../services/qualificationApiClient'
 import { useAuthHeader } from 'react-auth-kit'
