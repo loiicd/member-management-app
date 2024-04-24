@@ -49,26 +49,22 @@ const SettingsQualificationPage = () => {
             <p className='text-black dark:text-white'>Qualifikationen</p>
             <QualificationDialog type='insert' accountId={accountId as string} />
           </div>
-          <div className='border rounded-md'>
-            <table className='w-full min-w-max table-auto text-left'>
-              <thead className='bg-slate-50 text-slate-600 border-b'>
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+              <thead>
                 <tr>
-                  <th className='ps-4 py-2 pe-3'></th>
-                  <th className='ps-4 py-2 pe-3'>Name</th>
-                  <th className='ps-3 py-2 pe-3'>Abkürzung</th>
-                  <th className='ps-3 py-2 pe-3'></th>
+                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 cursor-pointer'></th>
+                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 cursor-pointer'>Name</th>
+                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 cursor-pointer'>Abkürzung</th>
                 </tr>
               </thead>
-              <tbody>
-                {qualifications.map((qualification) => (
-                  <tr className='bg-white border-b hover:bg-slate-100'>
-                    <th className='ps-4 py-2 pe-3'><div className='h-4 w-4 rounded-full' style={{ backgroundColor: qualification.color}}></div></th>
-                    <td className='ps-4 py-2 pe-3'>{qualification.name}</td>
-                    <td className='ps-3 py-2 pe-3'>{qualification.abbreviation}</td>
-                    <td  className='ps-3 py-2 pe-4 flex items-center justify-end'>
-                      <IconButton icon={icon({ name: 'pen', style: 'solid' })} onClick={() => alert('Not Implemented!')} />
-                      <IconButton icon={icon({ name: 'trash', style: 'solid' })} onClick={() => alert('Not Implemented!')} />
-                    </td>
+
+              <tbody className="divide-y divide-gray-200">
+                {qualifications.map((qualification, index) => (
+                  <tr key={qualification.id + index} className='cursor-pointer hover:bg-gray-50'>
+                    <td className='whitespace-nowrap px-4 py-2 text-gray-700'><div className='h-4 w-4 rounded-full' style={{ backgroundColor: qualification.color}}></div></td>
+                    <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{qualification.name}</td>
+                    <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{qualification.abbreviation}</td>
                   </tr>
                 ))}
               </tbody>
