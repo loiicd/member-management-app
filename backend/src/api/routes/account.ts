@@ -1,36 +1,30 @@
 import express, { Request, Response } from 'express'
+import { z } from 'zod'
 import { tryCatchMiddleware } from '../middleware/tryCatchMiddleware'
 import { validateEmail, validateUUID } from '../validate'
-import { AccountEntityService } from '../../database/accountEntityService'
-import { UserEntityService } from '../../database/userEntityService'
-import { v4 as uuidv4 } from 'uuid'
-import { z } from 'zod'
 import { authMiddleware } from '../middleware/authMiddleware'
+import { AccountService } from '../../services/accountService'
 
 const router = express.Router()
-const accountEntityService = new AccountEntityService
-const userEntityService = new UserEntityService
+const accountService = new AccountService
 
 router.get('/:id', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
-  const id = validateUUID(req.params.id)
-  const account = await accountEntityService.getOneById(id)
+  const accountId = validateUUID(req.params.id)
+  const account = await accountService.getOneById(accountId)
   res.status(200).send(account)
 }))
 
 router.post('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
   const organisationName = z.string().parse(req.body.organisationName)
   const userId = z.string().parse(req.body.userId)
-  const accountId = uuidv4()
-  await accountEntityService.create(accountId, organisationName)
-  await accountEntityService.addUserById(accountId, userId)
+  await accountService.createAccount(organisationName, userId)
   res.sendStatus(201)
 }))
 
 router.post('/user', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
   const accountId = validateUUID(req.body.accountId)
   const loginEmail = validateEmail(req.body.loginEmail)
-  const user = await userEntityService.getOneByEmail(loginEmail)
-  await accountEntityService.addUserById(accountId, user.id)
+  await accountService.addUserByMail(loginEmail, accountId)
   res.sendStatus(201)
 }))
 

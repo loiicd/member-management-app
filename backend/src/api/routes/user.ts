@@ -25,7 +25,7 @@ router.get('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Res
   if (data.page < 1) { 
     data.page = 1
   }
-  const users = await userEntityService.getAll(data.accountId, data.searchTerm, data.sortAttribute, data.sortDirection, data.filter, data.page)
+  const users = await userService.getUsers(data.accountId, data.searchTerm, data.sortAttribute, data.sortDirection, data.filter, data.page)
   res.status(200).send(users)
 }))
 

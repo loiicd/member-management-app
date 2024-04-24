@@ -1,31 +1,19 @@
 import { UserEntityService } from '../database/userEntityService'
 import { AccountEntityService } from '../database/accountEntityService'
-import { Client } from 'pg'
-import { connect } from '../database/db'
 import { AccountType } from '../models/accountShema'
 import { UserFormDataType, UserType } from '../models/userShema'
 import { v4 as uuidv4 } from 'uuid'
 import { ApiResponse } from '../types/apiResponse'
+import { BaseService } from './baseService'
+import { DataBaseResponse } from '../types/DataBaseResponse'
 
 const userEntityService = new UserEntityService
 const accountEntityService = new AccountEntityService
 
-export class UserService {
-  private async performTransaction(callback: (client: Client) => Promise<any>): Promise<any> {
-    const client = await connect()
-    try {
-      await client.query('BEGIN')
-      const result = await callback(client)
-      await client.query('COMMIT')
-      return result
-    } catch (error) {
-      await client.query('ROLLBACK')
-      throw error
-    } finally {
-      client.end()
-    }
-  }
+export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
+export type SortDirection = 'ASC' | 'DESC'
 
+export class UserService extends BaseService {
   async createUser(accountId: string, userFormData: UserFormDataType): Promise<ApiResponse> {
     return this.performTransaction(async (client) => {
       const user = await userEntityService.getOneByMail(client, userFormData.login_email)
@@ -66,6 +54,26 @@ export class UserService {
     })
   }
 
+  async getUsers(accountId: string, searchTerm: string | undefined, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[], page: number): Promise<DataBaseResponse> {
+    return await this.performTransaction(async (client) => {
+      let users: UserType[] = []
+      let totalEntries: number
+      if (searchTerm) {
+        searchTerm.trim().split(' ').join(':* & ')
+        users = await userEntityService.getAllWithSearch(client, accountId, searchTerm, sortAttribute, sortDirection, filter, page)
+        totalEntries = await userEntityService.getTotalEntriesCount(client, accountId, filter)
+      } else {
+        users = await userEntityService.getAll(client, accountId, sortAttribute, sortDirection, filter, page)
+        totalEntries = await userEntityService.getTotalEntriesCount(client, accountId, filter)
+      }
+      users.forEach(async (user) => {
+        user.qualifications = await userEntityService.getQualifications(client, user.id)
+      })
+
+      return { page: page, total: totalEntries, data: users}
+    })
+  }
+
   async getUserById(userId: string): Promise<UserType[]> {
     return await this.performTransaction(async (client) => {
       const user = await userEntityService.getOneById(client, userId)
@@ -75,7 +83,8 @@ export class UserService {
   }
 
   async getAccounts(userId: string): Promise<AccountType[]> {
-    const client = await connect()
-    return await userEntityService.getAccounts(client, userId)
+    return await this.performTransaction(async (client) => {
+      return await userEntityService.getAccounts(client, userId)
+    })
   }
 }

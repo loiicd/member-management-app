@@ -1,7 +1,7 @@
 import { FunctionComponent, useState } from 'react'
 import Footer from '../components/footer'
 import Header from '../components/header'
-import Sidebar from '../components/Sidebar'
+import Sidebar from '../components/sidebar'
 
 interface StandardLayoutProps {
   accountId: string
