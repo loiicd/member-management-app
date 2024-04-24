@@ -160,7 +160,7 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
         WHERE to_tsvector('simple', firstname || ' ' || lastname || ' ' || coalesce(birthdate::text, '') || ' ' || coalesce(address, '') || ' ' || coalesce(email, '') || ' ' || coalesce(phone, '')) @@ to_tsquery('simple', $1)
         AND user_account_rel.account_id = $2
         ORDER BY ${sortAttribute} ${sortDirection}
-        LIMIT 25 OFFSET ${(page - 1) * 5}`
+        LIMIT 25 OFFSET ${(page - 1) * 25}`
     } else {
       query = `
         SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
@@ -174,7 +174,7 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
         AND user_qualification_rel.account_id = $2
         AND qualification_id IN (${filter.map((filter) => `'${filter}'`)})
         ORDER BY ${sortAttribute} ${sortDirection}
-        LIMIT 25 OFFSET ${(page - 1) * 5}`
+        LIMIT 25 OFFSET ${(page - 1) * 25}`
     }
     const result = await client.query(query, [newSearchTerm + ':*', accountId])
 

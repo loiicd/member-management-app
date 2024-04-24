@@ -5,6 +5,7 @@ import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { useNavigate } from 'react-router-dom'
 import Badge from './core/Badge'
 import { SortAttribute } from '../pages/users'
+import Pagination from './core/Pagination'
 
 interface UserTableProps {
   users: User[]
@@ -83,35 +84,15 @@ const UserTable: FunctionComponent<UserTableProps> = ({ users, loadingUsers, sor
         </tbody>
       </table>
   
-    <div className='rounded-b-lg border-t border-gray-200 px-4 py-2'>
-      <ol className='flex justify-end gap-1 text-xs font-medium'>
-        <li 
-          onClick={() => handleChangePagination(currentPage - 1)}
-          className="cursor-pointer inline-flex items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180 w-8 h-8"
-        >
-          <span className="sr-only">Prev Page</span>
-          <FontAwesomeIcon icon={icon({ name: 'chevron-left', style: 'solid' })} className='w-3 h-3' />
-        </li>
-
-        {pageNumbers.map((pageNumber) => (
-          <li 
-            onClick={() => handleChangePagination(pageNumber)}
-            className={`cursor-pointer block rounded text-center leading-8 w-8 h-8 ${pageNumber === currentPage ? 'border-blue-600 bg-blue-600 text-white' : 'border-gray-100 bg-white text-gray-900'}`}
-          >
-            {pageNumber}
-          </li>
-        ))}
-  
-        <li 
-          onClick={() => handleChangePagination(currentPage + 1)}
-          className="cursor-pointer inline-flex items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180 w-8 h-8"
-        >
-          <span className="sr-only">Next Page</span>
-          <FontAwesomeIcon icon={icon({ name: 'chevron-right', style: 'solid' })} className='w-3 h-3' />
-        </li>
-      </ol>
+      <div className='rounded-b-lg border-t border-gray-200 px-4 py-2'>
+        <Pagination 
+          currentPage={currentPage} 
+          totalEntries={totalEntries} 
+          pageNumbers={pageNumbers} 
+          handleChangePagination={handleChangePagination} 
+        />
+      </div>
     </div>
-  </div>
   </>
   )
 }
