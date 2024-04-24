@@ -3,12 +3,11 @@ import { SortAttribute, SortDirection, UserEntityService } from '../../database/
 import { tryCatchMiddleware } from '../middleware/tryCatchMiddleware'
 import { validateFilter, validatePageNumber, validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateEmail, validateUser, validateUserFormData } from '../validate'
 import { authMiddleware } from '../middleware/authMiddleware'
-import { AccountEntityService } from '../../database/accountEntityService'
-import { deleteUserHandler } from '../../handler/deleteUserHandler'
+import { UserService } from '../../services/userService'
 
 const router = express.Router()
 const userEntityService = new UserEntityService
-const accountEntityService = new AccountEntityService
+const userService = new UserService
 
 // Get one by ID
 router.get('/:id', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
@@ -54,7 +53,7 @@ router.put('/password/:id', authMiddleware, tryCatchMiddleware(async (req: Reque
 router.delete('/:id', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
   const accountId = validateUUID(req.headers.accountid)
   const userId = validateUUID(req.params.id)
-  const response = await deleteUserHandler(userId, accountId)
+  const response = await userService.deleteUser(userId, accountId)
   res.status(200).send(response)
 }))
 

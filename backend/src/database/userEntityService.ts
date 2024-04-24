@@ -61,6 +61,30 @@ export class UserEntityService {
     }
   }
 
+  async getOneByIdTest(client: Client, userId: string): Promise<UserType> {
+    const user = await selectUserById(client, userId)
+    user.qualifications = await selectQualifications(client, userId)
+    return user
+  }
+
+  async getAccountsTest(client: Client, userId: string): Promise<AccountType[]> {
+    const query = 'SELECT id, organisation_name FROM public."account" LEFT JOIN public."user_account_rel" ON account_id = id WHERE user_id = $1'
+    const values = [userId]
+    return (await client.query(query, values)).rows
+  }
+
+  async deleteUser(client: Client, userId: string): Promise<void> {
+    const query = 'DELETE FROM public."user" WHERE id = $1'
+    const values = [userId]
+    await client.query(query, values)
+  }
+
+  async removeQualifications(client: Client, userId: string): Promise<void> {
+    const query = 'DELETE FROM public."user_qualification_rel" WHERE user_id = $1'
+    const values = [userId]
+    await client.query(query, values)
+  }
+
   async getOneByEmail(email: string): Promise<UserType> {
     const client = await connect()
     try {

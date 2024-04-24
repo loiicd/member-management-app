@@ -37,8 +37,9 @@ export class SessionService {
   }
 
   async getUserIdByToken(token: string): Promise<string> {
+    const client = await connect()
     const query = 'SELECT user_id FROM public."user_session" WHERE token = $1'
     const values = [token]
-    return (await this.executeQueryWithTransaction(query, values)).rows[0].user_id
+    return (await client.query(query, values)).rows[0].user_id
   }
 }

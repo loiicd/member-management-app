@@ -22,19 +22,15 @@ const DashboardPage = () => {
   return (
     <StandardLayout accountId={accountId}>
       <PageHead title={`Dashboard - ${account?.organisation_name}`}></PageHead>
-      <div className='grid grid-cols-4 gap-4'>
-        <div className='rounded-lg bg-white h-40 border'></div>
-        <div className='rounded-lg bg-white h-40 border'></div>
-        <div className='rounded-lg bg-white h-40 border'></div>
-        <div className='rounded-lg bg-white h-40 border'></div>
-        <div className='rounded-lg bg-white h-40 border'></div>
-        <div className='rounded-lg bg-white h-40 border'></div>
-        <div className='rounded-lg bg-white h-40 border'></div>
-        <div className='rounded-lg bg-white h-40 border'></div>
-        <div className='rounded-lg bg-white h-40 border'></div>
-        <div className='rounded-lg bg-white h-40 border'></div>
-        <div className='rounded-lg bg-white h-40 border'></div>
-        <div className='rounded-lg bg-white h-40 border'></div>
+      <div className='grid grid-cols-3 gap-4'>
+        <div className='rounded-lg bg-white h-60 border'></div>
+        <div className='rounded-lg bg-white h-60 border'></div>
+        <div className='rounded-lg bg-white h-60 border p-4'>
+          <p className='font-semibold'>Offene Aufgaben</p>
+        </div>
+        <div className='rounded-lg bg-white h-60 border'></div>
+        <div className='rounded-lg bg-white h-60 border'></div>
+        <div className='rounded-lg bg-white h-60 border'></div>
       </div>
     </StandardLayout>
   )
