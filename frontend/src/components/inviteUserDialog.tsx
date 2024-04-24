@@ -4,6 +4,7 @@ import Input from './core/Input'
 import Modal from './core/Modal'
 import Button from './core/Button'
 import { useAuthHeader } from 'react-auth-kit'
+import Alert from './core/Alert'
 
 interface InviteUserDialogProps {
   isOpen: boolean
@@ -18,9 +19,11 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const emailInputRef = useRef<HTMLInputElement>(null)
 
+  const [showAlert, setShowAlert] = useState<boolean>(false)
+
   const handleClose = () => close()
 
-  const handleTest = () => {
+  const handleInvite = () => {
     setIsLoading(true)
     const email = emailInputRef.current?.value
     if (!email) {
@@ -29,7 +32,11 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
     } 
     accountApiClient.addUser(accountId, email)
       .catch(error => setShowError(error.response.data.message))
-      .finally(() => setIsLoading(false))
+      .finally(() => {
+        setIsLoading(false)
+        handleClose()
+        setShowAlert(true)
+      })
   }
 
   const handleEmptyEmail = () => {
@@ -38,13 +45,16 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
   }
 
   return (
-    <Modal open={isOpen} onClose={handleClose} title='User hinzufügen' size='sm'>
-      <div className='flex flex-col justify-between gap-4'>
-        <Input type='text' label='E-Mail' ref={emailInputRef} />
-        {showError ? <div className='text-red-600'>{showError}</div> : null}
-        <Button onClick={handleTest} loading={isLoading}>Einladen</Button>
-      </div>
-    </Modal>
+    <>
+      <Modal open={isOpen} onClose={handleClose} title='User hinzufügen' size='sm'>
+        <div className='flex flex-col justify-between gap-4'>
+          <Input type='text' label='E-Mail' ref={emailInputRef} />
+          {showError ? <div className='text-red-600'>{showError}</div> : null}
+          <Button onClick={handleInvite} loading={isLoading}>Einladen</Button>
+        </div>
+      </Modal>
+      {showAlert ? <Alert message='User wurde eingeladen' timeout={3000} /> : null}
+    </>
   )
 }
 

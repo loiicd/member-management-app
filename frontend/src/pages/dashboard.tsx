@@ -5,6 +5,7 @@ import { Account } from '../types/account'
 import PageHead from '../components/pageHead'
 import { AccountApiClient } from '../services/accountApiClient'
 import { useAuthHeader } from 'react-auth-kit'
+import Alert from '../components/core/Alert'
 
 const DashboardPage = () => {
   const { accountId } = useParams()
@@ -26,6 +27,7 @@ const DashboardPage = () => {
         <div className='border rounded'>
           <p>Hello</p>
         </div>
+        <Alert message='Hello' timeout={10000} />
       </div>
     </StandardLayout>
   )
