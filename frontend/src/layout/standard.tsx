@@ -1,7 +1,7 @@
 import { FunctionComponent, useState } from 'react'
 import Footer from '../components/footer'
 import Header from '../components/header'
-import NewSidebar from '../components/NewSidebar'
+import Sidebar from '../components/Sidebar'
 
 interface StandardLayoutProps {
   accountId: string
@@ -16,16 +16,16 @@ const StandardLayout: FunctionComponent<StandardLayoutProps> = ({ accountId, chi
   }
 
   return (
-    <main className='min-h-screen flex flex-col justify-between bg-gray-50 dark:bg-gray-900'>
-      <div>
-        <Header accountId={accountId} toogleSidebar={toogleSidebar} />
-        <div className='container mx-auto'>
-          <NewSidebar accountId={accountId} />
+    <div className='min-h-screen flex flex-col justify-between bg-gray-50 dark:bg-gray-900'>
+      <Header accountId={accountId} toogleSidebar={toogleSidebar} />
+      <div className='flex justify-between'>
+        <Sidebar accountId={accountId} />
+        <main className='container mx-auto pb-8'>
           { children }
-        </div>
+        </main>
       </div>
       <Footer />
-    </main>
+    </div>
   )
 }
 
