@@ -1,11 +1,10 @@
 import { useParams } from 'react-router-dom'
-import StandardLayout from '../layout/standard'
 import { useEffect, useState } from 'react'
 import { Account } from '../types/account'
-import PageHead from '../components/pageHead'
 import { AccountApiClient } from '../services/accountApiClient'
 import { useAuthHeader } from 'react-auth-kit'
-import Alert from '../components/core/Alert'
+import PageHead from '../components/pageHead'
+import StandardLayout from '../layout/standard'
 
 const DashboardPage = () => {
   const { accountId } = useParams()
@@ -23,11 +22,19 @@ const DashboardPage = () => {
   return (
     <StandardLayout accountId={accountId}>
       <PageHead title={`Dashboard - ${account?.organisation_name}`}></PageHead>
-      <div className='h-screen'>
-        <div className='border rounded'>
-          <p>Hello</p>
-        </div>
-        <Alert message='Hello' timeout={10000} />
+      <div className='grid grid-cols-4 gap-4'>
+        <div className='rounded-lg bg-white h-40 border'></div>
+        <div className='rounded-lg bg-white h-40 border'></div>
+        <div className='rounded-lg bg-white h-40 border'></div>
+        <div className='rounded-lg bg-white h-40 border'></div>
+        <div className='rounded-lg bg-white h-40 border'></div>
+        <div className='rounded-lg bg-white h-40 border'></div>
+        <div className='rounded-lg bg-white h-40 border'></div>
+        <div className='rounded-lg bg-white h-40 border'></div>
+        <div className='rounded-lg bg-white h-40 border'></div>
+        <div className='rounded-lg bg-white h-40 border'></div>
+        <div className='rounded-lg bg-white h-40 border'></div>
+        <div className='rounded-lg bg-white h-40 border'></div>
       </div>
     </StandardLayout>
   )
