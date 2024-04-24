@@ -9,21 +9,6 @@ export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' |
 export type SortDirection = 'ASC' | 'DESC'
 
 export class UserEntityService {
-  private async executeQueryWithTransaction(query: string, values: any[]): Promise<QueryResult<any>> {
-    const client = await connect()
-    try {
-      await client.query('BEGIN')
-      const result = await client.query(query, values)
-      await client.query('COMMIT')
-      return result
-    } catch(error) {
-      await client.query('ROLLBACK')
-      throw error
-    } finally {
-      await client.end()
-    }
-  }
-
   async insertUser(client: Client, userId: string, user: UserFormDataType): Promise<void> {
     const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now()::timestamp, now()::timestamp)'
     const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess]
@@ -149,13 +134,6 @@ export class UserEntityService {
     await client.query(query, values)
   }
 
-
-  async update(user: UserType): Promise<void> {
-    const query = 'UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, is_online_user = $7, webaccess = $8, updated_at = now()::timestamp WHERE id = $9'
-    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess, user.id]
-    await this.executeQueryWithTransaction(query, values)
-  }
-
   async getLoginDataByMail(client: Client, email: string): Promise<any> {
     const query = 'SELECT id, login_email, password, passwordsalt FROM public."user" WHERE email = $1'
     const values = [email]
@@ -163,6 +141,27 @@ export class UserEntityService {
   }
 
   // Old!! without Service Client Provider
+
+  private async executeQueryWithTransaction(query: string, values: any[]): Promise<QueryResult<any>> {
+    const client = await connect()
+    try {
+      await client.query('BEGIN')
+      const result = await client.query(query, values)
+      await client.query('COMMIT')
+      return result
+    } catch(error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally {
+      await client.end()
+    }
+  }
+
+  async update(user: UserType): Promise<void> {
+    const query = 'UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, is_online_user = $7, webaccess = $8, updated_at = now()::timestamp WHERE id = $9'
+    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess, user.id]
+    await this.executeQueryWithTransaction(query, values)
+  }
 
   async checkEmail(email: string): Promise<boolean> {
     const query = 'SELECT login_email FROM public."user" WHERE email = $1'

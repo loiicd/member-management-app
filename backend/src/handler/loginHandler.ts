@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken'
 import bcryptjs from 'bcryptjs'
-import { SessionService } from '../database/sessionService'
+import { SessionService } from '../services/sessionService'
 import { UserService } from '../services/userService'
 
 const sessionService = new SessionService

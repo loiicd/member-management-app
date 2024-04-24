@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import { tryCatchMiddleware } from '../middleware/tryCatchMiddleware'
-import { SessionService } from '../../database/sessionService'
+import { SessionService } from '../../services/sessionService'
 import { loginHandler } from '../../handler/loginHandler'
 import { z } from 'zod'
 

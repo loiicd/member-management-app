@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { NextFunction, Request, Response } from 'express'
-import { SessionService } from '../../database/sessionService'
+import { SessionService } from '../../services/sessionService'
 import { UserService } from '../../services/userService'
 
 const sessionService = new SessionService
@@ -12,7 +12,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
   const splitAuthToken = authToken.split(' ')[1]
 
-  const userId = await sessionService.getUserIdByToken(splitAuthToken)
+  const userId = await sessionService.getUserId(splitAuthToken)
   if (!userId) {
     res.sendStatus(401)
   }
