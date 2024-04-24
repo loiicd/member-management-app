@@ -1,10 +1,10 @@
 import { UserType, UserFormDataType } from '../models/userShema'
 import { connect } from './db'
-import { v4 as uuidv4 } from 'uuid'
 import bcryptjs from 'bcryptjs'
+import { v4 as uuidv4 } from 'uuid'
 import { Client, QueryResult } from 'pg'
 import { QualificationType } from '../models/qualificationShema'
-import { ApiResponse } from '../types/apiResponse'
+// import { ApiResponse } from '../types/apiResponse'
 import { DataBaseResponse } from '../types/DataBaseResponse'
 import { ValidateError } from './validateError'
 import { AccountType } from '../models/accountShema'
@@ -45,29 +45,64 @@ export class UserEntityService {
     }
   }
 
-  async getOneById(id: string): Promise<UserType> {
-    const client = await connect()
-    try {
-      await client.query('BEGIN')
-      const user = await selectUserById(client, id)
-      user.qualifications = await selectQualifications(client, id)
-      await client.query('COMMIT')
-      return user
-    } catch (error) {
-      await client.query('ROLLBACK')
-      throw error
-    } finally {
-      await client.end()
-    }
+  // async getOneById(id: string): Promise<UserType> {
+  //   const client = await connect()
+  //   try {
+  //     await client.query('BEGIN')
+  //     const user = await selectUserById(client, id)
+  //     user.qualifications = await selectQualifications(client, id)
+  //     await client.query('COMMIT')
+  //     return user
+  //   } catch (error) {
+  //     await client.query('ROLLBACK')
+  //     throw error
+  //   } finally {
+  //     await client.end()
+  //   }
+  // }
+
+  // async getOneById(client: Client, userId: string): Promise<UserType> {
+  //   const user = await selectUserById(client, userId)
+  //   user.qualifications = await selectQualifications(client, userId)
+  //   return user
+  // }
+
+  async insertUser(client: Client, userId: string, user: UserFormDataType): Promise<void> {
+    const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now()::timestamp, now()::timestamp)'
+    const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess]
+    await client.query(query, values)
   }
 
-  async getOneByIdTest(client: Client, userId: string): Promise<UserType> {
-    const user = await selectUserById(client, userId)
-    user.qualifications = await selectQualifications(client, userId)
-    return user
+  async getOneById(client: Client, userId: string): Promise<UserType> {
+    const query = `
+      SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
+      FROM public."user" 
+      WHERE id = $1`
+    const values = [userId]
+    return (await client.query(query, values)).rows[0]
   }
 
-  async getAccountsTest(client: Client, userId: string): Promise<AccountType[]> {
+  async getOneByMail(client: Client, email: string): Promise<UserType> {
+    const query = `
+      SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
+      FROM public."user" 
+      WHERE login_email = $1`
+    const values = [email]
+    return (await client.query(query, values)).rows[0]
+  }
+
+  async getQualifications(client: Client, userId: string): Promise<any[]> {
+    const query = `
+      SELECT id, name, abbreviation, color
+      FROM public."qualification" 
+      LEFT JOIN public."user_qualification_rel"
+      ON qualification_id = id
+      WHERE user_id = $1`
+    const values = [userId]
+    return (await client.query(query, values)).rows
+  }
+
+  async getAccounts(client: Client, userId: string): Promise<AccountType[]> {
     const query = 'SELECT id, organisation_name FROM public."account" LEFT JOIN public."user_account_rel" ON account_id = id WHERE user_id = $1'
     const values = [userId]
     return (await client.query(query, values)).rows
@@ -85,38 +120,43 @@ export class UserEntityService {
     await client.query(query, values)
   }
 
-  async getOneByEmail(email: string): Promise<UserType> {
-    const client = await connect()
-    try {
-      await client.query('BEGIN')
-      const user = await selectUserByEmail(client, email)
-      if (!user) { 
-        throw new ValidateError('USER_NOT_FOUND', 'User not found')
-      }
-      user.qualifications = await selectQualifications(client, user.id)
-      await client.query('COMMIT')
-      return user
-    } catch (error) {
-      await client.query('ROLLBACK')
-      console.log('Error:', error)
-      throw error
-    } finally {
-      await client.end()
-    }
-  }
 
-  async insert(accountId: string, user: UserFormDataType): Promise<ApiResponse> {
-    const client = await connect()
-    const userWithMail = await checkIfMailExists(client, user.email)
-    let relExists = false
-    if (userWithMail) {
-      relExists = await checkIfRelExists(accountId, userWithMail)
-      if (relExists) return { type: 'relExists', userId: userWithMail.id }
-    }
-    if (userWithMail && !relExists) return { type: 'mailExists', userId: userWithMail}
-    await insertUser(client, accountId, user)
-    return { type: 'userCreated' }
-  }
+  // ################
+  // ### OLD CODE ###
+  // ################
+
+  // async getOneByEmail(email: string): Promise<UserType> {
+  //   const client = await connect()
+  //   try {
+  //     await client.query('BEGIN')
+  //     const user = await selectUserByEmail(client, email)
+  //     if (!user) { 
+  //       throw new ValidateError('USER_NOT_FOUND', 'User not found')
+  //     }
+  //     user.qualifications = await selectQualifications(client, user.id)
+  //     await client.query('COMMIT')
+  //     return user
+  //   } catch (error) {
+  //     await client.query('ROLLBACK')
+  //     console.log('Error:', error)
+  //     throw error
+  //   } finally {
+  //     await client.end()
+  //   }
+  // }
+
+  // async insert(accountId: string, user: UserFormDataType): Promise<ApiResponse> {
+  //   const client = await connect()
+  //   const userWithMail = await checkIfMailExists(client, user.email)
+  //   let relExists = false
+  //   if (userWithMail) {
+  //     relExists = await checkIfRelExists(accountId, userWithMail)
+  //     if (relExists) return { type: 'relExists', userId: userWithMail.id }
+  //   }
+  //   if (userWithMail && !relExists) return { type: 'mailExists', userId: userWithMail}
+  //   await insertUser(client, accountId, user)
+  //   return { type: 'userCreated' }
+  // }
 
   async addAccountRelation(userId: string, accountId: string): Promise<void> {
     const query = 'INSERT INTO public."user_account_rel" (user_id, account_id, is_admin) VALUES ($1, $2, false)'
@@ -138,17 +178,17 @@ export class UserEntityService {
     await this.executeQueryWithTransaction(query, values)
   }
 
-  async delete(id: string): Promise<void> {
-    const query = 'DELETE FROM public."user" WHERE id = $1'
-    const values = [id]
-    await this.executeQueryWithTransaction(query, values)
-  }
+  // async delete(id: string): Promise<void> {
+  //   const query = 'DELETE FROM public."user" WHERE id = $1'
+  //   const values = [id]
+  //   await this.executeQueryWithTransaction(query, values)
+  // }
 
-  async getAccounts(userId: string): Promise<AccountType[]> {
-    const query = 'SELECT id, organisation_name FROM public."account" LEFT JOIN public."user_account_rel" ON account_id = id WHERE user_id = $1'
-    const values = [userId]
-    return (await this.executeQueryWithTransaction(query, values)).rows
-  }
+  // async getAccounts(userId: string): Promise<AccountType[]> {
+  //   const query = 'SELECT id, organisation_name FROM public."account" LEFT JOIN public."user_account_rel" ON account_id = id WHERE user_id = $1'
+  //   const values = [userId]
+  //   return (await this.executeQueryWithTransaction(query, values)).rows
+  // }
 
   async checkEmail(email: string): Promise<boolean> {
     const query = 'SELECT login_email FROM public."user" WHERE email = $1'
@@ -279,14 +319,14 @@ const selectUsers = async (client: Client, accountId: string, searchTerm: string
   }
 }
 
-const selectUserById = async (client: Client, userId: string): Promise<UserType> => {
-  const query = `
-    SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
-    FROM public."user" 
-    WHERE id = $1`
-  const user = await client.query(query, [userId])
-  return user.rows[0]
-}
+// const selectUserById = async (client: Client, userId: string): Promise<UserType> => {
+//   const query = `
+//     SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
+//     FROM public."user" 
+//     WHERE id = $1`
+//   const user = await client.query(query, [userId])
+//   return user.rows[0]
+// }
 
 const selectUserByEmail = async (client: Client, email: string): Promise<UserType> => {
   const query = `
@@ -308,33 +348,33 @@ const selectQualifications = async (client: Client, userId: string): Promise<Qua
   return result.rows
 }
 
-const checkIfMailExists = async (client: Client, email: string): Promise<any | null> => {
-  const response = await client.query('SELECT id, login_email, ARRAY_AGG(account_id) as account_ids FROM public."user" RIGHT JOIN public."user_account_rel" ON id = user_id WHERE email = $1 GROUP BY id', [email])
-  console.log(response.rows)
-  if (response.rows.length = 1) return response.rows[0]
-  return null
-}
+// const checkIfMailExists = async (client: Client, email: string): Promise<any | null> => {
+//   const response = await client.query('SELECT id, login_email, ARRAY_AGG(account_id) as account_ids FROM public."user" RIGHT JOIN public."user_account_rel" ON id = user_id WHERE email = $1 GROUP BY id', [email])
+//   console.log(response.rows)
+//   if (response.rows.length = 1) return response.rows[0]
+//   return null
+// }
 
-const checkIfRelExists = async (accountId: string, user: any): Promise<boolean> => {
-  if (user.account_ids.includes(accountId)) return true
-  return false
-}
+// const checkIfRelExists = async (accountId: string, user: any): Promise<boolean> => {
+//   if (user.account_ids.includes(accountId)) return true
+//   return false
+// }
 
-const insertUser = async (client: Client, accountId: string, user: UserFormDataType): Promise<void> => {
-  try {
-    await client.query('BEGIN')
-    const userId = uuidv4()
-    const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now()::timestamp, now()::timestamp)'
-    const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess]
-    const query2 = 'INSERT INTO public."user_account_rel" (user_id, account_id, is_admin) VALUES ($1, $2, false)'
-    const values2 = [userId, accountId]
-    await client.query(query, values)
-    await client.query(query2, values2)
-    await client.query('COMMIT')
-  } catch (error) {
-    await client.query('ROLLBACK')
-    throw error
-  } finally {
-    await client.end()
-  }
-}
+// const insertUser = async (client: Client, accountId: string, user: UserFormDataType): Promise<void> => {
+//   try {
+//     await client.query('BEGIN')
+//     const userId = uuidv4()
+//     const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now()::timestamp, now()::timestamp)'
+//     const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess]
+//     const query2 = 'INSERT INTO public."user_account_rel" (user_id, account_id, is_admin) VALUES ($1, $2, false)'
+//     const values2 = [userId, accountId]
+//     await client.query(query, values)
+//     await client.query(query2, values2)
+//     await client.query('COMMIT')
+//   } catch (error) {
+//     await client.query('ROLLBACK')
+//     throw error
+//   } finally {
+//     await client.end()
+//   }
+// }

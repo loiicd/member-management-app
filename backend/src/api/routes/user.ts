@@ -4,15 +4,18 @@ import { tryCatchMiddleware } from '../middleware/tryCatchMiddleware'
 import { validateFilter, validatePageNumber, validateSearchTerm, validateSortAttribute, validateSortDirection, validateString, validateUUID, validateEmail, validateUser, validateUserFormData } from '../validate'
 import { authMiddleware } from '../middleware/authMiddleware'
 import { UserService } from '../../services/userService'
+import { AccountService } from '../../services/accountService'
 
 const router = express.Router()
 const userEntityService = new UserEntityService
+
 const userService = new UserService
+const accountService = new AccountService
 
 // Get one by ID
 router.get('/:id', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
   const userId = validateUUID(req.params.id)
-  const user = await userEntityService.getOneById(userId)
+  const user = await userService.getUserById(userId)
   res.status(200).send(user)
 }))
 
@@ -30,7 +33,7 @@ router.get('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Res
 router.post('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
   const accountId = validateUUID(req.headers.accountid)
   const userFormData = validateUserFormData(req.body)
-  const response = await userEntityService.insert(accountId, userFormData)
+  const response = await userService.createUser(accountId, userFormData)
   res.status(200).send(response)
 }))
 
@@ -60,7 +63,7 @@ router.delete('/:id', authMiddleware, tryCatchMiddleware(async (req: Request, re
 // Get accounts by user ID
 router.get('/accounts/:id', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
   const id = validateUUID(req.params.id)
-  const accounts = await userEntityService.getAccounts(id)
+  const accounts = await userService.getAccounts(id)
   res.status(200).send(accounts)
 }))
 
@@ -74,8 +77,7 @@ router.get('/email/:email', authMiddleware, tryCatchMiddleware(async (req: Reque
 router.post('/orgrel/:email', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
   const accountId = validateUUID(req.headers.accountid)
   const email = validateEmail(req.params.email)
-  const user = await userEntityService.getOneByEmail(email)
-  userEntityService.addAccountRelation(user.id, accountId)
+  await accountService.addUserByMail(email, accountId)
   res.sendStatus(201)
 }))
 
