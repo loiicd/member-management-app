@@ -15,8 +15,6 @@ export const loginHandler = async (email: string, password: string): Promise<any
 
   const passwordIsIdentical = bcryptjs.compareSync(password+user.passwordsalt, user.password)
 
-  console.log('PasswordIsIdentical', passwordIsIdentical)
-
   if (!passwordIsIdentical) throw new Error('Invalid Credentials')
 
   const token = generateJsonWebToken(user.id, user.email)

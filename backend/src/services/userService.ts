@@ -29,9 +29,10 @@ export class UserService extends BaseService {
       } else {
         const userId = uuidv4()
         if (userFormData.password) {
-          const salt = bcryptjs.genSaltSync()
-          userFormData.password = bcryptjs.hashSync(userFormData.password+salt)
-          userFormData.passwordsalt = salt
+          this.hashPassword(userFormData)
+          // const salt = bcryptjs.genSaltSync()
+          // userFormData.password = bcryptjs.hashSync(userFormData.password+salt)
+          // userFormData.passwordsalt = salt
         }
         await userEntityService.insertUser(client, userId, userFormData)
         if (accountId) {
@@ -40,6 +41,12 @@ export class UserService extends BaseService {
         return { type: 'userCreated' }
       }
     })
+  }
+
+  private hashPassword(userFormData: UserFormDataType): void {
+    const salt = bcryptjs.genSaltSync()
+    userFormData.password = bcryptjs.hashSync(userFormData.password+salt)
+    userFormData.passwordsalt = salt
   }
 
   async deleteUser(userId: string, accountId: string): Promise<string> {
@@ -109,5 +116,4 @@ export class UserService extends BaseService {
       return await userEntityService.getLoginDataByMail(client, email)
     })
   }
-
 }
