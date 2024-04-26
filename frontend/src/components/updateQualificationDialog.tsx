@@ -11,7 +11,7 @@ import ColorPicker from './ColorPicker'
 interface ComponentProps {
   open: boolean
   qualifcationId: string
-  addAlert: (type: 'error' | 'success' | 'warning' | 'info', message: string, timeout: number) => void
+  addAlert: (color: string, message: string, timeout: number) => void
   handleClose: () => void
 }
 
@@ -28,7 +28,7 @@ const UpdateQualificationDialog: FunctionComponent<ComponentProps> = ({ open, qu
       .then((qualification) => setQualification(qualification))
       .catch((error) => {
         handleClose()
-        addAlert('error', error.response.data.message, 3000)
+        addAlert('danger', error.response.data.message, 3000)
       })
   }, [qualificationApiClient, qualifcationId, addAlert, handleClose])
 

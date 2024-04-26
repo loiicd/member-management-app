@@ -5,18 +5,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { icon } from "@fortawesome/fontawesome-svg-core/import.macro"
 import { QualificationApiClient } from "../services/qualificationApiClient"
 import { useAuthHeader } from "react-auth-kit"
-import QualificationDialog from "../components/qualificationDialog"
+import AddQualificationDialog from "../components/addQualificationDialog"
 import StandardLayout from "../layout/standard"
 import PageHead from "../components/pageHead"
 import UpdateQualificationDialog from "../components/updateQualificationDialog"
-import Alert from "../components/core/Alert"
+import Snackbar from '@mui/joy/Snackbar'
 
 const SettingsQualificationPage = () => {
   const [qualifications, setqualifications] = useState<Qualification[]>([])
   const { accountId } = useParams()
   const authToken = useAuthHeader()()
   const navigate = useNavigate()
-  const [alerts, setAlerts] = useState<{id: number, type: 'error' | 'success' | 'warning' | 'info', message: string, timeout: number}[]>([])
+  const [alerts, setAlerts] = useState<{id: number, color: any, message: string, timeout: number}[]>([])
   console.log(alerts)
 
   const qualificationApiClient = useMemo(() => new QualificationApiClient('http://localhost:3002', authToken, accountId), [authToken, accountId])
@@ -36,11 +36,12 @@ const SettingsQualificationPage = () => {
 
   const handleDelete = async (id: string) => {
     await qualificationApiClient.deleteQualification(id)
+      .then(() => addAlert('success', 'Qualifikation gelöscht', 3000))
   }
 
-  const addAlert = (type: 'error' | 'success' | 'warning' | 'info', message: string, timeout: number) => {
+  const addAlert = (color: string, message: string, timeout: number) => {
     const id = Date.now() as number
-    setAlerts([ ...alerts, { id, type, message, timeout }])
+    setAlerts([ ...alerts, { id, color, message, timeout }])
     setTimeout(() => removeAlert(id), timeout)
   }
 
@@ -71,7 +72,7 @@ const SettingsQualificationPage = () => {
         <div className='col-span-8'>
           <div className='flex justify-between'>
             <p className='text-black dark:text-white'>Qualifikationen</p>
-            <QualificationDialog type='insert' accountId={accountId as string} />
+            <AddQualificationDialog addAlert={addAlert} accountId={accountId as string} />
           </div>
           <div className="overflow-x-auto rounded-lg border border-gray-200">
             <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
@@ -114,7 +115,7 @@ const SettingsQualificationPage = () => {
         /> : null
       }
       {alerts.map((alert) => (
-        <Alert type={alert.type} message={alert.message} timeout={alert.timeout} />
+        <Snackbar open variant='soft' color={alert.color}>{alert.message}</Snackbar>
       ))}
     </StandardLayout>
   )

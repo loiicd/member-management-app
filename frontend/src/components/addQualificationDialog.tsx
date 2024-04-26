@@ -1,9 +1,9 @@
-import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
+import { ChangeEvent, FunctionComponent, useState } from 'react'
+import { QualificationApiClient } from '../services/qualificationApiClient'
+import { useAuthHeader } from 'react-auth-kit'
 import Modal from './core/Modal'
 import Input from './core/Input'
 import Button from './core/Button'
-import { QualificationApiClient } from '../services/qualificationApiClient'
-import { useAuthHeader } from 'react-auth-kit'
 
 type Test = {
   name: string | undefined,
@@ -11,32 +11,16 @@ type Test = {
   color: string | undefined,
 }
 
-interface qualificationDialogProps {
-  type: 'insert' | 'update'
-  qualificationId?: string
+interface AddQualificationDialogProps {
   accountId: string
+  addAlert: (color: string, message: string, timeout: number) => void
 }
 
-const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type, qualificationId, accountId }) => {
+const AddQualificationDialog: FunctionComponent<AddQualificationDialogProps> = ({ accountId, addAlert }) => {
   const [open, setOpen] = useState<boolean>(false)
   const authToken = useAuthHeader()()
 
   const [formData, setFormData] = useState<Test>({ name: undefined, abbreviation: undefined, color: '#FF3B30' })
-
-  // const [color, setColor] = useState<string>('#FF3B30')
-
-  // const changeColor = (color: string) => setColor(color)
-
-  useEffect(() => {
-    if (type === 'update' && qualificationId) {
-      // @ts-ignore
-      // getUser(qualificationId)
-      //   .then((data) => {
-      //     setFormData(data)
-      //   })
-      //   .catch((error) => alert(error))
-    }
-  }, [type, qualificationId])
 
   const handleOpen = () =>  setOpen(true)
   const handleClose = () =>  setOpen(false)
@@ -57,26 +41,20 @@ const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type
 
   const handleSave = () => {
     if (formData.name) {
-      if (type === 'insert') {
-        const qualificationApiClient = new QualificationApiClient('http://localhost:3002', authToken, accountId)
-        qualificationApiClient.postQualification(formData)
-          .then(handleClose)
-          .catch((error) => alert(error))
-      } else {
-        // if (qualificationId) {
-        //   // @ts-ignore
-        //   updateUser({id: userId, ...formData})
-        //     .then(handleClose)
-        //     .catch((error) => alert(error))
-        // }
-      }
+      const qualificationApiClient = new QualificationApiClient('http://localhost:3002', authToken, accountId)
+      qualificationApiClient.postQualification(formData)
+        .then(() => {
+          addAlert('success', 'Qualifikation erstellt', 3000)
+          handleClose()
+        })
+        .catch((error) => alert(error))
     }
   }
 
   return (
     <>
-      <Button onClick={handleOpen}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</Button>
-      <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert Qualification' : 'Update Qualification'} size='xl' >
+      <Button onClick={handleOpen}>{'+ Neu'}</Button>
+      <Modal open={open} onClose={handleClose} title={'Insert Qualification'} size='xl' >
         <div className='grid grid-cols-2 gap-2'>
           <div className='col-1'>
             <Input type='text' label='Name' value={formData.name} required={true} onChange={handleChange('name')} />
@@ -131,4 +109,4 @@ const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type
   )
 }
 
-export default QualificationDialog
+export default AddQualificationDialog
