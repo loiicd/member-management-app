@@ -15,7 +15,7 @@ export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' |
 export type SortDirection = 'ASC' | 'DESC'
 
 export class UserService extends BaseService {
-  async createUser(accountId: string, userFormData: UserFormDataType): Promise<ApiResponse> {
+  async createUser(accountId: string | undefined, userFormData: UserFormDataType): Promise<ApiResponse> {
     return this.performTransaction(async (client) => {
       const user = await userEntityService.getOneByMail(client, userFormData.login_email)
       if (user) {
@@ -28,8 +28,15 @@ export class UserService extends BaseService {
         }
       } else {
         const userId = uuidv4()
+        if (userFormData.password) {
+          const salt = bcryptjs.genSaltSync()
+          userFormData.password = bcryptjs.hashSync(userFormData.password+salt)
+          userFormData.passwordsalt = salt
+        }
         await userEntityService.insertUser(client, userId, userFormData)
-        await accountEntityService.insertUserRel(client, userId, accountId)
+        if (accountId) {
+          await accountEntityService.insertUserRel(client, userId, accountId)
+        }
         return { type: 'userCreated' }
       }
     })
@@ -99,7 +106,7 @@ export class UserService extends BaseService {
 
   async getLoginDataByMail(email: string): Promise<any> {
     return this.performTransaction(async (client) => {
-      await userEntityService.getLoginDataByMail(client, email)
+      return await userEntityService.getLoginDataByMail(client, email)
     })
   }
 

@@ -1,6 +1,5 @@
 import { UserType, UserFormDataType } from '../models/userShema'
 import { connect } from './db'
-import bcryptjs from 'bcryptjs'
 import { v4 as uuidv4 } from 'uuid'
 import { Client, QueryResult } from 'pg'
 import { AccountType } from '../models/accountShema'
@@ -10,8 +9,8 @@ export type SortDirection = 'ASC' | 'DESC'
 
 export class UserEntityService {
   async insertUser(client: Client, userId: string, user: UserFormDataType): Promise<void> {
-    const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now()::timestamp, now()::timestamp)'
-    const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess]
+    const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, login_email, password, passwordsalt, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, now()::timestamp, now()::timestamp)'
+    const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess, user.email, user.password, user.passwordsalt]
     await client.query(query, values)
   }
 

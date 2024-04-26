@@ -10,10 +10,12 @@ export const loginHandler = async (email: string, password: string): Promise<any
   const user = await userService.getLoginDataByMail(email)
   const userExists = !!user
 
-  if (!userExists) throw new Error('Invalid Credentials')
-  if (user.password === null) throw new Error('Invalid Credentials')
+  if (!userExists) throw new Error('User not Exists')
+  if (user.password === null) throw new Error('Password not in DB')
 
   const passwordIsIdentical = bcryptjs.compareSync(password+user.passwordsalt, user.password)
+
+  console.log('PasswordIsIdentical', passwordIsIdentical)
 
   if (!passwordIsIdentical) throw new Error('Invalid Credentials')
 
