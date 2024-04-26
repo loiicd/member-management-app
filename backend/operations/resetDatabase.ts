@@ -60,6 +60,8 @@ const resetDatabase = async () => {
       name text NOT NULL,
       abbreviation text,
       color text,
+      created_at timestamp NOT NULL DEFAULT now()::timestamp,
+      updated_at timestamp NOT NULL DEFAULT now()::timestamp,
       PRIMARY KEY (id),
       FOREIGN KEY (account_id) REFERENCES "account" (id)
     );
