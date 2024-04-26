@@ -76,7 +76,7 @@ const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type
   return (
     <>
       <Button onClick={handleOpen}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</Button>
-      <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert Qualification' : 'Update Qualification'}>
+      <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert Qualification' : 'Update Qualification'} size='xl' >
         <div className='grid grid-cols-2 gap-2'>
           <div className='col-1'>
             <Input type='text' label='Name' value={formData.name} required={true} onChange={handleChange('name')} />

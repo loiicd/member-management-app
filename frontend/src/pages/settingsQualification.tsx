@@ -1,32 +1,51 @@
 import { useEffect, useMemo, useState } from "react"
 import { Qualification } from "../types/qualification"
-import QualificationDialog from "../components/qualificationDialog"
 import { useNavigate, useParams } from "react-router-dom"
-import StandardLayout from "../layout/standard"
-import PageHead from "../components/pageHead"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { icon } from "@fortawesome/fontawesome-svg-core/import.macro"
-import IconButton from "../components/iconButton"
 import { QualificationApiClient } from "../services/qualificationApiClient"
 import { useAuthHeader } from "react-auth-kit"
+import QualificationDialog from "../components/qualificationDialog"
+import StandardLayout from "../layout/standard"
+import PageHead from "../components/pageHead"
+import UpdateQualificationDialog from "../components/updateQualificationDialog"
+import Alert from "../components/core/Alert"
 
 const SettingsQualificationPage = () => {
   const [qualifications, setqualifications] = useState<Qualification[]>([])
   const { accountId } = useParams()
   const authToken = useAuthHeader()()
   const navigate = useNavigate()
+  const [alerts, setAlerts] = useState<{id: number, type: 'error' | 'success' | 'warning' | 'info', message: string, timeout: number}[]>([])
+  console.log(alerts)
 
   const qualificationApiClient = useMemo(() => new QualificationApiClient('http://localhost:3002', authToken, accountId), [authToken, accountId])
 
   if (!accountId) throw new Error('Account ID is required')
 
+  const [openUpdateQualificationDialog, setOpenUpdateQualificationDialog] = useState<false | string>(false)
+
+  const handleCloseDialog = () => {
+    setOpenUpdateQualificationDialog(false)
+  }
+
   useEffect(() => {
     qualificationApiClient.getQualifications(accountId)
       .then(result => setqualifications(result)) 
-  }, [accountId, authToken])
+  }, [qualificationApiClient, accountId, openUpdateQualificationDialog])
 
   const handleDelete = async (id: string) => {
     await qualificationApiClient.deleteQualification(id)
+  }
+
+  const addAlert = (type: 'error' | 'success' | 'warning' | 'info', message: string, timeout: number) => {
+    const id = Date.now() as number
+    setAlerts([ ...alerts, { id, type, message, timeout }])
+    setTimeout(() => removeAlert(id), timeout)
+  }
+
+  const removeAlert = (id: number) => {
+    setAlerts(alerts.filter((alert) => alert.id !== id))
   }
 
   return (
@@ -75,6 +94,9 @@ const SettingsQualificationPage = () => {
                       <button className="text-gray-500 rounded-full hover:bg-gray-200 w-6 h-6" onClick={() => handleDelete(qualification.id)}>
                         <FontAwesomeIcon icon={icon({ name: 'trash', style: 'solid' })} className='h-4 w-4' />
                       </button>
+                      <button className="text-gray-500 rounded-full hover:bg-gray-200 w-6 h-6" onClick={() => setOpenUpdateQualificationDialog(qualification.id)}>
+                        <FontAwesomeIcon icon={icon({ name: 'pen', style: 'solid' })} className='h-4 w-4' />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -83,6 +105,17 @@ const SettingsQualificationPage = () => {
           </div>
         </div>
       </div>
+      {typeof openUpdateQualificationDialog === 'string' ? 
+        <UpdateQualificationDialog 
+          open={true} 
+          qualifcationId={openUpdateQualificationDialog} 
+          addAlert={addAlert}
+          handleClose={handleCloseDialog} 
+        /> : null
+      }
+      {alerts.map((alert) => (
+        <Alert type={alert.type} message={alert.message} timeout={alert.timeout} />
+      ))}
     </StandardLayout>
   )
 }

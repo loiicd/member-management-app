@@ -53,7 +53,7 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
           <Button onClick={handleInvite} loading={isLoading}>Einladen</Button>
         </div>
       </Modal>
-      {showAlert ? <Alert message='User wurde eingeladen' timeout={3000} /> : null}
+      {showAlert ? <Alert type='success' message='User wurde eingeladen' timeout={3000} /> : null}
     </>
   )
 }
