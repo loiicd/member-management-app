@@ -25,6 +25,7 @@ const UpdateQualificationDialog: FunctionComponent<ComponentProps> = ({ open, qu
   const authToken = useAuthHeader()()
   const qualificationApiClient = useMemo(() => new QualificationApiClient('http://localhost:3002', authToken, accountId), [authToken, accountId])
   const [qualification, setQualification] = useState<Qualification | undefined>(undefined)
+  const [loading, setLoading] = useState<boolean>(false)
 
   if (!accountId) throw new Error('AccountID required!')
 
@@ -52,9 +53,11 @@ const UpdateQualificationDialog: FunctionComponent<ComponentProps> = ({ open, qu
   }
 
   const handleUpdate = () => {
+    setLoading(true)
     qualificationApiClient.putQualification(qualification!)
       .then(handleClose)
       .catch((error) => alert(error))
+      .finally(() => setLoading(false))
   }
 
   return qualification ? (
@@ -73,7 +76,7 @@ const UpdateQualificationDialog: FunctionComponent<ComponentProps> = ({ open, qu
           fontWeight="lg"
           mb={1}
         >
-          Qualifikation Bearbeiten
+          Qualifikation bearbeiten
         </Typography>
         <div className='grid grid-cols-2 gap-2'>
           <div className='col-1'>
@@ -93,8 +96,8 @@ const UpdateQualificationDialog: FunctionComponent<ComponentProps> = ({ open, qu
           <ColorPicker color={qualification?.color} handleColorChange={handleColorChange} />
         </div>
         <div className='flex justify-end gap-4'>
-        <Button variant='outlined' onClick={handleClose}>Abbrechen</Button>
-          <Button variant='solid' onClick={handleUpdate}>Speichern</Button>
+          <Button variant='outlined' onClick={handleClose}>Abbrechen</Button>
+          <Button variant='solid' loading={loading} onClick={handleUpdate}>Speichern</Button>
         </div>
       </Sheet>
     </Modal>

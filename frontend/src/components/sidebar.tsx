@@ -45,7 +45,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ accountId }) => {
             <ListItemContent>Mitglieder</ListItemContent>
           </ListItemButton>
         </ListItem>
-        <ListItem onClick={() => navigate(`/${accountId}/settings/general`)}>
+        <ListItem onClick={() => navigate(`/${accountId}/settings`)}>
           <ListItemButton>
             <ListItemDecorator><FontAwesomeIcon icon={icon({ name: 'gear', style: 'solid' })} /></ListItemDecorator>
             <ListItemContent>Einstellungen</ListItemContent>

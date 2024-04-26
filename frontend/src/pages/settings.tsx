@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { Qualification } from "../types/qualification"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { icon } from "@fortawesome/fontawesome-svg-core/import.macro"
 import { QualificationApiClient } from "../services/qualificationApiClient"
@@ -11,13 +11,17 @@ import PageHead from "../components/pageHead"
 import UpdateQualificationDialog from "../components/updateQualificationDialog"
 import Snackbar from '@mui/joy/Snackbar'
 import Table from '@mui/joy/Table'
+import Button from '@mui/joy/Button'
 import IconButton from '@mui/joy/IconButton'
+import Tabs from '@mui/joy/Tabs'
+import TabList from '@mui/joy/TabList'
+import Tab from '@mui/joy/Tab'
+import TabPanel from '@mui/joy/TabPanel'
 
-const SettingsQualificationPage = () => {
+const SettingsPage = () => {
   const [qualifications, setqualifications] = useState<Qualification[]>([])
   const { accountId } = useParams()
   const authToken = useAuthHeader()()
-  const navigate = useNavigate()
   const [alerts, setAlerts] = useState<{id: number, color: any, message: string, timeout: number}[]>([])
 
   const qualificationApiClient = useMemo(() => new QualificationApiClient('http://localhost:3002', authToken, accountId), [authToken, accountId])
@@ -25,6 +29,7 @@ const SettingsQualificationPage = () => {
   if (!accountId) throw new Error('Account ID is required')
 
   const [openUpdateQualificationDialog, setOpenUpdateQualificationDialog] = useState<false | string>(false)
+  const [openAddQualificationDialog, setOpenAddQualificationDialog] = useState<boolean>(false)
 
   const handleCloseDialog = () => {
     setOpenUpdateQualificationDialog(false)
@@ -53,27 +58,34 @@ const SettingsQualificationPage = () => {
   return (
     <StandardLayout accountId={accountId}>
       <PageHead title='Einstellungen'></PageHead>
-      <div className='grid grid-cols-12 gap-4'>
-        <div className='col-span-2'>
-          <ul>
-            <li className='px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-200 text-sm text-slate-500' onClick={() => navigate(`/${accountId}/settings/general`)}>
-              <FontAwesomeIcon icon={icon({ name: 'users', style: 'solid' })} className='pe-2' />
+      <Tabs>
+        <TabList>
+          <Tab>
+            <FontAwesomeIcon icon={icon({ name: 'sliders', style: 'solid' })} />
               Allgemein
-            </li>
-            <li className='px-3 py-2 rounded-lg cursor-pointer bg-gray-200 text-sm font-semibold' onClick={() => navigate(`/${accountId}/settings/qualification`)}>
-              <FontAwesomeIcon icon={icon({ name: 'user-graduate', style: 'solid' })} className='pe-2' />
-              Qualifikationen
-            </li>
-            <li className='px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-200 text-sm text-slate-500'>
-              <FontAwesomeIcon icon={icon({ name: 'user-tag', style: 'solid' })} className='pe-2' />
-              Rollen
-            </li>
-          </ul>
-        </div>
-        <div className='col-span-8'>
+            </Tab>
+          <Tab>
+            <FontAwesomeIcon icon={icon({ name: 'user-graduate', style: 'solid' })} />
+            Qualifikationen
+          </Tab>
+          <Tab disabled>
+            <FontAwesomeIcon icon={icon({ name: 'user-astronaut', style: 'solid' })} />
+            Rollen
+          </Tab>
+          <Tab disabled>
+            <FontAwesomeIcon icon={icon({ name: 'user-group', style: 'solid' })} />
+            Gruppen
+          </Tab>
+          <Tab disabled>
+            <FontAwesomeIcon icon={icon({ name: 'shield-halved', style: 'solid' })} />
+            Sicherheit
+          </Tab>
+        </TabList>
+        <TabPanel value={0}>1</TabPanel>
+        <TabPanel value={1}>
           <div className='flex justify-between'>
             <p className='text-black dark:text-white'>Qualifikationen</p>
-            <AddQualificationDialog addAlert={addAlert} accountId={accountId as string} />
+            <Button onClick={() => setOpenAddQualificationDialog(true)}>+ Neu</Button>
           </div>
 
           <Table variant='outlined' sx={{ backgroundColor: 'white' }}>
@@ -103,8 +115,14 @@ const SettingsQualificationPage = () => {
               ))}
             </tbody>
           </Table>
-        </div>
-      </div>
+        </TabPanel>
+        <TabPanel value={2}>3</TabPanel>
+      </Tabs>
+      <AddQualificationDialog 
+        open={openAddQualificationDialog}
+        handleClose={() => setOpenAddQualificationDialog(false)}
+        addAlert={addAlert}
+      />
       {typeof openUpdateQualificationDialog === 'string' ? 
         <UpdateQualificationDialog 
           open={true} 
@@ -127,4 +145,4 @@ const SettingsQualificationPage = () => {
   )
 }
 
-export default SettingsQualificationPage
+export default SettingsPage

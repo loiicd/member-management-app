@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useState } from 'react'
+import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react'
 import Modal from './core/Modal'
 import { UserApiClient } from '../services/userApiClient'
 import Button from './core/Button'
@@ -29,7 +29,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
   const authToken = useAuthHeader()()
   const [open, setOpen] = useState<boolean>(false)
 
-  const userApiClient = new UserApiClient('http://localhost:3002', authToken, accountId)
+  const userApiClient = useMemo(() => new UserApiClient('http://localhost:3002', authToken, accountId), [authToken, accountId])
 
   const [formData, setFormData] = useState<Test>({
     firstname: undefined, 
@@ -53,7 +53,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
         })
         .catch((error) => alert(error))
     }
-  }, [type, userId])
+  }, [type, userId, userApiClient])
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
