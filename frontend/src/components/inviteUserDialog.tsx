@@ -1,10 +1,16 @@
-import { FunctionComponent, useRef, useState } from 'react'
+import { FunctionComponent, useMemo, useRef, useState } from 'react'
 import { AccountApiClient } from '../services/accountApiClient'
-import Input from './core/Input'
-import Modal from './core/Modal'
-import Button from './core/Button'
 import { useAuthHeader } from 'react-auth-kit'
 import Alert from './core/Alert'
+import Button from '@mui/joy/Button'
+import Input from '@mui/joy/Input'
+import Modal from '@mui/joy/Modal'
+import Sheet from '@mui/joy/Sheet'
+import ModalClose from '@mui/joy/ModalClose'
+import Typography from '@mui/joy/Typography'
+import FormControl from '@mui/joy/FormControl'
+import FormLabel from '@mui/joy/FormLabel'
+import FormHelperText from '@mui/joy/FormHelperText'
 
 interface InviteUserDialogProps {
   isOpen: boolean
@@ -14,14 +20,11 @@ interface InviteUserDialogProps {
 
 const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, close, accountId }) => {
   const authToken = useAuthHeader()()
-  const accountApiClient = new AccountApiClient('http://localhost:3002', authToken, accountId)
+  const emailInputRef = useRef<HTMLInputElement>(null)
+  const accountApiClient = useMemo(() => new AccountApiClient('http://localhost:3002', authToken, accountId), [authToken, accountId])
   const [showError, setShowError] = useState<false | any>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const emailInputRef = useRef<HTMLInputElement>(null)
-
   const [showAlert, setShowAlert] = useState<boolean>(false)
-
-  const handleClose = () => close()
 
   const handleInvite = () => {
     setIsLoading(true)
@@ -34,7 +37,7 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
       .catch(error => setShowError(error.response.data.message))
       .finally(() => {
         setIsLoading(false)
-        handleClose()
+        close()
         setShowAlert(true)
       })
   }
@@ -46,12 +49,32 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
 
   return (
     <>
-      <Modal open={isOpen} onClose={handleClose} title='User hinzufügen' size='sm'>
-        <div className='flex flex-col justify-between gap-4'>
-          <Input type='text' label='E-Mail' ref={emailInputRef} />
-          {showError ? <div className='text-red-600'>{showError}</div> : null}
-          <Button onClick={handleInvite} loading={isLoading}>Einladen</Button>
-        </div>
+      <Modal 
+        open={isOpen}
+        onClose={close}
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
+        <Sheet sx={{ width: 300, borderRadius: 'md', p: 3, boxShadow: 'lg' }}>
+          <ModalClose variant="plain" sx={{ m: 1 }} />
+          <Typography
+            component="h2"
+            id="modal-title"
+            level="h4"
+            textColor="inherit"
+            fontWeight="lg"
+            mb={1}
+          >
+            User einladen
+          </Typography>
+          <div className='flex flex-col justify-between gap-4'>
+            <FormControl error={showError ? true : false}>
+              <FormLabel>E-Mail</FormLabel>
+              <Input type='text' variant='outlined' required ref={emailInputRef} />
+              <FormHelperText>{showError}</FormHelperText>
+            </FormControl>
+            <Button onClick={handleInvite} loading={isLoading}>Einladen</Button>
+          </div>
+        </Sheet>
       </Modal>
       {showAlert ? <Alert type='success' message='User wurde eingeladen' timeout={3000} /> : null}
     </>

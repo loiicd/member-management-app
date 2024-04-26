@@ -9,12 +9,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Qualification } from '../types/qualification'
 import StandardLayout from '../layout/standard'
 import PageHead from '../components/pageHead'
-import Dropwdown from '../components/dropdown'
 import UserTable from '../components/userTable'
-import Input from '../components/core/Input'
+import Input from '@mui/joy/Input'
 import CreateUserDialog from '../components/createUserDialog'
 import InviteUserDialog from '../components/inviteUserDialog'
-import Menu from '../components/core/Menu'
+import Dropdown from '@mui/joy/Dropdown'
+import MenuButton from '@mui/joy/MenuButton'
+import Menu from '@mui/joy/Menu'
+import MenuItem from '@mui/joy/MenuItem'
+import ListDivider from '@mui/joy/ListDivider'
+import ListItemDecorator from '@mui/joy/ListItemDecorator'
 
 const sortAttributes = ['firstname', 'lastname',  'birthdate', 'address', 'webaccess'] as const
 export type SortAttribute = typeof sortAttributes[number]
@@ -119,41 +123,46 @@ const UsersPage: FunctionComponent = () => {
       <div className='py-4 flex justify-between'>
         <h2>Test</h2>
         <div className='flex justify-between gap-2'>
-          <Input placeholder='Suche ...' value={searchTerm != null ? searchTerm : undefined} onChange={handleSearch} startIcon={icon({ name: 'search', style: 'solid' })} />
-          <Dropwdown text='Hinzufügen'>
-            <div className='p-2'>
-              <Menu 
-                items={[{
-                  name: 'Neu erstellen',
-                  icon: icon({ name: 'plus', style: 'solid' }),
-                  onClick: () => setOpenCreateUserDialog(true),
-                  active: false
-                }, {
-                  name: 'Bestehenden einladen',
-                  icon: icon({ name: 'id-card', style: 'solid' }),
-                  onClick: () => setOpenInviteUserDialog(true),
-                  active: false
-                }]}
-              />
-            </div>
-          </Dropwdown>
-          <Dropwdown text='Qualifikation' counter={searchFilter ? searchFilter.split('%').length : undefined}>
-            <ul className='py-2'>
+          <Input 
+            variant='outlined'
+            placeholder='Suche ...' 
+            value={searchTerm != null ? searchTerm : undefined} 
+            onChange={handleSearch} 
+            startDecorator={<FontAwesomeIcon icon={icon({ name: 'search', style: 'solid' })} />} 
+          />
+          <Dropdown>
+            <MenuButton endDecorator={<FontAwesomeIcon icon={icon({ name: 'caret-down', style: 'solid' })} />}>
+              Hinzufügen
+            </MenuButton>
+            <Menu>
+              <MenuItem onClick={() => setOpenCreateUserDialog(true)}>
+                <FontAwesomeIcon icon={icon({ name: 'plus', style: 'solid' })} className='w-4 h-4' />
+                Neu erstellen
+              </MenuItem>
+              <MenuItem onClick={() => setOpenInviteUserDialog(true)}>
+                <FontAwesomeIcon icon={icon({ name: 'id-card', style: 'solid' })} className='w-4 h-4' />
+                Bestehenden einladen
+              </MenuItem>
+            </Menu>
+          </Dropdown>
+
+          <Dropdown>
+            <MenuButton endDecorator={<FontAwesomeIcon icon={icon({ name: 'caret-down', style: 'solid' })} />}>
+              Qualifikation
+            </MenuButton>
+            <Menu>
               {qualifications.map((qualification) => (
-                <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer' onClick={() => toggleSearchFilter(qualification.id)}>
-                  {searchFilter?.includes(qualification.id) ? 
-                    <>
-                      <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} className='w-4 h-4' />
-                      <span className='ms-2'>{qualification.name}</span>
-                    </>
-                    : <span className='ms-6'>{qualification.name}</span>
-                  }
-                </li>
+                <MenuItem onClick={() => toggleSearchFilter(qualification.id)}>
+                  <ListItemDecorator>{searchFilter?.includes(qualification.id) ? <FontAwesomeIcon icon={icon({ name: 'check', style: 'solid' })} /> : null}</ListItemDecorator>
+                  {qualification.name}
+                </MenuItem>
               ))}
-              <li className='border-b my-2'></li>
-              <li className='mx-2 p-2 rounded-md hover:bg-slate-200 cursor-pointer flex justify-center' onClick={resetSearchFilter}>Zurücksetzen</li>
-            </ul>
-          </Dropwdown>
+              <ListDivider />
+              <MenuItem onClick={resetSearchFilter}>
+                Zurücksetzen
+              </MenuItem>
+            </Menu>
+          </Dropdown>
         </div>
       </div>
       <UserTable 
