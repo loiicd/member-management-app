@@ -17,7 +17,11 @@ export class SessionEntityService {
   async selectUserId(client: Client, token: string): Promise<string> {
     const query = 'SELECT user_id FROM public."user_session" WHERE token = $1'
     const values = [token]
-    return (await client.query(query, values)).rows[0].user_id
+    const user = await client.query(query, values)
+    if (!user) {
+      throw new Error('Session not found')
+    }
+    return user.rows[0].user_id
   }
 
   async selectSessionValidation(client: Client, token: string): Promise<boolean> {
