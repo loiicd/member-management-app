@@ -20,4 +20,10 @@ router.post('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Re
   res.sendStatus(201)
 }))
 
+router.delete('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
+  const qualificationId = validateUUID(req.query.qualificationId)
+  await qualificationService.deleteQualification(qualificationId)
+  res.sendStatus(201)
+}))
+
 export default router

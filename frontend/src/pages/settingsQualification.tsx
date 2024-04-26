@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Qualification } from "../types/qualification"
 import QualificationDialog from "../components/qualificationDialog"
 import { useNavigate, useParams } from "react-router-dom"
@@ -16,13 +16,18 @@ const SettingsQualificationPage = () => {
   const authToken = useAuthHeader()()
   const navigate = useNavigate()
 
+  const qualificationApiClient = useMemo(() => new QualificationApiClient('http://localhost:3002', authToken, accountId), [authToken, accountId])
+
   if (!accountId) throw new Error('Account ID is required')
 
   useEffect(() => {
-    const qualificationApiClient = new QualificationApiClient('http://localhost:3002', authToken, accountId)
     qualificationApiClient.getQualifications(accountId)
       .then(result => setqualifications(result)) 
   }, [accountId, authToken])
+
+  const handleDelete = async (id: string) => {
+    await qualificationApiClient.deleteQualification(id)
+  }
 
   return (
     <StandardLayout accountId={accountId}>
@@ -53,18 +58,24 @@ const SettingsQualificationPage = () => {
             <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
               <thead>
                 <tr>
-                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 cursor-pointer'></th>
-                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 cursor-pointer'>Name</th>
-                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900 cursor-pointer'>Abkürzung</th>
+                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900'></th>
+                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900'>Name</th>
+                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900'>Abkürzung</th>
+                  <th className='whitespace-nowrap px-4 py-2 font-medium text-gray-900'></th>
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-200">
                 {qualifications.map((qualification, index) => (
-                  <tr key={qualification.id + index} className='cursor-pointer hover:bg-gray-50'>
+                  <tr key={qualification.id + index} className='hover:bg-gray-50'>
                     <td className='whitespace-nowrap px-4 py-2 text-gray-700'><div className='h-4 w-4 rounded-full' style={{ backgroundColor: qualification.color}}></div></td>
                     <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{qualification.name}</td>
                     <td className='whitespace-nowrap px-4 py-2 text-gray-700'>{qualification.abbreviation}</td>
+                    <td className='whitespace-nowrap px-4 py-2 text-gray-700'>
+                      <button className="text-gray-500 rounded-full hover:bg-gray-200 w-6 h-6" onClick={() => handleDelete(qualification.id)}>
+                        <FontAwesomeIcon icon={icon({ name: 'trash', style: 'solid' })} className='h-4 w-4' />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

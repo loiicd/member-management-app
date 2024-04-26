@@ -16,4 +16,16 @@ export class QualificationService extends BaseService {
       await qualificationEntityService.insertQualification(client, accountId, qualification)
     })
   }
+
+  async deleteQualification(qualificationId: string): Promise<void> {
+    this.performTransaction(async (client) => {
+      const relations = await qualificationEntityService.selectUserRelations(client, qualificationId)
+
+      if (relations.length != 0) {
+        throw new Error('Kann nicht gelöscht werden da noch relation!')
+      }
+
+      await qualificationEntityService.deleteQualification(client, qualificationId)
+    })
+  }
 }

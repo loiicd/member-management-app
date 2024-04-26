@@ -10,4 +10,8 @@ export class QualificationApiClient extends BaseApiClient {
   async postQualification(qualification: any): Promise<void> {
     await this.axiosInstance.post('qualification', { qualification })
   }
+
+  async deleteQualification(qualificationId: string): Promise<void> {
+    await this.axiosInstance.delete('qualification', { params: { qualificationId } })
+  }
 }
