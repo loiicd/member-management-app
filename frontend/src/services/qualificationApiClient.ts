@@ -7,7 +7,7 @@ export class QualificationApiClient extends BaseApiClient {
     return (await this.axiosInstance.get('qualification', { params: { accountId }})).data
   }
 
-  async postQualification(accountId: string, qualification: any): Promise<void> {
-    await this.axiosInstance.post('qualification', { accountId, qualification })
+  async postQualification(qualification: any): Promise<void> {
+    await this.axiosInstance.post('qualification', { qualification })
   }
 }

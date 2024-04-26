@@ -21,7 +21,7 @@ const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type
   const [open, setOpen] = useState<boolean>(false)
   const authToken = useAuthHeader()()
 
-  const [formData, setFormData] = useState<Test>({name: undefined, abbreviation: undefined, color: '#FF3B30'})
+  const [formData, setFormData] = useState<Test>({ name: undefined, abbreviation: undefined, color: '#FF3B30' })
 
   // const [color, setColor] = useState<string>('#FF3B30')
 
@@ -58,9 +58,8 @@ const QualificationDialog: FunctionComponent<qualificationDialogProps> = ({ type
   const handleSave = () => {
     if (formData.name) {
       if (type === 'insert') {
-        // @ts-ignore
         const qualificationApiClient = new QualificationApiClient('http://localhost:3002', authToken, accountId)
-        qualificationApiClient.postQualification(accountId, formData)
+        qualificationApiClient.postQualification(formData)
           .then(handleClose)
           .catch((error) => alert(error))
       } else {

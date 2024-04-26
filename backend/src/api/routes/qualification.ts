@@ -14,8 +14,8 @@ router.get('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Res
 }))
 
 router.post('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
-  const accountId = validateUUID(req.params.accountId)
-  const qualification = validatequalificationFormData(req.body.params.qualification)
+  const accountId = validateUUID(req.headers.accountid)
+  const qualification = validatequalificationFormData(req.body.qualification)
   await qualificationService.createQualification(accountId, qualification)
   res.sendStatus(201)
 }))
