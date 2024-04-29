@@ -30,9 +30,6 @@ export class UserService extends BaseService {
         const userId = uuidv4()
         if (userFormData.password) {
           this.hashPassword(userFormData)
-          // const salt = bcryptjs.genSaltSync()
-          // userFormData.password = bcryptjs.hashSync(userFormData.password+salt)
-          // userFormData.passwordsalt = salt
         }
         await userEntityService.insertUser(client, userId, userFormData)
         if (accountId) {

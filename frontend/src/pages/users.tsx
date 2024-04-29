@@ -71,7 +71,7 @@ const UsersPage: FunctionComponent = () => {
         setUrlParams(urlParams)
       })
       .finally(() => setLoadingUsers(false))
-  }, [accountId, authParams, searchTerm, sortAttribute, sortDirection, urlParams, authToken])
+  }, [accountId, authParams, searchTerm, sortAttribute, sortDirection, urlParams, authToken, setUrlParams])
 
   const toggleSearchFilter = (attribute: string): void => {
     const list = searchFilter ? searchFilter.split('%') : []
@@ -136,11 +136,11 @@ const UsersPage: FunctionComponent = () => {
             </MenuButton>
             <Menu>
               <MenuItem onClick={() => setOpenCreateUserDialog(true)}>
-                <FontAwesomeIcon icon={icon({ name: 'plus', style: 'solid' })} className='w-4 h-4' />
+                <FontAwesomeIcon icon={icon({ name: 'user-plus', style: 'solid' })} className='w-4 h-4' />
                 Neu erstellen
               </MenuItem>
               <MenuItem onClick={() => setOpenInviteUserDialog(true)}>
-                <FontAwesomeIcon icon={icon({ name: 'id-card', style: 'solid' })} className='w-4 h-4' />
+                <FontAwesomeIcon icon={icon({ name: 'envelope-open-text', style: 'solid' })} className='w-4 h-4' />
                 Bestehenden einladen
               </MenuItem>
             </Menu>

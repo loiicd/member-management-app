@@ -54,7 +54,7 @@ const InviteUserDialog: FunctionComponent<InviteUserDialogProps> = ({ isOpen, cl
         onClose={close}
         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
-        <Sheet sx={{ width: 300, borderRadius: 'md', p: 3, boxShadow: 'lg' }}>
+        <Sheet sx={{ width: 400, borderRadius: 'md', p: 3, boxShadow: 'lg' }}>
           <ModalClose variant="plain" sx={{ m: 1 }} />
           <Typography
             component="h2"
