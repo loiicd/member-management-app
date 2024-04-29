@@ -139,6 +139,12 @@ export class UserEntityService {
     return (await client.query(query, values)).rows[0]
   }
 
+  async insertQualificationRel(client: Client, userId: string, qualificationId: string, accountId: string): Promise<void> {
+    const query = 'INSERT INTO public."user_qualification_rel" (user_id, qualification_id, account_id) VALUES ($1, $2, $3)'
+    const values = [userId, qualificationId, accountId]
+    await client.query(query, values)
+  }
+
   // Old!! without Service Client Provider
 
   private async executeQueryWithTransaction(query: string, values: any[]): Promise<QueryResult<any>> {

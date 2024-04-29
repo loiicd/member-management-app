@@ -32,6 +32,11 @@ export class UserService extends BaseService {
           this.hashPassword(userFormData)
         }
         await userEntityService.insertUser(client, userId, userFormData)
+
+        userFormData.qualifications.map(async qualificationId => {
+          await userEntityService.insertQualificationRel(client, userId, qualificationId, accountId)
+        })
+
         if (accountId) {
           await accountEntityService.insertUserRel(client, userId, accountId)
         }

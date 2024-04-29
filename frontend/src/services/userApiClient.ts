@@ -15,7 +15,7 @@ export class UserApiClient extends BaseApiClient {
     return { ...response.data, data }
   }
 
-  public async createUser(userFormData: any): Promise<ApiResponse> {
+  public async createUser(userFormData: UserFormData): Promise<ApiResponse> {
     return (await this.axiosInstance.post('user', userFormData)).data
   }
 

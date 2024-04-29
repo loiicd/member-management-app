@@ -30,6 +30,7 @@ export const UserFormDataShema = z.object({
   webaccess:      z.boolean(),
   password:       z.string().optional().nullable(),
   passwordsalt:   z.string().optional().nullable(),
+  qualifications: z.array(z.string())
 })
 export type UserFormDataType = z.infer<typeof UserFormDataShema>
 

@@ -15,6 +15,10 @@ import FormControl from '@mui/joy/FormControl'
 import FormLabel from '@mui/joy/FormLabel'
 import Switch from '@mui/joy/Switch'
 import Button from '@mui/joy/Button'
+import Autocomplete from '@mui/joy/Autocomplete'
+import CircularProgress from '@mui/joy/CircularProgress'
+import { QualificationApiClient } from '../services/qualificationApiClient'
+import { Qualification } from '../types/qualification'
 
 type InputErrorObject = {
   firstname: boolean
@@ -22,17 +26,6 @@ type InputErrorObject = {
 }
 
 type EmailStatus = 'initial' | 'loading' | 'success' | 'error'
-
-type TestusUser = {
-  firstname: string | null,
-  lastname: string | null,
-  birthdate: Date | null,
-  address: string | null,
-  email: string | null,
-  phone: string | null,
-  isOnlineUser: boolean,
-  webaccess: boolean 
-}
 
 interface CreateUserDialogProps {
   isOpen: boolean
@@ -43,13 +36,17 @@ interface CreateUserDialogProps {
 const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, close, accountId }) => {
   const authToken = useAuthHeader()()
   const userApiClient = useMemo(() => new UserApiClient('http://localhost:3002', authToken, accountId), [accountId, authToken])
+  const qualifcationApiClient = useMemo(() => new QualificationApiClient('http://localhost:3002', authToken, accountId), [accountId, authToken])
 
   const [inputError, setInputError] = useState<InputErrorObject>({ firstname: false, lastname: false })
   const [emailStatus, setEmailStatus] = useState<EmailStatus>('initial')
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
-  const [formData, setFormData] = useState<TestusUser>({
+  const [isLoadingQualifications, setIsLoadingQualifications] = useState<boolean>(false)
+  const [qualifications, setQualifications] = useState<Qualification[]>([])
+
+  const [formData, setFormData] = useState<UserFormData>({
     firstname: null, 
     lastname: null, 
     birthdate: null, 
@@ -57,8 +54,11 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
     email: null, 
     phone: null, 
     isOnlineUser: true, 
-    webaccess: false
+    webaccess: false,
+    qualifications: []
   })
+
+  console.log(formData)
 
   const handleClose = () => {
     resetFormData()
@@ -75,8 +75,18 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
       email: null, 
       phone: null, 
       isOnlineUser: true, 
-      webaccess: false
+      webaccess: false,
+      qualifications: [] 
     })
+  }
+
+  const loadQualifications = () => {
+    if (qualifications.length === 0) {
+      setIsLoadingQualifications(true)
+      qualifcationApiClient.getQualifications(accountId)
+        .then((data) => setQualifications(data))
+        .finally(() => setIsLoadingQualifications(false))
+    }
   }
 
   const resetErrors = () => {
@@ -226,7 +236,31 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
               <FormLabel>Online Zugang</FormLabel>
               <Switch checked={formData.webaccess} onChange={handleChange('webaccess')} />
             </FormControl>
+
           </div>
+
+          <FormControl className='mb-4'>
+              <FormLabel>Qualifikationen</FormLabel>
+              <Autocomplete
+                multiple
+                onOpen={loadQualifications}
+                loading={isLoadingQualifications}
+                options={qualifications}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                onChange={(event, newQualifications) => {
+                  setFormData({ 
+                    ...formData, 
+                    qualifications: newQualifications.map(qualification => qualification.id)
+                  })
+                }}
+                endDecorator={
+                  isLoadingQualifications ? (
+                    <CircularProgress size="sm" sx={{ bgcolor: 'background.surface' }} />
+                  ) : null
+                }
+              />
+            </FormControl>
 
           <Typography>Authentifizierung</Typography>
           <Divider />

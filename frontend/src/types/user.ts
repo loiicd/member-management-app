@@ -16,12 +16,13 @@ export type User = {
 }
 
 export type UserFormData = {
-  firstname?: string
-  lastname?: string
-  birthdate?: Date
-  address?: string
-  email?: string
-  phone?: string
+  firstname: string | null
+  lastname: string | null
+  birthdate: Date | null
+  address: string | null
+  email: string | null
+  phone: string | null
   isOnlineUser: boolean
   webaccess: boolean
+  qualifications: string[]
 }
