@@ -1,4 +1,4 @@
-import { ChangeEvent, FunctionComponent, useState } from 'react'
+import { ChangeEvent, FunctionComponent, useMemo, useState } from 'react'
 import { AxiosError } from 'axios'
 import { UserApiClient } from '../services/userApiClient'
 import { UserFormData } from '../types/user'
@@ -23,7 +23,6 @@ type InputErrorObject = {
 
 type EmailStatus = 'initial' | 'loading' | 'success' | 'error'
 
-
 type TestusUser = {
   firstname: string | null,
   lastname: string | null,
@@ -43,7 +42,7 @@ interface CreateUserDialogProps {
 
 const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, close, accountId }) => {
   const authToken = useAuthHeader()()
-  const userApiClient = new UserApiClient('http://localhost:3002', authToken, accountId)
+  const userApiClient = useMemo(() => new UserApiClient('http://localhost:3002', authToken, accountId), [accountId, authToken])
 
   const [inputError, setInputError] = useState<InputErrorObject>({ firstname: false, lastname: false })
   const [emailStatus, setEmailStatus] = useState<EmailStatus>('initial')
@@ -235,15 +234,14 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
           <div className='grid gap-4 mb-4 sm:grid-cols-2 mt-4'>
             <FormControl disabled={!formData.isOnlineUser}>
               <FormLabel>Account E-Mail</FormLabel>
-              <Input id='phoneInput' type='text' onChange={handleChange('phone')} />
+              <Input id='accountEmailInput' type='text' />
             </FormControl>
             <FormControl disabled={!formData.isOnlineUser}>
               <FormLabel>Passwort</FormLabel>
-              <Input id='phoneInput' type='text' onChange={handleChange('phone')} />
+              <Input id='passwortInput' type='text' />
             </FormControl>
           </div>
         </form>
-
 
         <div className='flex justify-end gap-4'>
           <Button variant='outlined' onClick={handleClose}>Abbrechen</Button>
