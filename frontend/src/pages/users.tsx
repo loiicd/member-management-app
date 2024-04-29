@@ -41,6 +41,7 @@ const UsersPage: FunctionComponent = () => {
   const [openCreateUserDialog, setOpenCreateUserDialog] = useState<boolean>(false)
   const [openInviteUserDialog, setOpenInviteUserDialog] = useState<boolean>(false)
   const [loadingUsers, setLoadingUsers] = useState<boolean>(true)
+  const [alerts, setAlerts] = useState<{id: number, color: any, message: string, timeout: number}[]>([])
 
   const sortAttribute = urlParams.get('sortAttribute')
   const sortDirection = urlParams.get('sortDirection')
@@ -177,8 +178,8 @@ const UsersPage: FunctionComponent = () => {
         resetSearchFilter={resetSearchFilter}
         handleChangePagination={handleChangePagination}
       />
-      <CreateUserDialog isOpen={openCreateUserDialog} accountId={accountId} close={handleCloseCreateUserDialog} />
-      <InviteUserDialog isOpen={openInviteUserDialog} accountId={accountId} close={handleCloseInviteUserDialog} />
+      {openCreateUserDialog ? <CreateUserDialog isOpen={openCreateUserDialog} accountId={accountId} close={handleCloseCreateUserDialog} /> : null}
+      {openInviteUserDialog ? <InviteUserDialog isOpen={openInviteUserDialog} accountId={accountId} close={handleCloseInviteUserDialog} /> : null}
     </StandardLayout>
   )
 }

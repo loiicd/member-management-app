@@ -19,6 +19,7 @@ import Autocomplete from '@mui/joy/Autocomplete'
 import CircularProgress from '@mui/joy/CircularProgress'
 import { QualificationApiClient } from '../services/qualificationApiClient'
 import { Qualification } from '../types/qualification'
+import Snackbar from '@mui/joy/Snackbar'
 
 type InputErrorObject = {
   firstname: boolean
@@ -42,6 +43,9 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
   const [emailStatus, setEmailStatus] = useState<EmailStatus>('initial')
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
+  const [alerts, setAlerts] = useState<{id: number, color: any, message: string, timeout: number}[]>([])
+
+  const [isCreatingUser, setIsCreatingUser] = useState<boolean>(false)
 
   const [isLoadingQualifications, setIsLoadingQualifications] = useState<boolean>(false)
   const [qualifications, setQualifications] = useState<Qualification[]>([])
@@ -58,7 +62,15 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
     qualifications: []
   })
 
-  console.log(formData)
+  const addAlert = (color: string, message: string, timeout: number) => {
+    const id = Date.now() as number
+    setAlerts([ ...alerts, { id, color, message, timeout }])
+    setTimeout(() => removeAlert(id), timeout)
+  }
+
+  const removeAlert = (id: number) => {
+    setAlerts(alerts.filter((alert) => alert.id !== id))
+  }
 
   const handleClose = () => {
     resetFormData()
@@ -106,6 +118,7 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
   const handleChangeIsOnlineUser = (isOnlineUser: boolean) => setFormData({ ...formData, isOnlineUser: isOnlineUser })
 
   const handleSave = async () => {
+    setIsCreatingUser(true)
     const errors: InputErrorObject = { firstname: false, lastname: false }
     if (!formData.firstname) errors.firstname = true
     if (!formData.lastname) errors.lastname = true
@@ -114,23 +127,24 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
 
     const hasInputErrors = Object.values(errors).some(error => error)
     if (!hasInputErrors) {
-      try {
-        const response = await userApiClient.createUser(formData)
-        switch (response.type) {
-          case 'userCreated':
-            alert('User wurde erstellt!')
-            break
-          case 'mailExists':
-            alert(`User ist bereits registriert! Wollen sie den User mit dem Account verknüpfen? - ${response.userId}`)
-            break
-          case 'relExists':
-            alert(`User ist bereits mit dem Account verknüpft! - ${response.userId}`)
-            break
-        }
-      } catch (error) {
-        alert(error)
-      }
+      userApiClient.createUser(formData)
+        .then(response => {
+          switch (response.type) {
+            case 'userCreated':
+              addAlert('success', 'User wurde erstellt!', 3000)
+              break
+            case 'mailExists':
+              addAlert('error', 'User ist bereits registriert!', 3000)
+              break
+            case 'relExists':
+              addAlert('error', 'User ist bereits mit dem Account verknüpft!', 3000)
+              break
+          }
+          handleClose()
+        })
+        .catch(error => addAlert('error', error.response.data.message, 3000))
     }
+    setIsCreatingUser(false)
   }
 
   const handleCheckEmail = (event: ChangeEvent<HTMLInputElement>) => {
@@ -162,127 +176,139 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
 
 
   return (
-    <Modal 
-      open={isOpen}
-      onClose={handleClose}
-      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-    >
-      <Sheet sx={{ width: 600, borderRadius: 'md', p: 3, boxShadow: 'lg' }}>
-        <ModalClose variant="plain" sx={{ m: 1 }} />
-        <Typography
-          component="h2"
-          id="modal-title"
-          level="h4"
-          textColor="inherit"
-          fontWeight="lg"
-          mb={1}
-        >
-          User erstellen
-        </Typography>
+    <>
+      <Modal 
+        open={isOpen}
+        onClose={handleClose}
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
+        <Sheet sx={{ width: 600, borderRadius: 'md', p: 3, boxShadow: 'lg' }}>
+          <ModalClose variant="plain" sx={{ m: 1 }} />
+          <Typography
+            component="h2"
+            id="modal-title"
+            level="h4"
+            textColor="inherit"
+            fontWeight="lg"
+            mb={1}
+          >
+            User erstellen
+          </Typography>
 
 
-        <div className='py-6 grid grid-cols-2 gap-4'>
-          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(true)}>
-            <div className='text-center'>
-              <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} className='rounded-full h-4 w-4 bg-lime-200 p-4' />
+          <div className='py-6 grid grid-cols-2 gap-4'>
+            <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(true)}>
+              <div className='text-center'>
+                <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} className='rounded-full h-4 w-4 bg-lime-200 p-4' />
+              </div>
+              <div className='text-center'>
+                Online User
+              </div>
             </div>
-            <div className='text-center'>
-              Online User
+            <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${!formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(false)}>
+              <div className='text-center'>
+              <FontAwesomeIcon icon={icon({ name: 'user-lock', style: 'solid' })} className='rounded-full h-4 w-4 bg-blue-200 p-4' />
+              </div>
+              <div className='text-center'>
+                Offline User
+              </div>
             </div>
           </div>
-          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${!formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(false)}>
-            <div className='text-center'>
-            <FontAwesomeIcon icon={icon({ name: 'user-lock', style: 'solid' })} className='rounded-full h-4 w-4 bg-blue-200 p-4' />
-            </div>
-            <div className='text-center'>
-              Offline User
-            </div>
-          </div>
-        </div>
 
-        <Typography>Allgemein</Typography>
-        <Divider />
-
-        <form>
-          <div className='grid gap-4 mb-4 sm:grid-cols-2 mt-4'>
-            <FormControl>
-              <FormLabel>Vorname</FormLabel>
-              <Input id='firstnameInput' type='text' onChange={handleChange('firstname')} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Nachname</FormLabel>
-              <Input id='lastnameInput' type='text' onChange={handleChange('lastname')} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Geburtsdatum</FormLabel>
-              <Input id='birthdateInput' type='date' onChange={handleChange('birthdate')} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Addresse</FormLabel>
-              <Input id='addressInput' type='text' onChange={handleChange('address')} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>E-Mail</FormLabel>
-              <Input id='emailInput' type='text' onChange={handleChange('email')} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Telefon</FormLabel>
-              <Input id='phoneInput' type='text' onChange={handleChange('phone')} />
-            </FormControl>
-            <FormControl
-              orientation="horizontal"
-              sx={{ justifyContent: 'space-between' }}
-            >
-              <FormLabel>Online Zugang</FormLabel>
-              <Switch checked={formData.webaccess} onChange={handleChange('webaccess')} />
-            </FormControl>
-
-          </div>
-
-          <FormControl className='mb-4'>
-              <FormLabel>Qualifikationen</FormLabel>
-              <Autocomplete
-                multiple
-                onOpen={loadQualifications}
-                loading={isLoadingQualifications}
-                options={qualifications}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.id === value.id}
-                onChange={(event, newQualifications) => {
-                  setFormData({ 
-                    ...formData, 
-                    qualifications: newQualifications.map(qualification => qualification.id)
-                  })
-                }}
-                endDecorator={
-                  isLoadingQualifications ? (
-                    <CircularProgress size="sm" sx={{ bgcolor: 'background.surface' }} />
-                  ) : null
-                }
-              />
-            </FormControl>
-
-          <Typography>Authentifizierung</Typography>
+          <Typography>Allgemein</Typography>
           <Divider />
 
-          <div className='grid gap-4 mb-4 sm:grid-cols-2 mt-4'>
-            <FormControl disabled={!formData.isOnlineUser}>
-              <FormLabel>Account E-Mail</FormLabel>
-              <Input id='accountEmailInput' type='text' />
-            </FormControl>
-            <FormControl disabled={!formData.isOnlineUser}>
-              <FormLabel>Passwort</FormLabel>
-              <Input id='passwortInput' type='text' />
-            </FormControl>
-          </div>
-        </form>
+          <form>
+            <div className='grid gap-4 mb-4 sm:grid-cols-2 mt-4'>
+              <FormControl>
+                <FormLabel>Vorname</FormLabel>
+                <Input id='firstnameInput' type='text' onChange={handleChange('firstname')} />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Nachname</FormLabel>
+                <Input id='lastnameInput' type='text' onChange={handleChange('lastname')} />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Geburtsdatum</FormLabel>
+                <Input id='birthdateInput' type='date' onChange={handleChange('birthdate')} />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Addresse</FormLabel>
+                <Input id='addressInput' type='text' onChange={handleChange('address')} />
+              </FormControl>
+              <FormControl>
+                <FormLabel>E-Mail</FormLabel>
+                <Input id='emailInput' type='text' onChange={handleChange('email')} />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Telefon</FormLabel>
+                <Input id='phoneInput' type='text' onChange={handleChange('phone')} />
+              </FormControl>
+              <FormControl
+                orientation="horizontal"
+                sx={{ justifyContent: 'space-between' }}
+              >
+                <FormLabel>Online Zugang</FormLabel>
+                <Switch checked={formData.webaccess} onChange={handleChange('webaccess')} />
+              </FormControl>
 
-        <div className='flex justify-end gap-4'>
-          <Button variant='outlined' onClick={handleClose}>Abbrechen</Button>
-          <Button variant='solid' onClick={handleSave}>Speichern</Button>
-        </div>
-      </Sheet>
-    </Modal>
+            </div>
+
+            <FormControl className='mb-4'>
+                <FormLabel>Qualifikationen</FormLabel>
+                <Autocomplete
+                  multiple
+                  onOpen={loadQualifications}
+                  loading={isLoadingQualifications}
+                  options={qualifications}
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                  onChange={(event, newQualifications) => {
+                    setFormData({ 
+                      ...formData, 
+                      qualifications: newQualifications.map(qualification => qualification.id)
+                    })
+                  }}
+                  endDecorator={
+                    isLoadingQualifications ? (
+                      <CircularProgress size="sm" sx={{ bgcolor: 'background.surface' }} />
+                    ) : null
+                  }
+                />
+              </FormControl>
+
+            <Typography>Authentifizierung</Typography>
+            <Divider />
+
+            <div className='grid gap-4 mb-4 sm:grid-cols-2 mt-4'>
+              <FormControl disabled={!formData.isOnlineUser}>
+                <FormLabel>Account E-Mail</FormLabel>
+                <Input id='accountEmailInput' type='text' />
+              </FormControl>
+              <FormControl disabled={!formData.isOnlineUser}>
+                <FormLabel>Passwort</FormLabel>
+                <Input id='passwortInput' type='text' />
+              </FormControl>
+            </div>
+          </form>
+
+          <div className='flex justify-end gap-4'>
+            <Button variant='outlined' disabled={isCreatingUser} onClick={handleClose}>Abbrechen</Button>
+            <Button variant='solid' loading={isCreatingUser} onClick={handleSave}>Speichern</Button>
+          </div>
+        </Sheet>
+      </Modal>
+      {alerts.map((alert) => (
+        <Snackbar 
+          open 
+          variant='soft' 
+          color={alert.color}
+          autoHideDuration={alert.timeout}
+        >
+          {alert.message}
+        </Snackbar>
+      ))}
+    </>
   )
 }
 
