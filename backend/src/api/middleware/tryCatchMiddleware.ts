@@ -22,6 +22,8 @@ export const tryCatchMiddleware = (handler: (req: Request, res: Response, next: 
         }
       } else if (error instanceof Error && error.message === 'Invalid Credentials') {
         res.sendStatus(401)
+      } else if (error instanceof Error && error.message === 'Kann nicht gelöscht werden da noch relation!') {
+        res.sendStatus(409)
       } else {
         res.sendStatus(500)
       }

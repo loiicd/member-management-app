@@ -22,26 +22,26 @@ export class QualificationService extends BaseService {
   }
 
   async createQualification(accountId: string, qualification: QualificationFormDataType): Promise<void> {
-    this.performTransaction(async (client) => {
+    return this.performTransaction(async (client) => {
       await qualificationEntityService.insertQualification(client, accountId, qualification)
     })
   }
 
   async updateQualification(qualification: QualificationType): Promise<void> {
-    this.performTransaction(async (client) => {
+    return this.performTransaction(async (client) => {
       await qualificationEntityService.updateQualification(client, qualification)
     })
   }
 
   async deleteQualification(qualificationId: string): Promise<void> {
-    this.performTransaction(async (client) => {
+    return this.performTransaction(async (client) => {
       const relations = await qualificationEntityService.selectUserRelations(client, qualificationId)
 
       if (relations.length != 0) {
         throw new Error('Kann nicht gelöscht werden da noch relation!')
+      } else {
+        await qualificationEntityService.deleteQualification(client, qualificationId) 
       }
-
-      await qualificationEntityService.deleteQualification(client, qualificationId)
     })
   }
 }

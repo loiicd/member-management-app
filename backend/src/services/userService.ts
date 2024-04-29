@@ -101,7 +101,7 @@ export class UserService extends BaseService {
   }
 
   async updatePassword(userId: string, password: string): Promise<void> {
-    this.performTransaction(async (client) => {
+    return this.performTransaction(async (client) => {
       const salt = bcryptjs.genSaltSync()
       const hashedPassword = bcryptjs.hashSync(password+salt)  
       await userEntityService.updatePassword(client, userId, hashedPassword, salt)

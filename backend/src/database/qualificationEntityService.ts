@@ -15,7 +15,7 @@ export class QualificationEntityService {
     return (await client.query(query, values)).rows
   }
 
-  async selectUserRelations(client: Client, qualificationId: string): Promise<any> {
+  async selectUserRelations(client: Client, qualificationId: string): Promise<any[]> {
     const query = 'SELECT * FROM public."user_qualification_rel" WHERE qualification_id = $1'
     const values = [qualificationId]
     return (await client.query(query, values)).rows

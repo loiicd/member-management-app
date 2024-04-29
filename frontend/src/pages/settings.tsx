@@ -43,6 +43,7 @@ const SettingsPage = () => {
   const handleDelete = async (id: string) => {
     await qualificationApiClient.deleteQualification(id)
       .then(() => addAlert('success', 'Qualifikation gelöscht', 3000))
+      .catch(() => addAlert('danger', 'Fehler', 3000))
   }
 
   const addAlert = (color: string, message: string, timeout: number) => {
@@ -105,10 +106,10 @@ const SettingsPage = () => {
                   <td>{qualification.abbreviation}</td>
                   <td>
                     <IconButton onClick={() => handleDelete(qualification.id)}>
-                      <FontAwesomeIcon icon={icon({ name: 'trash', style: 'solid' })} className='text-gray-500 h-4 w-4' />
+                      <FontAwesomeIcon icon={icon({ name: 'trash', style: 'solid' })} className='text-gray-500' />
                     </IconButton>
                     <IconButton onClick={() => setOpenUpdateQualificationDialog(qualification.id)}>
-                      <FontAwesomeIcon icon={icon({ name: 'pen', style: 'solid' })} className='text-gray-500 h-4 w-4' />
+                      <FontAwesomeIcon icon={icon({ name: 'pen', style: 'solid' })} className='text-gray-500' />
                     </IconButton>
                   </td>
                 </tr>
