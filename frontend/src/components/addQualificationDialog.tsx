@@ -28,18 +28,9 @@ interface AddQualificationDialogProps {
 const AddQualificationDialog: FunctionComponent<AddQualificationDialogProps> = ({ open, handleClose, addAlert }) => {
   const { accountId } = useParams<{ accountId: string }>()
   const authToken = useAuthHeader()()
-  // const [open, setOpen] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [formData, setFormData] = useState<Test>({ name: undefined, abbreviation: undefined, color: '#FF3B30' })
   const [nameInputError, setNameInputError] = useState<boolean>(false)
-
-  // const handleOpen = () => {
-  //   setOpen(true)
-  // }
-
-  // const handleClose = () => {
-  //   setOpen(false)
-  // }
 
   const handleChange = (field: keyof Test) => (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -73,7 +64,6 @@ const AddQualificationDialog: FunctionComponent<AddQualificationDialogProps> = (
 
   return (
     <>
-      {/* <Button onClick={handleOpen}>{'+ Neu'}</Button> */}
       <Modal 
         open={open}
         onClose={handleClose}
