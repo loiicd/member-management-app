@@ -61,6 +61,7 @@ const resetDatabase = async () => {
       name text NOT NULL,
       abbreviation text,
       color text,
+      version integer NOT NULL DEFAULT 0,
       created_at timestamp NOT NULL DEFAULT now()::timestamp,
       updated_at timestamp NOT NULL DEFAULT now()::timestamp,
       PRIMARY KEY (id),

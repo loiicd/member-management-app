@@ -5,6 +5,7 @@ export const QualificationShema = z.object({
   name:         z.string(),
   abbreviation: z.string().optional(),
   color:        z.string().optional(),
+  version:      z.number()
 })
 export type QualificationType = z.infer<typeof QualificationShema>
 
