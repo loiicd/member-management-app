@@ -3,11 +3,14 @@ import { AccountEntityService } from '../database/accountEntityService'
 import { UserEntityService } from '../database/userEntityService'
 import { AccountType } from '../models/accountShema'
 import { BaseService } from './baseService'
+import { UserAccountRelEntityService } from '../database/userAccountRelEntityService'
 
 const accountEntityService = new AccountEntityService
 const userEntityService = new UserEntityService
+const userAccountRelEntityService = new UserAccountRelEntityService
 
 export class AccountService extends BaseService {
+  
   async getOneById(accountId: string): Promise<AccountType> {
     return this.performTransaction(async (client) => {
       return await accountEntityService.selectAccount(client, accountId)
@@ -18,7 +21,7 @@ export class AccountService extends BaseService {
     return this.performTransaction(async (client) => {
       const accountId = uuidv4()
       await accountEntityService.insertAccount(client, accountId, organisationName)
-      await accountEntityService.insertUserRel(client, userId, accountId)
+      await userAccountRelEntityService.insertRelation(client, userId, accountId)
     })
   }
   
@@ -28,7 +31,8 @@ export class AccountService extends BaseService {
       if (!user) {
         throw new Error('E-Mail exestiert nicht')
       }
-      await accountEntityService.insertUserRel(client, user.id, accountId)
+      await userAccountRelEntityService.insertRelation(client, user.id, accountId)
     })
   }
+
 }

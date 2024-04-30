@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { ValidateError } from '../../database/validateError'
+import { ValidateError } from '../../validateError'
 import { ZodError } from 'zod'
 
 export const tryCatchMiddleware = (handler: (req: Request, res: Response, next: NextFunction) => Promise<void>) =>

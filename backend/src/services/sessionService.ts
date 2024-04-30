@@ -4,6 +4,7 @@ import { BaseService } from './baseService'
 const sessionEntityService = new SessionEntityService
 
 export class SessionService extends BaseService {
+  
   async createSession(userId: string, token: string, expiresAt: Date): Promise<void> {
     return this.performTransaction(async (client) => {
       await sessionEntityService.insertSession(client, userId, token, expiresAt)
@@ -27,4 +28,5 @@ export class SessionService extends BaseService {
       return await sessionEntityService.selectUserId(client, token)
     })
   }
+
 }

@@ -1,15 +1,17 @@
 import { UserEntityService } from '../database/userEntityService'
-import { AccountEntityService } from '../database/accountEntityService'
 import { AccountType } from '../models/accountShema'
 import { UserFormDataType, UserType } from '../models/userShema'
 import { v4 as uuidv4 } from 'uuid'
 import { ApiResponse } from '../types/apiResponse'
 import { BaseService } from './baseService'
 import { DataBaseResponse } from '../types/DataBaseResponse'
+import { UserQualificationRelEntityService } from '../database/userQualificationRelEntityService'
+import { UserAccountRelEntityService } from '../database/userAccountRelEntityService'
 import bcryptjs from 'bcryptjs'
 
 const userEntityService = new UserEntityService
-const accountEntityService = new AccountEntityService
+const userQualificationRelEntityService = new UserQualificationRelEntityService
+const userAccountRelEntityService = new UserAccountRelEntityService
 
 export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
 export type SortDirection = 'ASC' | 'DESC'
@@ -34,11 +36,11 @@ export class UserService extends BaseService {
         await userEntityService.insertUser(client, userId, userFormData)
 
         userFormData.qualifications.map(async qualificationId => {
-          await userEntityService.insertQualificationRel(client, userId, qualificationId, accountId)
+          await userQualificationRelEntityService.insertRelation(client, userId, qualificationId, accountId)
         })
 
         if (accountId) {
-          await accountEntityService.insertUserRel(client, userId, accountId)
+          await userAccountRelEntityService.insertRelation(client, userId, accountId)
         }
         return { type: 'userCreated' }
       }
@@ -63,11 +65,11 @@ export class UserService extends BaseService {
       const removedQualifications = qualifications.filter(qualification => !user.qualifications.some(qual => qual.id === qualification.id))
 
       addedQualifications.map(async qualification => {
-        await userEntityService.insertQualificationRel(client, user.id, qualification.id, accountId)
+        await userQualificationRelEntityService.insertRelation(client, user.id, qualification.id, accountId)
       })
 
       removedQualifications.map(async qualification => {
-        await userEntityService.deleteQualificationRel(client, user.id, qualification.id, accountId)
+        await userQualificationRelEntityService.deleteRelation(client, user.id, qualification.id, accountId)
       })
     })
   }
@@ -81,11 +83,11 @@ export class UserService extends BaseService {
 
       const accounts = await userEntityService.getAccounts(client, accountId)
       if (accounts.length > 1) {
-        await accountEntityService.deleteUserRel(client, accountId, userId)
+        await userAccountRelEntityService.deleteRelation(client, accountId, userId)
         return 'User wurde aus Account entfernt'
       } else {
-        await accountEntityService.deleteUserRel(client, accountId, userId)
-        await userEntityService.removeQualifications(client, userId)
+        await userAccountRelEntityService.deleteRelation(client, accountId, userId)
+        await userQualificationRelEntityService.deleteAllRelations(client, userId)
         await userEntityService.deleteUser(client, userId)
         return 'User wurde gelöscht'
       }

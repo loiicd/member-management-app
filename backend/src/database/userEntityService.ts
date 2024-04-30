@@ -62,12 +62,6 @@ export class UserEntityService {
     await client.query(query, values)
   }
 
-  async removeQualifications(client: Client, userId: string): Promise<void> {
-    const query = 'DELETE FROM public."user_qualification_rel" WHERE user_id = $1'
-    const values = [userId]
-    await client.query(query, values)
-  }
-
   async getAll(client: Client, accountId: string, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[], page: number): Promise<UserType[]> {
     const query = `
       SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
@@ -144,18 +138,6 @@ export class UserEntityService {
     const query = 'SELECT id, login_email, password, passwordsalt FROM public."user" WHERE email = $1'
     const values = [email]
     return (await client.query(query, values)).rows[0]
-  }
-
-  async insertQualificationRel(client: Client, userId: string, qualificationId: string, accountId: string): Promise<void> {
-    const query = 'INSERT INTO public."user_qualification_rel" (user_id, qualification_id, account_id) VALUES ($1, $2, $3)'
-    const values = [userId, qualificationId, accountId]
-    await client.query(query, values)
-  }
-
-  async deleteQualificationRel(client: Client, userId: string, qualificationId: string, accountId: string): Promise<void> {
-    const query = 'DELETE FROM public."user_qualification_rel" WHERE user_id = $1 AND qualification_id = $2 AND account_id = $3'
-    const values = [userId, qualificationId, accountId]
-    await client.query(query, values)
   }
 
   // Old!! without Service Client Provider

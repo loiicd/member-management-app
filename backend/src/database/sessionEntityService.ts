@@ -2,6 +2,7 @@ import { Client } from 'pg'
 import { v4 as uuidv4 } from 'uuid'
 
 export class SessionEntityService {
+  
   async insertSession(client: Client, userId: string, token: string, expiresAt: Date): Promise<void> {
     const query = 'INSERT INTO public."user_session" (id, user_id, token, created_at, expires_at) VALUES ($1, $2, $3, $4, $5)'
     const values = [uuidv4(), userId, token, new Date(), expiresAt]
@@ -29,4 +30,5 @@ export class SessionEntityService {
     const values = [token]
     return (await client.query(query, values)).rows.length != 0 ? true : false
   }
+
 }
