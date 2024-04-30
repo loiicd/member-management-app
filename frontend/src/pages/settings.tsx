@@ -38,7 +38,7 @@ const SettingsPage = () => {
   useEffect(() => {
     qualificationApiClient.getQualifications(accountId)
       .then(result => setqualifications(result)) 
-  }, [qualificationApiClient, accountId, openUpdateQualificationDialog])
+  }, [qualificationApiClient, accountId, openUpdateQualificationDialog, openAddQualificationDialog])
 
   const handleDelete = async (id: string) => {
     await qualificationApiClient.deleteQualification(id)
@@ -119,11 +119,13 @@ const SettingsPage = () => {
         </TabPanel>
         <TabPanel value={2}>3</TabPanel>
       </Tabs>
-      <AddQualificationDialog 
-        open={openAddQualificationDialog}
-        handleClose={() => setOpenAddQualificationDialog(false)}
-        addAlert={addAlert}
-      />
+      {openAddQualificationDialog ? 
+        <AddQualificationDialog 
+          open={openAddQualificationDialog}
+          handleClose={() => setOpenAddQualificationDialog(false)}
+          addAlert={addAlert}
+        /> : null
+      }
       {typeof openUpdateQualificationDialog === 'string' ? 
         <UpdateQualificationDialog 
           open={true} 
