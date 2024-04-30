@@ -17,7 +17,7 @@ router.post('/user/', tryCatchMiddleware(async (req: Request, res: Response) => 
     email: user.loginEmail, 
     phone: null,
     login_email: user.loginEmail,
-    isOnlineUser: true,
+    is_online_user: true,
     webaccess: true,
     password: user.password,
     passwordsalt: null

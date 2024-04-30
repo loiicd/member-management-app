@@ -15,7 +15,7 @@ type Test = {
   address?: string,
   email?: string,
   phone?: string,
-  isOnlineUser: boolean
+  is_online_user: boolean
   webaccess: boolean
 }
 
@@ -38,7 +38,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
     address: undefined, 
     email: undefined, 
     phone: undefined, 
-    isOnlineUser: true, 
+    is_online_user: true, 
     webaccess: false
   })
 
@@ -65,10 +65,10 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
     })
   }
 
-  const handleChangeIsOnlineUser = (isOnlineUser: boolean) => {
+  const handleChangeis_online_user = (is_online_user: boolean) => {
     setFormData({
       ...formData,
-      isOnlineUser: isOnlineUser,
+      is_online_user: is_online_user,
     })
   }
 
@@ -150,7 +150,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
       <Button onClick={handleOpen}>{type === 'insert' ? '+ Neu' : 'Bearbeiten'}</Button>
       <Modal open={open} onClose={handleClose} title={type === 'insert' ? 'Insert User' : 'Update User'}>
         <div className='py-6 grid grid-cols-2 gap-4'>
-          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(true)}>
+          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.is_online_user ? 'border-blue-500' : null}`} onClick={() => handleChangeis_online_user(true)}>
             <div className='text-center'>
               <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} className='rounded-full h-4 w-4 bg-lime-200 p-4' />
             </div>
@@ -158,7 +158,7 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
               Online User
             </div>
           </div>
-          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${!formData.isOnlineUser ? 'border-blue-500' : null}`} onClick={() => handleChangeIsOnlineUser(false)}>
+          <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${!formData.is_online_user ? 'border-blue-500' : null}`} onClick={() => handleChangeis_online_user(false)}>
             <div className='text-center'>
             <FontAwesomeIcon icon={icon({ name: 'user-lock', style: 'solid' })} className='rounded-full h-4 w-4 bg-blue-200 p-4' />
             </div>
@@ -183,20 +183,20 @@ const UserDialog: FC<UserDialogProps> = ({ type, userId, accountId }) => {
         <h2 className='pt-4'>Authentifizierung</h2>
         <div className='border-b mb-4 mt-2' />
         <div className='grid gap-4 mb-4 sm:grid-cols-2'>
-          <div className={`${!formData.isOnlineUser ? 'blur-sm' : null}`}>
-            <label className={`block mb-2 text-sm font-medium dark:text-white ${formData.isOnlineUser ? 'text-gray-900' : 'text-gray-400'}`}>Account E-Mail</label>
+          <div className={`${!formData.is_online_user ? 'blur-sm' : null}`}>
+            <label className={`block mb-2 text-sm font-medium dark:text-white ${formData.is_online_user ? 'text-gray-900' : 'text-gray-400'}`}>Account E-Mail</label>
             <Input 
               spinningEndIcon={emailStatus === 'loading' ? true : false} 
               endIcon={emailStatus === 'loading' ? icon({ name: 'spinner', style: 'solid' }) : emailStatus === 'success' ? icon({ name: 'check', style: 'solid' }) : emailStatus === 'error' ? icon({ name: 'circle-exclamation', style: 'solid' }) : undefined}
               error={emailStatus === 'error' ? true : false}
               errorMessage={errorMessage ? errorMessage : undefined}
               onChange={handleCheckEmail} 
-              disabled={formData.isOnlineUser ? false : true}
+              disabled={formData.is_online_user ? false : true}
             />
           </div>
-          <div className={`${!formData.isOnlineUser ? 'blur-sm' : null}`}>
-            <label className={`block mb-2 text-sm font-medium dark:text-white ${formData.isOnlineUser ? 'text-gray-900' : 'text-gray-400'}`}>Passwort</label>
-            <input type='password' disabled={formData.isOnlineUser ? false : true} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+          <div className={`${!formData.is_online_user ? 'blur-sm' : null}`}>
+            <label className={`block mb-2 text-sm font-medium dark:text-white ${formData.is_online_user ? 'text-gray-900' : 'text-gray-400'}`}>Passwort</label>
+            <input type='password' disabled={formData.is_online_user ? false : true} className="bg-slate-50 h-8 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
           </div>
           <div className='col-span-2 text-base text-gray-600'>Diese Daten sind erforderlich, damit sich der User selbständig anmelden kann</div>
         </div>

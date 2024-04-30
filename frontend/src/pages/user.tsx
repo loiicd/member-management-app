@@ -15,6 +15,7 @@ import TabPanel from '@mui/joy/TabPanel'
 import TabList from '@mui/joy/TabList'
 import Tab from '@mui/joy/Tab'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import UpdateUserDialog from '../components/updateUserDialog'
 
 const UserPage = () => {
   const navigate = useNavigate()
@@ -26,6 +27,8 @@ const UserPage = () => {
   const [user, setUser] = useState<User | null>(null)
   const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
   const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false)
+
+  const [openUpdateUserDialog, setOpenUpdateUserDialog] = useState<boolean>(false)
 
   if (!accountId) throw new Error('Account ID is required')
   if (!id) throw new Error('User ID is required')
@@ -53,6 +56,7 @@ const UserPage = () => {
       <PageHead title={`${user?.firstname} ${user?.lastname}`}> 
         <div className='flex justify-end gap-2'>
           <UserDialog type='update' userId={user?.id} accountId={accountId} />
+          <Button onClick={() => setOpenUpdateUserDialog(true)}>Bearbeiten 2</Button>
           <Button onClick={handleDeleteClick}>Löschen</Button>
         </div>
       </PageHead>
@@ -117,6 +121,8 @@ const UserPage = () => {
         handleClose={() => setOpenApproveDialog(false)} 
         handleApprove={handleDeleteApprove}
       />
+
+      {openUpdateUserDialog ? <UpdateUserDialog isOpen={openUpdateUserDialog} accountId={accountId} userId={user!.id} close={() => setOpenUpdateUserDialog(false)} /> : null}
     </StandardLayout>
   )
 }

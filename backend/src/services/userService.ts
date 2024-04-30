@@ -51,6 +51,25 @@ export class UserService extends BaseService {
     userFormData.passwordsalt = salt
   }
 
+  async updateUser(user: UserType, accountId: string): Promise<void> {
+    return this.performTransaction(async (client) => {
+      await userEntityService.updateUser(client, user)
+
+      const qualifications = await userEntityService.getQualifications(client, user.id)
+
+      const addedQualifications = user.qualifications.filter(qualification => !qualifications.some(qual => qual.id === qualification.id))
+      const removedQualifications = qualifications.filter(qualification => !user.qualifications.some(qual => qual.id === qualification.id))
+
+      addedQualifications.map(async qualification => {
+        await userEntityService.insertQualificationRel(client, user.id, qualification.id, accountId)
+      })
+
+      removedQualifications.map(async qualification => {
+        await userEntityService.deleteQualificationRel(client, user.id, qualification.id, accountId)
+      })
+    })
+  }
+
   async deleteUser(userId: string, accountId: string): Promise<string> {
     return this.performTransaction(async (client) => {
       const user = await userEntityService.getOneById(client, userId)

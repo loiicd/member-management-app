@@ -1,7 +1,7 @@
-import { ChangeEvent, FunctionComponent, useMemo, useState } from 'react'
+import { ChangeEvent, FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 import { AxiosError } from 'axios'
 import { UserApiClient } from '../services/userApiClient'
-import { UserFormData } from '../types/user'
+import { User, UserFormData } from '../types/user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAuthHeader } from 'react-auth-kit'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
@@ -26,23 +26,22 @@ type InputErrorObject = {
   lastname: boolean
 }
 
-type EmailStatus = 'initial' | 'loading' | 'success' | 'error'
-
-interface CreateUserDialogProps {
+interface UpdateUserDialogProps {
   isOpen: boolean
-  close: () => void
   accountId: string
+  userId: string
+  close: () => void
 }
 
-const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, close, accountId }) => {
+const UpdateUserDialog: FunctionComponent<UpdateUserDialogProps> = ({ isOpen, accountId, userId, close }) => {
   const authToken = useAuthHeader()()
   const userApiClient = useMemo(() => new UserApiClient('http://localhost:3002', authToken, accountId), [accountId, authToken])
   const qualifcationApiClient = useMemo(() => new QualificationApiClient('http://localhost:3002', authToken, accountId), [accountId, authToken])
 
-  const [inputError, setInputError] = useState<InputErrorObject>({ firstname: false, lastname: false })
-  const [emailStatus, setEmailStatus] = useState<EmailStatus>('initial')
+  // const [inputError, setInputError] = useState<InputErrorObject>({ firstname: false, lastname: false })
+  // const [emailStatus, setEmailStatus] = useState<EmailStatus>('initial')
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
+  // const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
   const [alerts, setAlerts] = useState<{id: number, color: any, message: string, timeout: number}[]>([])
 
   const [isCreatingUser, setIsCreatingUser] = useState<boolean>(false)
@@ -50,46 +49,28 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
   const [isLoadingQualifications, setIsLoadingQualifications] = useState<boolean>(false)
   const [qualifications, setQualifications] = useState<Qualification[]>([])
 
-  const [formData, setFormData] = useState<UserFormData>({
-    firstname: null, 
-    lastname: null, 
-    birthdate: null, 
-    address: null, 
-    email: null, 
-    phone: null, 
-    is_online_user: true, 
-    webaccess: false,
-    qualifications: []
-  })
+  const [user, setUser] = useState<User | null>(null)
 
-  const addAlert = (color: string, message: string, timeout: number) => {
-    const id = Date.now() as number
-    setAlerts([ ...alerts, { id, color, message, timeout }])
-    setTimeout(() => removeAlert(id), timeout)
-  }
+  useEffect(() => {
+    userApiClient.getUser(userId)
+      .then(user => setUser(user))
+      .catch(error => alert(error))
+  }, [userApiClient, userId])
 
-  const removeAlert = (id: number) => {
-    setAlerts(alerts.filter((alert) => alert.id !== id))
-  }
+
+  // const addAlert = (color: string, message: string, timeout: number) => {
+  //   const id = Date.now() as number
+  //   setAlerts([ ...alerts, { id, color, message, timeout }])
+  //   setTimeout(() => removeAlert(id), timeout)
+  // }
+
+  // const removeAlert = (id: number) => {
+  //   setAlerts(alerts.filter((alert) => alert.id !== id))
+  // }
 
   const handleClose = () => {
-    resetFormData()
     resetErrors()
     close()
-  }
-
-  const resetFormData = () => {
-    setFormData({
-      firstname: null, 
-      lastname: null, 
-      birthdate: null, 
-      address: null, 
-      email: null, 
-      phone: null, 
-      is_online_user: true, 
-      webaccess: false,
-      qualifications: [] 
-    })
   }
 
   const loadQualifications = () => {
@@ -102,80 +83,75 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
   }
 
   const resetErrors = () => {
-    setInputError({ firstname: false, lastname: false })
-    setEmailStatus('initial')
-    setErrorMessage(undefined)
+    // setInputError({ firstname: false, lastname: false })
+    // setEmailStatus('initial')
+    // setErrorMessage(undefined)
+    return
   }
 
   const handleChange = (field: keyof UserFormData) => (event: ChangeEvent<HTMLInputElement>) => {
+    if (!user) return
     const { value, checked, type } = event.target
-    setFormData({ 
-      ...formData, 
+    setUser({ 
+      ...user, 
       [field]: type === 'checkbox' ? checked : value 
     })
   }
 
-  const handleChangeis_online_user = (is_online_user: boolean) => setFormData({ ...formData, is_online_user: is_online_user })
+  console.log(user)
+
+  const handleChangeis_online_user = (is_online_user: boolean) => {
+    if (!user) return
+    setUser({ ...user, is_online_user: is_online_user })
+  }
 
   const handleSave = async () => {
+    if (!user) return
     setIsCreatingUser(true)
     const errors: InputErrorObject = { firstname: false, lastname: false }
-    if (!formData.firstname) errors.firstname = true
-    if (!formData.lastname) errors.lastname = true
+    if (!user.firstname) errors.firstname = true
+    if (!user.lastname) errors.lastname = true
 
-    setInputError(errors)
+    // setInputError(errors)
 
     const hasInputErrors = Object.values(errors).some(error => error)
-    if (!hasInputErrors) {
-      userApiClient.createUser(formData)
-        .then(response => {
-          switch (response.type) {
-            case 'userCreated':
-              addAlert('success', 'User wurde erstellt!', 3000)
-              break
-            case 'mailExists':
-              addAlert('error', 'User ist bereits registriert!', 3000)
-              break
-            case 'relExists':
-              addAlert('error', 'User ist bereits mit dem Account verknüpft!', 3000)
-              break
-          }
-          handleClose()
-        })
-        .catch(error => addAlert('error', error.response.data.message, 3000))
+    if (!hasInputErrors) { 
+      userApiClient.updateUser(user)
+        .then(() => close())
+        .catch(error => alert(error))
     }
     setIsCreatingUser(false)
   }
 
-  const handleCheckEmail = (event: ChangeEvent<HTMLInputElement>) => {
-    if (typingTimeout) clearTimeout(typingTimeout)
-    const timeout = setTimeout(() => {
-      setEmailStatus('loading')
-      if (event.target.value) {
-        userApiClient.checkEMail(event.target.value)
-          .then((emailExists) => {
-            if (!emailExists) {
-              setErrorMessage(undefined)  
-              setEmailStatus('success')
-            } else {
-              setErrorMessage('E-Mail exestiert bereits!')
-              setEmailStatus('error')  
-            }
-          })
-          .catch((error: AxiosError) => {
-            setErrorMessage(error.response?.statusText)
-            setEmailStatus('error')
-          })
-      } else {
-        setErrorMessage(undefined)
-        setEmailStatus('initial')
-      }
-    }, 500)
-    setTypingTimeout(timeout)
-  }
+  // const handleCheckEmail = (event: ChangeEvent<HTMLInputElement>) => {
+  //   if (typingTimeout) clearTimeout(typingTimeout)
+  //   const timeout = setTimeout(() => {
+  //     setEmailStatus('loading')
+  //     if (event.target.value) {
+  //       userApiClient.checkEMail(event.target.value)
+  //         .then((emailExists) => {
+  //           if (!emailExists) {
+  //             setErrorMessage(undefined)  
+  //             setEmailStatus('success')
+  //           } else {
+  //             setErrorMessage('E-Mail exestiert bereits!')
+  //             setEmailStatus('error')  
+  //           }
+  //         })
+  //         .catch((error: AxiosError) => {
+  //           setErrorMessage(error.response?.statusText)
+  //           setEmailStatus('error')
+  //         })
+  //     } else {
+  //       setErrorMessage(undefined)
+  //       setEmailStatus('initial')
+  //     }
+  //   }, 500)
+  //   setTypingTimeout(timeout)
+  // }
 
 
-  return (
+  return user ? (
     <>
       <Modal 
         open={isOpen}
@@ -192,12 +168,11 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
             fontWeight="lg"
             mb={1}
           >
-            User erstellen
+            User bearbeiten
           </Typography>
 
-
           <div className='py-6 grid grid-cols-2 gap-4'>
-            <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.is_online_user ? 'border-blue-500' : null}`} onClick={() => handleChangeis_online_user(true)}>
+            <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${user.is_online_user ? 'border-blue-500' : null}`} onClick={() => handleChangeis_online_user(true)}>
               <div className='text-center'>
                 <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} className='rounded-full h-4 w-4 bg-lime-200 p-4' />
               </div>
@@ -205,7 +180,7 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
                 Online User
               </div>
             </div>
-            <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${!formData.is_online_user ? 'border-blue-500' : null}`} onClick={() => handleChangeis_online_user(false)}>
+            <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${!user.is_online_user ? 'border-blue-500' : null}`} onClick={() => handleChangeis_online_user(false)}>
               <div className='text-center'>
               <FontAwesomeIcon icon={icon({ name: 'user-lock', style: 'solid' })} className='rounded-full h-4 w-4 bg-blue-200 p-4' />
               </div>
@@ -222,70 +197,76 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
             <div className='grid gap-4 mb-4 sm:grid-cols-2 mt-4'>
               <FormControl>
                 <FormLabel>Vorname</FormLabel>
-                <Input id='firstnameInput' type='text' onChange={handleChange('firstname')} />
+                <Input 
+                  id='firstnameInput' 
+                  type='text'
+                  value={user.firstname}
+                  onChange={handleChange('firstname')}
+                />
               </FormControl>
               <FormControl>
                 <FormLabel>Nachname</FormLabel>
-                <Input id='lastnameInput' type='text' onChange={handleChange('lastname')} />
+                <Input id='lastnameInput' type='text' value={user.lastname} onChange={handleChange('lastname')} />
               </FormControl>
               <FormControl>
                 <FormLabel>Geburtsdatum</FormLabel>
-                <Input id='birthdateInput' type='date' onChange={handleChange('birthdate')} />
+                <Input id='birthdateInput' type='date' value={user.birthdate?.toISOString().split('T')[0]} onChange={handleChange('birthdate')} />
               </FormControl>
               <FormControl>
                 <FormLabel>Addresse</FormLabel>
-                <Input id='addressInput' type='text' onChange={handleChange('address')} />
+                <Input id='addressInput' type='text' value={user.address} onChange={handleChange('address')} />
               </FormControl>
               <FormControl>
                 <FormLabel>E-Mail</FormLabel>
-                <Input id='emailInput' type='text' onChange={handleChange('email')} />
+                <Input id='emailInput' type='text' value={user.email} onChange={handleChange('email')} />
               </FormControl>
               <FormControl>
                 <FormLabel>Telefon</FormLabel>
-                <Input id='phoneInput' type='text' onChange={handleChange('phone')} />
+                <Input id='phoneInput' type='text' value={user.phone} onChange={handleChange('phone')} />
               </FormControl>
               <FormControl
                 orientation="horizontal"
                 sx={{ justifyContent: 'space-between' }}
               >
                 <FormLabel>Online Zugang</FormLabel>
-                <Switch checked={formData.webaccess} onChange={handleChange('webaccess')} />
+                <Switch checked={user.webaccess} onChange={handleChange('webaccess')} />
               </FormControl>
 
             </div>
 
             <FormControl className='mb-4'>
-                <FormLabel>Qualifikationen</FormLabel>
-                <Autocomplete
-                  multiple
-                  onOpen={loadQualifications}
-                  loading={isLoadingQualifications}
-                  options={qualifications}
-                  getOptionLabel={(option) => option.name}
-                  isOptionEqualToValue={(option, value) => option.id === value.id}
-                  onChange={(event, newQualifications) => {
-                    setFormData({ 
-                      ...formData, 
-                      qualifications: newQualifications.map(qualification => qualification.id)
-                    })
-                  }}
-                  endDecorator={
-                    isLoadingQualifications ? (
-                      <CircularProgress size="sm" sx={{ bgcolor: 'background.surface' }} />
-                    ) : null
-                  }
-                />
-              </FormControl>
+              <FormLabel>Qualifikationen</FormLabel>
+              <Autocomplete
+                multiple
+                value={user.qualifications}
+                onOpen={loadQualifications}
+                loading={isLoadingQualifications}
+                options={qualifications}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                onChange={(event, newQualifications) => {
+                  setUser({ 
+                    ...user, 
+                    qualifications: newQualifications
+                  })
+                }}
+                endDecorator={
+                  isLoadingQualifications ? (
+                    <CircularProgress size="sm" sx={{ bgcolor: 'background.surface' }} />
+                  ) : null
+                }
+              />
+            </FormControl>
 
             <Typography>Authentifizierung</Typography>
             <Divider />
 
             <div className='grid gap-4 mb-4 sm:grid-cols-2 mt-4'>
-              <FormControl disabled={!formData.is_online_user}>
+              <FormControl disabled={!user.is_online_user}>
                 <FormLabel>Account E-Mail</FormLabel>
                 <Input id='accountEmailInput' type='text' />
               </FormControl>
-              <FormControl disabled={!formData.is_online_user}>
+              <FormControl disabled={!user.is_online_user}>
                 <FormLabel>Passwort</FormLabel>
                 <Input id='passwortInput' type='text' />
               </FormControl>
@@ -309,7 +290,7 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
         </Snackbar>
       ))}
     </>
-  )
+  ) : null
 }
 
-export default CreateUserDialog
+export default UpdateUserDialog

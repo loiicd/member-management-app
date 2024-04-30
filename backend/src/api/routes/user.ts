@@ -39,8 +39,9 @@ router.post('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Re
 
 // Update user
 router.put('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
+  const accountId = validateUUID(req.headers.accountid)
   const user = validateUser(req.body)
-  await userEntityService.update(user)
+  await userService.updateUser(user, accountId)
   res.sendStatus(201)
 }))
 

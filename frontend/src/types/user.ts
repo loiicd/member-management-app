@@ -8,7 +8,7 @@ export type User = {
   address?: string
   email?: string
   phone?: string
-  isOnlineUser: boolean
+  is_online_user: boolean
   webaccess: boolean
   created_at: Date
   updated_at: Date
@@ -22,7 +22,7 @@ export type UserFormData = {
   address: string | null
   email: string | null
   phone: string | null
-  isOnlineUser: boolean
+  is_online_user: boolean
   webaccess: boolean
   qualifications: string[]
 }

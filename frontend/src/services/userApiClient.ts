@@ -19,6 +19,11 @@ export class UserApiClient extends BaseApiClient {
     return (await this.axiosInstance.post('user', userFormData)).data
   }
 
+  public async updateUser(user: User): Promise<void> {
+    console.log('Api sending this User:', user)
+    await this.axiosInstance.put('user', {...user, created_at: user.created_at.toISOString(), updated_at: user.updated_at.toISOString()})
+  }
+
   public async updatePassword(userId: string, newPassword: string): Promise<void> {
     await this.axiosInstance.put(`user/password/${userId}`, { newPassword })
   }

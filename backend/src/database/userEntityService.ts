@@ -10,7 +10,13 @@ export type SortDirection = 'ASC' | 'DESC'
 export class UserEntityService {
   async insertUser(client: Client, userId: string, user: UserFormDataType): Promise<void> {
     const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, login_email, password, passwordsalt, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, now()::timestamp, now()::timestamp)'
-    const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess, user.email, user.password, user.passwordsalt]
+    const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.is_online_user, user.webaccess, user.email, user.password, user.passwordsalt]
+    await client.query(query, values)
+  }
+
+  async updateUser(client: Client, user: UserType): Promise<void> {
+    const query = 'UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, is_online_user = $7, webaccess = $8, updated_at = now()::timestamp WHERE id = $9'
+    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.is_online_user, user.webaccess, user.id]
     await client.query(query, values)
   }
 
@@ -145,6 +151,12 @@ export class UserEntityService {
     await client.query(query, values)
   }
 
+  async deleteQualificationRel(client: Client, userId: string, qualificationId: string, accountId: string): Promise<void> {
+    const query = 'DELETE FROM public."user_qualification_rel" WHERE user_id = $1 AND qualification_id = $2 AND account_id = $3'
+    const values = [userId, qualificationId, accountId]
+    await client.query(query, values)
+  }
+
   // Old!! without Service Client Provider
 
   private async executeQueryWithTransaction(query: string, values: any[]): Promise<QueryResult<any>> {
@@ -164,7 +176,7 @@ export class UserEntityService {
 
   async update(user: UserType): Promise<void> {
     const query = 'UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, is_online_user = $7, webaccess = $8, updated_at = now()::timestamp WHERE id = $9'
-    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.isOnlineUser, user.webaccess, user.id]
+    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.is_online_user, user.webaccess, user.id]
     await this.executeQueryWithTransaction(query, values)
   }
 
@@ -177,7 +189,7 @@ export class UserEntityService {
   async createUser(user: UserFormDataType): Promise<string> {
     const id = uuidv4()
     const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, login_email, is_online_user, webaccess, password, passwordsalt) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)'
-    const values = [id, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.login_email, user.isOnlineUser, user.webaccess, user.password, user.passwordsalt]
+    const values = [id, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.login_email, user.is_online_user, user.webaccess, user.password, user.passwordsalt]
     await this.executeQueryWithTransaction(query, values)
     return id
   }
