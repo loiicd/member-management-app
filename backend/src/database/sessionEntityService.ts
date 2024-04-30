@@ -16,7 +16,7 @@ export class SessionEntityService {
   }
 
   async selectUserId(client: Client, token: string): Promise<string> {
-    const query = 'SELECT user_id FROM public."user_session" WHERE token = $1'
+    const query = 'SELECT user_id FROM public."user_session" WHERE token = $1 LIMIT 1'
     const values = [token]
     const user = await client.query(query, values)
     if (!user) {

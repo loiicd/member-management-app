@@ -1,13 +1,14 @@
-import { UserType, UserFormDataType } from '../models/userShema'
-import { connect } from './db'
-import { v4 as uuidv4 } from 'uuid'
 import { Client, QueryResult } from 'pg'
+import { v4 as uuidv4 } from 'uuid'
+import { connect } from './db'
 import { AccountType } from '../models/accountShema'
+import { UserType, UserFormDataType } from '../models/userShema'
 
 export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
 export type SortDirection = 'ASC' | 'DESC'
 
 export class UserEntityService {
+
   async insertUser(client: Client, userId: string, user: UserFormDataType): Promise<void> {
     const query = 'INSERT INTO public."user" (id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, login_email, password, passwordsalt, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, now()::timestamp, now()::timestamp)'
     const values = [userId, user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.is_online_user, user.webaccess, user.email, user.password, user.passwordsalt]
@@ -169,4 +170,5 @@ export class UserEntityService {
     await this.executeQueryWithTransaction(query, values)
     return id
   }
+
 }

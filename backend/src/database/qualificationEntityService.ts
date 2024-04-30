@@ -3,6 +3,7 @@ import { QualificationType, QualificationFormDataType } from '../models/qualific
 import { v4 as uuidv4 } from 'uuid'
 
 export class QualificationEntityService {
+
   async selectQualification(client: Client, qualificationId: string): Promise<QualificationType> {
     const query = 'SELECT id, name, abbreviation, color FROM public."qualification" WHERE id = $1'
     const values = [qualificationId]
@@ -38,4 +39,5 @@ export class QualificationEntityService {
     const values = [qualificationId]
     await client.query(query, values)
   }
+  
 }
