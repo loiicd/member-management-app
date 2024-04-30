@@ -98,8 +98,6 @@ const UpdateUserDialog: FunctionComponent<UpdateUserDialogProps> = ({ isOpen, ac
     })
   }
 
-  console.log(user)
-
   const handleChangeis_online_user = (is_online_user: boolean) => {
     if (!user) return
     setUser({ ...user, is_online_user: is_online_user })

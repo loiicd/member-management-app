@@ -15,6 +15,7 @@ export class UserEntityService {
   }
 
   async updateUser(client: Client, user: UserType): Promise<void> {
+//    const query = 'UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, is_online_user = $7, webaccess = $8, updated_at = now()::timestamp WHERE id = $9 and version = $10'
     const query = 'UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, is_online_user = $7, webaccess = $8, updated_at = now()::timestamp WHERE id = $9'
     const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.is_online_user, user.webaccess, user.id]
     await client.query(query, values)

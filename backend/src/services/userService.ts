@@ -53,6 +53,8 @@ export class UserService extends BaseService {
 
   async updateUser(user: UserType, accountId: string): Promise<void> {
     return this.performTransaction(async (client) => {
+
+      // validate 
       await userEntityService.updateUser(client, user)
 
       const qualifications = await userEntityService.getQualifications(client, user.id)

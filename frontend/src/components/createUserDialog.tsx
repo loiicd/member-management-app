@@ -183,50 +183,57 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
         <Sheet sx={{ width: 600, borderRadius: 'md', p: 3, boxShadow: 'lg' }}>
-          <ModalClose variant="plain" sx={{ m: 1 }} />
-          <Typography
-            component="h2"
-            id="modal-title"
-            level="h4"
-            textColor="inherit"
-            fontWeight="lg"
-            mb={1}
-          >
-            User erstellen
-          </Typography>
-
-
-          <div className='py-6 grid grid-cols-2 gap-4'>
-            <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.is_online_user ? 'border-blue-500' : null}`} onClick={() => handleChangeis_online_user(true)}>
-              <div className='text-center'>
-                <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} className='rounded-full h-4 w-4 bg-lime-200 p-4' />
-              </div>
-              <div className='text-center'>
-                Online User
-              </div>
-            </div>
-            <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${!formData.is_online_user ? 'border-blue-500' : null}`} onClick={() => handleChangeis_online_user(false)}>
-              <div className='text-center'>
-              <FontAwesomeIcon icon={icon({ name: 'user-lock', style: 'solid' })} className='rounded-full h-4 w-4 bg-blue-200 p-4' />
-              </div>
-              <div className='text-center'>
-                Offline User
-              </div>
-            </div>
-          </div>
-
-          <Typography>Allgemein</Typography>
-          <Divider />
-
           <form>
+            <ModalClose variant="plain" sx={{ m: 1 }} />
+            <Typography
+              component="h2"
+              id="modal-title"
+              level="h4"
+              textColor="inherit"
+              fontWeight="lg"
+              mb={1}
+            >
+              User erstellen
+            </Typography>
+
+
+            <div className='py-6 grid grid-cols-2 gap-4'>
+              <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${formData.is_online_user ? 'border-blue-500' : null}`} onClick={() => handleChangeis_online_user(true)}>
+                <div className='text-center'>
+                  <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} className='rounded-full h-4 w-4 bg-lime-200 p-4' />
+                </div>
+                <div className='text-center'>
+                  Online User
+                </div>
+              </div>
+              <div className={`col-span-1 border rounded-md p-4 cursor-pointer hover:bg-slate-50 ${!formData.is_online_user ? 'border-blue-500' : null}`} onClick={() => handleChangeis_online_user(false)}>
+                <div className='text-center'>
+                <FontAwesomeIcon icon={icon({ name: 'user-lock', style: 'solid' })} className='rounded-full h-4 w-4 bg-blue-200 p-4' />
+                </div>
+                <div className='text-center'>
+                  Offline User
+                </div>
+              </div>
+            </div>
+
+            <Typography>Allgemein</Typography>
+            <Divider />
+
             <div className='grid gap-4 mb-4 sm:grid-cols-2 mt-4'>
-              <FormControl>
+              <FormControl error={inputError.firstname}>
                 <FormLabel>Vorname</FormLabel>
-                <Input id='firstnameInput' type='text' onChange={handleChange('firstname')} />
+                <Input 
+                  id='firstnameInput' 
+                  type='text' 
+                  onChange={handleChange('firstname')} />
               </FormControl>
-              <FormControl>
+              <FormControl error={inputError.lastname}>
                 <FormLabel>Nachname</FormLabel>
-                <Input id='lastnameInput' type='text' onChange={handleChange('lastname')} />
+                <Input 
+                  id='lastnameInput' 
+                  type='text' 
+                  onChange={handleChange('lastname')} 
+                />
               </FormControl>
               <FormControl>
                 <FormLabel>Geburtsdatum</FormLabel>
@@ -290,12 +297,12 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
                 <Input id='passwortInput' type='text' />
               </FormControl>
             </div>
-          </form>
 
-          <div className='flex justify-end gap-4'>
-            <Button variant='outlined' disabled={isCreatingUser} onClick={handleClose}>Abbrechen</Button>
-            <Button variant='solid' loading={isCreatingUser} onClick={handleSave}>Speichern</Button>
-          </div>
+            <div className='flex justify-end gap-4'>
+              <Button variant='outlined' disabled={isCreatingUser} onClick={handleClose}>Abbrechen</Button>
+              <Button variant='solid' loading={isCreatingUser} onClick={handleSave}>Speichern</Button>
+            </div>
+          </form>
         </Sheet>
       </Modal>
       {alerts.map((alert) => (
