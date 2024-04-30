@@ -88,7 +88,7 @@ const UpdateQualificationDialog: FunctionComponent<ComponentProps> = ({ open, qu
           <div className='col-1'>
             <FormControl>
               <FormLabel>Abkürzung</FormLabel>
-              <Input variant='outlined' value={qualification?.abbreviation} required onChange={handleChange('name')}  />
+              <Input variant='outlined' value={qualification?.abbreviation} required onChange={handleChange('abbreviation')}  />
             </FormControl>
           </div>
         </div>
