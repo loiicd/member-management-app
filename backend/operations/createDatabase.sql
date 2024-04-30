@@ -20,6 +20,7 @@ CREATE TABLE "user" (
   passwordsalt text, 
   is_online_user boolean NOT NULL,
   webaccess boolean NOT NULL,
+  version integer NOT NULL DEFAULT 0,
   created_at timestamp NOT NULL DEFAULT now()::timestamp,
   updated_at timestamp NOT NULL DEFAULT now()::timestamp,
   searchvector tsvector,

@@ -10,6 +10,7 @@ export type User = {
   phone?: string
   is_online_user: boolean
   webaccess: boolean
+  version: number
   created_at: Date
   updated_at: Date
   qualifications: Qualification[]

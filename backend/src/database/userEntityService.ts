@@ -15,26 +15,19 @@ export class UserEntityService {
   }
 
   async updateUser(client: Client, user: UserType): Promise<void> {
-//    const query = 'UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, is_online_user = $7, webaccess = $8, updated_at = now()::timestamp WHERE id = $9 and version = $10'
-    const query = 'UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, is_online_user = $7, webaccess = $8, updated_at = now()::timestamp WHERE id = $9'
-    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.is_online_user, user.webaccess, user.id]
+    const query = 'UPDATE public."user" SET firstname = $1, lastname = $2, birthdate = $3, address = $4, email = $5, phone = $6, is_online_user = $7, webaccess = $8, version = $9, updated_at = now()::timestamp WHERE id = $10 AND version = $11'
+    const values = [user.firstname, user.lastname, user.birthdate, user.address, user.email, user.phone, user.is_online_user, user.webaccess, user.version + 1, user.id, user.version]
     await client.query(query, values)
   }
 
   async getOneById(client: Client, userId: string): Promise<UserType> {
-    const query = `
-      SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
-      FROM public."user" 
-      WHERE id = $1`
+    const query = 'SELECT * FROM public."user" WHERE id = $1'
     const values = [userId]
     return (await client.query(query, values)).rows[0]
   }
 
   async getOneByMail(client: Client, email: string): Promise<UserType> {
-    const query = `
-      SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
-      FROM public."user" 
-      WHERE login_email = $1`
+    const query = 'SELECT * FROM public."user" WHERE login_email = $1'
     const values = [email]
     return (await client.query(query, values)).rows[0]
   }
@@ -64,7 +57,7 @@ export class UserEntityService {
 
   async getAll(client: Client, accountId: string, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[], page: number): Promise<UserType[]> {
     const query = `
-      SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
+      SELECT *
       FROM public."user"
       LEFT JOIN public."user_account_rel"
       ON id = user_account_rel.user_id
@@ -81,7 +74,7 @@ export class UserEntityService {
 
   async getAllWithSearch(client: Client, accountId: string, searchTerm: string, sortAttribute: SortAttribute, sortDirection: SortDirection, filter: string[], page: number): Promise<UserType[]> {
     const query = `
-      SELECT id, firstname, lastname, birthdate, address, email, phone, is_online_user, webaccess, created_at, updated_at
+      SELECT *
       FROM public."user"
       LEFT JOIN public."user_account_rel"
       ON id = user_account_rel.user_id
