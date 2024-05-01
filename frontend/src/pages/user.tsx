@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { User } from '../types/user'
 import { useNavigate, useParams } from 'react-router-dom'
-import UserDialog from '../components/userDialog'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import PasswordDialog from '../components/passwordDialog'
 import StandardLayout from '../layout/standard'
@@ -55,8 +54,7 @@ const UserPage = () => {
     <StandardLayout accountId={accountId}>
       <PageHead title={`${user?.firstname} ${user?.lastname}`}> 
         <div className='flex justify-end gap-2'>
-          <UserDialog type='update' userId={user?.id} accountId={accountId} />
-          <Button onClick={() => setOpenUpdateUserDialog(true)}>Bearbeiten 2</Button>
+          <Button onClick={() => setOpenUpdateUserDialog(true)}>Bearbeiten</Button>
           <Button onClick={handleDeleteClick}>Löschen</Button>
         </div>
       </PageHead>

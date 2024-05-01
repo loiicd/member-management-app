@@ -36,24 +36,13 @@ const StandardLayout: FunctionComponent<StandardLayoutProps> = ({ accountId, chi
             display: 'flex',
             flexDirection: 'column',
             minWidth: 0,
-            height: '100dvh',
+            minHeight: '100dvh',
             gap: 1,
           }}
         >
           {children}
         </Box>
       </Box>
-      {/* <main className='container mx-auto py-8'>
-        { children }
-      </main> */}
-      {/* <div className='grid grid-cols-8 gap-16 flex-grow'>
-        <Sidebar accountId={accountId} />
-        <main className='col-span-6 container mx-auto py-8'>
-          { children }
-        </main>
-        <div></div>
-      </div> */}
-      <Footer />
     </div>
   )
 }
