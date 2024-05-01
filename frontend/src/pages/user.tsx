@@ -81,6 +81,8 @@ const UserPage = () => {
                 <dd className="text-gray-700 sm:col-span-2">{user?.firstname} {user?.lastname}</dd>
                 <dt className="font-medium text-gray-900">Geburtsdatum</dt>
                 <dd className="text-gray-700 sm:col-span-2">{user?.birthdate?.toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric' })}</dd>
+                <dt className="font-medium text-gray-900">Adresse</dt>
+                <dd className="text-gray-700 sm:col-span-2">{user?.address}</dd>
                 <dt className="font-medium text-gray-900">Online Zugang</dt>
                 <dd className="text-gray-700 sm:col-span-2">{user?.webaccess ? 'Ja' : 'Nein'}</dd>
               </div>

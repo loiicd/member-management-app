@@ -4,7 +4,6 @@ import Avatar from '@mui/joy/Avatar'
 import Box from '@mui/joy/Box'
 import Button from '@mui/joy/Button'
 import Card from '@mui/joy/Card'
-import Chip from '@mui/joy/Chip'
 import Divider from '@mui/joy/Divider'
 import IconButton from '@mui/joy/IconButton'
 import Input from '@mui/joy/Input'
@@ -19,38 +18,7 @@ import Stack from '@mui/joy/Stack'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { useNavigate } from 'react-router-dom'
-
-function Toggler({
-  defaultExpanded = false,
-  renderToggle,
-  children,
-}: {
-  defaultExpanded?: boolean;
-  children: React.ReactNode;
-  renderToggle: (params: {
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  }) => React.ReactNode;
-}) {
-  const [open, setOpen] = React.useState(defaultExpanded);
-  return (
-    <React.Fragment>
-      {renderToggle({ open, setOpen })}
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateRows: open ? '1fr' : '0fr',
-          transition: '0.2s ease',
-          '& > *': {
-            overflow: 'hidden',
-          },
-        }}
-      >
-        {children}
-      </Box>
-    </React.Fragment>
-  );
-}
+import { useSignOut } from 'react-auth-kit'
 
 interface Test {
   accountId: string
@@ -58,6 +26,12 @@ interface Test {
 
 const Sidebar: React.FunctionComponent<Test> = ({ accountId }) => {
   const navigate = useNavigate()
+  const signOut = useSignOut()
+
+  const handleSignOut = () => {
+    signOut()
+    navigate('/login')  
+  }
 
   return (
     <Sheet
@@ -137,7 +111,7 @@ const Sidebar: React.FunctionComponent<Test> = ({ accountId }) => {
             '--ListItem-radius': (theme) => theme.vars.radius.sm,
           }}
         >
-          <ListItem>
+          <ListItem onClick={() => navigate(`/${accountId}/dashboard`)}>
             <ListItemButton>
               <FontAwesomeIcon icon={icon({ name: 'house', style: 'solid' })} />
               <ListItemContent>
@@ -146,98 +120,13 @@ const Sidebar: React.FunctionComponent<Test> = ({ accountId }) => {
             </ListItemButton>
           </ListItem>
 
-          <ListItem>
+          <ListItem onClick={() => navigate(`/${accountId}/users`)}>
             <ListItemButton>
               <FontAwesomeIcon icon={icon({ name: 'users', style: 'solid' })} />
               <ListItemContent>
                 <Typography level="title-sm">Mitglieder</Typography>
               </ListItemContent>
             </ListItemButton>
-          </ListItem>
-
-          <ListItem>
-            <ListItemButton selected>
-              <FontAwesomeIcon icon={icon({ name: 'gear', style: 'solid' })} />
-              <ListItemContent>
-                <Typography level="title-sm">Einstellungen</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem nested>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton onClick={() => setOpen(!open)}>
-                  <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} />
-                  <ListItemContent>
-                    <Typography level="title-sm">Tasks</Typography>
-                  </ListItemContent>
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>All tasks</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Backlog</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>In progress</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Done</ListItemButton>
-                </ListItem>
-              </List>
-            </Toggler>
-          </ListItem>
-
-          <ListItem>
-            <ListItemButton
-              role="menuitem"
-              component="a"
-              href="/joy-ui/getting-started/templates/messages/"
-            >
-              <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} />
-              <ListItemContent>
-                <Typography level="title-sm">Messages</Typography>
-              </ListItemContent>
-              <Chip size="sm" color="primary" variant="solid">
-                4
-              </Chip>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem nested>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton onClick={() => setOpen(!open)}>
-                  <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} />
-                  <ListItemContent>
-                    <Typography level="title-sm">Users</Typography>
-                  </ListItemContent>
-                  <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} />
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton
-                    role="menuitem"
-                    component="a"
-                    href="/joy-ui/getting-started/templates/profile-dashboard/"
-                  >
-                    My profile
-                  </ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Create a new user</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Roles & permission</ListItemButton>
-                </ListItem>
-              </List>
-            </Toggler>
           </ListItem>
         </List>
 
@@ -251,13 +140,7 @@ const Sidebar: React.FunctionComponent<Test> = ({ accountId }) => {
             mb: 2,
           }}
         >
-          <ListItem>
-            <ListItemButton>
-              <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} />
-              Support
-            </ListItemButton>
-          </ListItem>
-          <ListItem onClick={() => navigate(`${accountId}/settings`)}>
+          <ListItem onClick={() => navigate(`/${accountId}/settings`)}>
             <ListItemButton>
               <FontAwesomeIcon icon={icon({ name: 'gear', style: 'solid' })} />
               Einstellungen
@@ -297,8 +180,8 @@ const Sidebar: React.FunctionComponent<Test> = ({ accountId }) => {
           <Typography level="title-sm">Siriwat K.</Typography>
           <Typography level="body-xs">siriwatk@test.com</Typography>
         </Box>
-        <IconButton size="sm" variant="plain" color="neutral">
-          <FontAwesomeIcon icon={icon({ name: 'wifi', style: 'solid' })} />
+        <IconButton size="sm" variant="plain" color="neutral" onClick={handleSignOut}>
+          <FontAwesomeIcon icon={icon({ name: 'right-from-bracket', style: 'solid' })} />
         </IconButton>
       </Box>
     </Sheet>
