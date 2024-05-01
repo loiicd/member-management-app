@@ -40,7 +40,7 @@ const LoginPage = () => {
         token: response.data.token,
         expiresIn: 3600,
         tokenType: 'Bearer',
-        authState: { email: response.data.email, id: response.data.userId }
+        authState: { email: response.data.email, id: response.data.userId, firstname: response.data.firstname, lastname: response.data.lastname }
       })
       navigate('/')
     } catch (error) {

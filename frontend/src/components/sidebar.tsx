@@ -18,7 +18,7 @@ import Stack from '@mui/joy/Stack'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { useNavigate } from 'react-router-dom'
-import { useSignOut } from 'react-auth-kit'
+import { useAuthUser, useSignOut } from 'react-auth-kit'
 
 interface Test {
   accountId: string
@@ -27,6 +27,9 @@ interface Test {
 const Sidebar: React.FunctionComponent<Test> = ({ accountId }) => {
   const navigate = useNavigate()
   const signOut = useSignOut()
+  const authParams = useAuthUser()()
+
+  console.log(authParams)
 
   const handleSignOut = () => {
     signOut()
@@ -171,14 +174,10 @@ const Sidebar: React.FunctionComponent<Test> = ({ accountId }) => {
       </Box>
       <Divider />
       <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-        <Avatar
-          variant="outlined"
-          size="sm"
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-        />
+        <Avatar size='sm'>{authParams?.firstname[0]}{authParams?.lastname[0]}</Avatar>
         <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Siriwat K.</Typography>
-          <Typography level="body-xs">siriwatk@test.com</Typography>
+          <Typography level="title-sm">{authParams?.firstname} {authParams?.lastname}</Typography>
+          <Typography level="body-xs">{authParams?.email}</Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral" onClick={handleSignOut}>
           <FontAwesomeIcon icon={icon({ name: 'right-from-bracket', style: 'solid' })} />

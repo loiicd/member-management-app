@@ -21,7 +21,7 @@ export const loginHandler = async (email: string, password: string): Promise<any
   const expirationDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Add 7 days to the current date
   await sessionService.createSession(user.id, token, expirationDate)
 
-  return { userId: user.id, email: user.email, token: token }
+  return { userId: user.id, email: user.login_email, firstname: user.firstname, lastname: user.lastname, token: token }
 }
 
 const generateJsonWebToken = (userId: string, email: string): string => {
