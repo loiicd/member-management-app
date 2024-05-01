@@ -78,6 +78,18 @@ const resetDatabase = async () => {
       FOREIGN KEY (account_id) REFERENCES "account" (id)
     );
 
+    CREATE TABLE "group" (
+      id text NOT NULL,
+      account_id text NOT NULL,
+      name text NOT NULL,
+      color text,
+      version integer NOT NULL DEFAULT 0,
+      created_at timestamp NOT NULL DEFAULT now()::timestamp,
+      updated_at timestamp NOT NULL DEFAULT now()::timestamp,
+      PRIMARY KEY (id),
+      FOREIGN KEY (account_id) REFERENCES "account" (id)
+    );
+
     CREATE TABLE "user_session" (
       id text NOT NULL,
       user_id text NOT NULL,

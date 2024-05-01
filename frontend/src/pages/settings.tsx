@@ -17,6 +17,7 @@ import Tabs from '@mui/joy/Tabs'
 import TabList from '@mui/joy/TabList'
 import Tab from '@mui/joy/Tab'
 import TabPanel from '@mui/joy/TabPanel'
+import GroupsTab from "../components/groupsTab"
 
 const SettingsPage = () => {
   const [qualifications, setqualifications] = useState<Qualification[]>([])
@@ -73,7 +74,7 @@ const SettingsPage = () => {
             <FontAwesomeIcon icon={icon({ name: 'user-astronaut', style: 'solid' })} />
             Rollen
           </Tab>
-          <Tab disabled>
+          <Tab>
             <FontAwesomeIcon icon={icon({ name: 'user-group', style: 'solid' })} />
             Gruppen
           </Tab>
@@ -118,6 +119,9 @@ const SettingsPage = () => {
           </Table>
         </TabPanel>
         <TabPanel value={2}>3</TabPanel>
+        <TabPanel value={3}>
+          <GroupsTab addAlert={addAlert} />
+        </TabPanel>
       </Tabs>
       {openAddQualificationDialog ? 
         <AddQualificationDialog 
