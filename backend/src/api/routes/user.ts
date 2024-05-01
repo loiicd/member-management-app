@@ -22,9 +22,6 @@ router.get('/:id', authMiddleware, tryCatchMiddleware(async (req: Request, res: 
 // Get all users
 router.get('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
   const data = validateReqData(req)
-  if (data.page < 1) { 
-    data.page = 1
-  }
   const users = await userService.getUsers(data.accountId, data.searchTerm, data.sortAttribute, data.sortDirection, data.filter, data.page)
   res.status(200).send(users)
 }))

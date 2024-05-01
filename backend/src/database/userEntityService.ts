@@ -128,8 +128,8 @@ export class UserEntityService {
     await client.query(query, values)
   }
 
-  async getLoginDataByMail(client: Client, email: string): Promise<any> {
-    const query = 'SELECT id, firstname, lastname, login_email, password, passwordsalt FROM public."user" WHERE email = $1'
+  async getLoginDataByMail(client: Client, email: string): Promise<UserType> {
+    const query = 'SELECT * FROM public."user" WHERE email = $1 LIMIT 1'
     const values = [email]
     return (await client.query(query, values)).rows[0]
   }

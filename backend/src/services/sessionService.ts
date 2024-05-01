@@ -13,12 +13,10 @@ export class SessionService extends BaseService {
     return this.performTransaction(async (client) => {
       const user = await userEntityService.getLoginDataByMail(client, email)
 
-      const userExists = !!user
+      if (!user) throw new Error('User not Exists')
+      if (!user.password) throw new Error('Password not in DB')
 
-      if (!userExists) throw new Error('User not Exists')
-      if (user.password === null) throw new Error('Password not in DB')
-
-      const passwordIsIdentical = bcryptjs.compareSync(password+user.passwordsalt, user.password)
+      const passwordIsIdentical = await bcryptjs.compare(password+user.passwordsalt, user.password)
 
       if (!passwordIsIdentical) throw new Error('Invalid Credentials')
 

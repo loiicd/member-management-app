@@ -11,6 +11,8 @@ export const UserShema = z.object({
   phone:          z.string().optional().nullable(),
   is_online_user: z.boolean(),
   webaccess:      z.boolean(),
+  password:       z.string().optional().nullable(),
+  passwordsalt:   z.string().optional().nullable(),
   created_at:     z.string(),
   updated_at:     z.string(),
   login_email:    z.string().optional().nullable(),

@@ -96,6 +96,9 @@ export class UserService extends BaseService {
     return this.performTransaction(async (client) => {
       let users: UserType[] = []
       let totalEntries: number
+      if (page < 1) { 
+        page = 1
+      }
       if (searchTerm) {
         searchTerm.trim().split(' ').join(':* & ')
         users = await userEntityService.getAllWithSearch(client, accountId, searchTerm, sortAttribute, sortDirection, filter, page)
