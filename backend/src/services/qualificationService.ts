@@ -1,8 +1,10 @@
+import { UserQualificationRelEntityService } from '../database/userQualificationRelEntityService'
 import { QualificationEntityService } from '../database/qualificationEntityService'
 import { QualificationFormDataType, QualificationType } from '../models/qualificationShema'
 import { BaseService } from './baseService'
 
 const qualificationEntityService = new QualificationEntityService
+const userQualificationRelEntityService = new UserQualificationRelEntityService
 
 export class QualificationService extends BaseService {
   async getOne(qualificationId: string): Promise<QualificationType> {
@@ -35,7 +37,7 @@ export class QualificationService extends BaseService {
 
   async deleteQualification(qualificationId: string): Promise<void> {
     return this.performTransaction(async (client) => {
-      const relations = await qualificationEntityService.selectUserRelations(client, qualificationId)
+      const relations = await userQualificationRelEntityService.selectRelationsByQualification(client, qualificationId)
 
       if (relations.length != 0) {
         throw new Error('Kann nicht gelöscht werden da noch relation!')

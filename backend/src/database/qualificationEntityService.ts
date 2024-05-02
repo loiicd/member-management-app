@@ -16,12 +16,6 @@ export class QualificationEntityService {
     return (await client.query(query, values)).rows
   }
 
-  async selectUserRelations(client: Client, qualificationId: string): Promise<any[]> {
-    const query = 'SELECT * FROM public."user_qualification_rel" WHERE qualification_id = $1'
-    const values = [qualificationId]
-    return (await client.query(query, values)).rows
-  }
-
   async insertQualification(client: Client, accountId: string, qualification: QualificationFormDataType): Promise<void> {
     const query = 'INSERT INTO public."qualification" (id, account_id, name, abbreviation, color) VALUES ($1, $2, $3, $4, $5)'
     const values = [uuidv4(), accountId, qualification.name, qualification.abbreviation, qualification.color]

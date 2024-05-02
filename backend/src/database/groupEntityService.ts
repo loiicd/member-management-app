@@ -16,12 +16,6 @@ export class GroupEntityService {
     return (await client.query(query, values)).rows
   }
 
-  // async selectUserRelations(client: Client, qualificationId: string): Promise<any[]> {
-  //   const query = 'SELECT * FROM public."user_qualification_rel" WHERE qualification_id = $1'
-  //   const values = [qualificationId]
-  //   return (await client.query(query, values)).rows
-  // }
-
   async insertGroup(client: Client, accountId: string, group: GroupFormDataType): Promise<void> {
     const query = 'INSERT INTO public."group" (id, account_id, name, color) VALUES ($1, $2, $3, $4)'
     const values = [uuidv4(), accountId, group.name, group.color]
