@@ -1,13 +1,20 @@
 import { BaseService } from './baseService'
 import { GroupFormDataType, GroupType } from '../models/groupShema'
 import { GroupEntityService } from '../database/groupEntityService'
+import { UserGroupRelEntityService } from '../database/userGroupRelEntityService'
+import { UserEntityService } from '../database/userEntityService'
 
-const groupEntityService = new GroupEntityService()
+const groupEntityService = new GroupEntityService
+const userGroupRelEntityService = new UserGroupRelEntityService
+const userEntityService = new UserEntityService
 
 export class GroupService extends BaseService {
+
   async getOne(groupId: string): Promise<GroupType> {
     return this.performTransaction(async (client) => {
       const group = await groupEntityService.selectGroup(client, groupId)
+      const userIds = await userGroupRelEntityService.getRelations(client, groupId)
+      group.users = await Promise.all(userIds.map(async (userId) => await userEntityService.getOneById(client, userId)))
       if (!group) {
         throw new Error('Da fehlt was')
       }
@@ -23,7 +30,10 @@ export class GroupService extends BaseService {
 
   async createGroup(accountId: string, group: GroupFormDataType): Promise<void> {
     return this.performTransaction(async (client) => {
-      await groupEntityService.insertGroup(client, accountId, group)
+      const groupId = await groupEntityService.insertGroup(client, accountId, group)
+      await Promise.all(group.users.map(async (userId) => {
+        await userGroupRelEntityService.insertRelation(client, userId, groupId, accountId)
+      }))
     })
   }
 

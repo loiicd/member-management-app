@@ -16,10 +16,12 @@ export class GroupEntityService {
     return (await client.query(query, values)).rows
   }
 
-  async insertGroup(client: Client, accountId: string, group: GroupFormDataType): Promise<void> {
+  async insertGroup(client: Client, accountId: string, group: GroupFormDataType): Promise<string> {
+    const groupId = uuidv4()
     const query = 'INSERT INTO public."group" (id, account_id, name, color) VALUES ($1, $2, $3, $4)'
-    const values = [uuidv4(), accountId, group.name, group.color]
+    const values = [groupId, accountId, group.name, group.color]
     await client.query(query, values)
+    return groupId
   }
 
   async updateGroup(client: Client, group: GroupType): Promise<void> {

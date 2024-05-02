@@ -1,8 +1,9 @@
 import express, { Request, Response } from 'express'
 import { tryCatchMiddleware } from '../middleware/tryCatchMiddleware'
-import { validatequalificationFormData, validateUUID } from '../validate'
+import { validateUUID } from '../validate'
 import { authMiddleware } from '../middleware/authMiddleware'
 import { GroupService } from '../../services/groupService'
+import { GroupFormDataShema, GroupShema } from '../../models/groupShema'
 
 const router = express.Router()
 const groupService = new GroupService
@@ -21,13 +22,13 @@ router.get('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Res
 
 router.post('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
   const accountId = validateUUID(req.headers.accountid)
-  const group = validatequalificationFormData(req.body.group)
+  const group = GroupFormDataShema.parse(req.body.group)
   await groupService.createGroup(accountId, group)
   res.sendStatus(201)
 }))
 
 router.put('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
-  const group = req.body.group
+  const group = GroupShema.parse(req.body.group)
   await groupService.updateGroup(group)
   res.sendStatus(201)
 }))

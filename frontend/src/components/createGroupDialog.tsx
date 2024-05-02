@@ -1,4 +1,4 @@
-import { ChangeEvent, FunctionComponent, useState } from 'react'
+import { ChangeEvent, FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { useAuthHeader } from 'react-auth-kit'
 import { useParams } from 'react-router-dom'
 import ColorPicker from './ColorPicker'
@@ -13,6 +13,11 @@ import FormLabel from '@mui/joy/FormLabel'
 import FormHelperText from '@mui/joy/FormHelperText'
 import { GroupFormData } from '../types/group'
 import { GroupApiClient } from '../services/groupApiClient'
+import { User } from '../types/user'
+import { UserApiClient } from '../services/userApiClient'
+import { Accordion, Option, AccordionDetails, AccordionGroup, AccordionSummary, Checkbox, Select, Avatar, ListItemContent, accordionClasses, Divider } from '@mui/joy'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 interface CreateGroupDialogProps {
   open: boolean
@@ -24,8 +29,21 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
   const { accountId } = useParams<{ accountId: string }>()
   const authToken = useAuthHeader()()
   const [loading, setLoading] = useState<boolean>(false)
-  const [formData, setFormData] = useState<GroupFormData>({ name: undefined, color: '#FF3B30' })
+  const [formData, setFormData] = useState<GroupFormData>({ name: undefined, color: '#FF3B30', users: [] })
   const [nameInputError, setNameInputError] = useState<boolean>(false)
+
+  if (!accountId) throw new Error('Account ID required!')
+
+  const userApiClient = useMemo(() => new UserApiClient('http://localhost:3002', authToken, accountId), [accountId, authToken]) 
+
+  const [users, setUsers] = useState<User[]>([])
+  const [searchTerm, setSearchTerm] = useState<string | null>(null)
+
+  useEffect(() => {
+    userApiClient.getUsers(searchTerm, null, null, null, null)
+      .then(response => setUsers(response.data))
+      .catch(error => alert(error))
+  }, [userApiClient, searchTerm])
 
   const handleChange = (field: keyof GroupFormData) => (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -57,6 +75,18 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
     }
   }
 
+  const handleChangeSearchTerm = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value)
+  }
+
+  const handleSelectUser = (userId: string) => {
+    if (formData.users.includes(userId)) {
+      setFormData({ ...formData, users: formData.users.filter(id => id !== userId) })
+    } else {
+      setFormData({ ...formData, users: [...formData.users, userId] })
+    }
+  }
+
   return (
     <>
       <Modal 
@@ -77,16 +107,68 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
             Gruppe erstellen
           </Typography>
           <div className='grid grid-cols-2 gap-2'>
-            <div className='col-1'>
-              <FormControl error={nameInputError}>
-                <FormLabel>Name</FormLabel>
-                <Input variant='outlined' value={formData.name} required onChange={handleChange('name')} />
-                {nameInputError ? <FormHelperText>Name muss ausgefüllt sein!</FormHelperText> : null}
-              </FormControl>
-            </div>
+            <FormControl error={nameInputError}>
+              <FormLabel>Name</FormLabel>
+              <Input variant='outlined' value={formData.name} required onChange={handleChange('name')} />
+              {nameInputError ? <FormHelperText>Name muss ausgefüllt sein!</FormHelperText> : null}
+            </FormControl>
+            <FormControl disabled>
+              <FormLabel>Typ</FormLabel>
+              <Select defaultValue='standard'>
+                <Option value='standard'>Standard</Option>
+                <Option value='intelligent'>Intelligent</Option>
+              </Select>
+            </FormControl>
           </div>
           <div className='my-4'>
             <ColorPicker color={formData.color} handleColorChange={handleColorChange} />
+          </div>
+          <div className='my-4'>
+            <AccordionGroup>
+              <Accordion>
+                <AccordionSummary>
+                  <Avatar color='primary'>
+                    <FontAwesomeIcon icon={icon({ name: 'users', style: 'solid' })} className='w-4 h-4' />
+                  </Avatar>
+                  <ListItemContent>
+                    <Typography level="title-md">Mitglieder</Typography>
+                    <Typography level="body-sm">
+                      Wähle die Mitglieder aus
+                    </Typography>
+                  </ListItemContent>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Input 
+                    placeholder='Suche ...'
+                    startDecorator={<FontAwesomeIcon icon={icon({ name: 'magnifying-glass', style: 'solid' })} className='w-4 h-4' />}
+                    value={searchTerm ? searchTerm : undefined} 
+                    onChange={handleChangeSearchTerm} 
+                    className='my-2' 
+                  />
+                  <div className='grid grid-cols-2 gap-1'>
+                    {users.map((user) => (
+                      <div>
+                        <Checkbox checked={formData.users.includes(user.id)} label={user.firstname + ' ' + user.lastname} onChange={() => handleSelectUser(user.id)}/>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion disabled>
+                <AccordionSummary>
+                  <Avatar color='danger'>
+                    <FontAwesomeIcon icon={icon({ name: 'user-graduate', style: 'solid' })} className='w-4 h-4' />
+                  </Avatar>
+                  <ListItemContent>
+                    <Typography level="title-md">Qualifikationen</Typography>
+                    <Typography level="body-sm">
+                      Wähle die Qualifikationen aus
+                    </Typography>
+                  </ListItemContent>
+                </AccordionSummary>
+                <AccordionDetails>Content</AccordionDetails>
+              </Accordion>
+            </AccordionGroup>
           </div>
           <div className='flex justify-end gap-4'>
             <Button variant='outlined' onClick={handleClose}>Abbrechen</Button>

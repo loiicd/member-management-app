@@ -4,6 +4,8 @@ DROP TABLE IF EXISTS "user" CASCADE;
 DROP TABLE IF EXISTS "qualification" CASCADE;
 DROP TABLE IF EXISTS "account" CASCADE;
 DROP TABLE IF EXISTS "user_session" CASCADE;
+DROP TABLE IF EXISTS "group" CASCADE;
+DROP TABLE IF EXISTS "user_group_rel" CASCADE;
 
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
@@ -74,6 +76,16 @@ CREATE TABLE "group" (
   created_at timestamp NOT NULL DEFAULT now()::timestamp,
   updated_at timestamp NOT NULL DEFAULT now()::timestamp,
   PRIMARY KEY (id),
+  FOREIGN KEY (account_id) REFERENCES "account" (id)
+);
+
+CREATE Table "user_group_rel" (
+  user_id text NOT NULL,
+  group_id text NOT NULL,
+  account_id text NOT NULL,
+  PRIMARY KEY (user_id, group_id, account_id),
+  FOREIGN KEY (user_id) REFERENCES "user" (id),
+  FOREIGN KEY (group_id) REFERENCES "group" (id),
   FOREIGN KEY (account_id) REFERENCES "account" (id)
 );
 
