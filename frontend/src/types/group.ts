@@ -1,3 +1,4 @@
+import { GroupFilter, GroupFilterFormData } from './groupFilter'
 import { User } from './user'
 
 export type Group = {
@@ -6,10 +7,15 @@ export type Group = {
   version: number
   users: User[]
   color?: string
-}
+} & (IntelligentGroup | StandardGroup)
+
+type IntelligentGroup = { type: 'intelligent', rules: GroupFilter[] }
+type StandardGroup = { type: 'standard' }
 
 export type GroupFormData = {
   name?: string
   color?: string
-  users: string[]
-}
+} & (IntelligentGroupFormData | StandardGroupFormData)
+
+type IntelligentGroupFormData = { type: 'intelligent', rules: GroupFilterFormData[] }
+type StandardGroupFormData = { type: 'standard', users: string[] }

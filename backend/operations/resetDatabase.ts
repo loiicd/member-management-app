@@ -84,12 +84,23 @@ const resetDatabase = async () => {
       id text NOT NULL,
       account_id text NOT NULL,
       name text NOT NULL,
+      type text NOT NULL,
       color text,
       version integer NOT NULL DEFAULT 0,
       created_at timestamp NOT NULL DEFAULT now()::timestamp,
       updated_at timestamp NOT NULL DEFAULT now()::timestamp,
       PRIMARY KEY (id),
       FOREIGN KEY (account_id) REFERENCES "account" (id)
+    );
+
+    CREATE Table "group_filter" (
+      id text NOT NULL,
+      group_id text NOT NULL,
+      entity text NOT NULL,
+      rule text NOT NULL,
+      value text NOT NULL,
+      PRIMARY KEY (id),
+      FOREIGN KEY (group_id) REFERENCES "group" (id)
     );
 
     CREATE Table "user_group_rel" (

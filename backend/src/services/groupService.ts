@@ -3,8 +3,10 @@ import { GroupFormDataType, GroupType } from '../models/groupShema'
 import { GroupEntityService } from '../database/groupEntityService'
 import { UserGroupRelEntityService } from '../database/userGroupRelEntityService'
 import { UserEntityService } from '../database/userEntityService'
+import { GroupFilterEntityService } from '../database/groupFilterEntityService'
 
 const groupEntityService = new GroupEntityService
+const groupFilterEntityService = new GroupFilterEntityService
 const userGroupRelEntityService = new UserGroupRelEntityService
 const userEntityService = new UserEntityService
 
@@ -13,6 +15,7 @@ export class GroupService extends BaseService {
   async getOne(groupId: string): Promise<GroupType> {
     return this.performTransaction(async (client) => {
       const group = await groupEntityService.selectGroup(client, groupId)
+      group.rules = await groupFilterEntityService.selectGroupFilters(client, groupId)
       const userIds = await userGroupRelEntityService.getRelations(client, groupId)
       group.users = await Promise.all(userIds.map(async (userId) => await userEntityService.getOneById(client, userId)))
       if (!group) {
@@ -31,6 +34,9 @@ export class GroupService extends BaseService {
   async createGroup(accountId: string, group: GroupFormDataType): Promise<void> {
     return this.performTransaction(async (client) => {
       const groupId = await groupEntityService.insertGroup(client, accountId, group)
+      await Promise.all(group.rules.map(async (groupFilter) => {
+        await groupFilterEntityService.insertGroupFilter(client, groupId, groupFilter)
+      }))
       await Promise.all(group.users.map(async (userId) => {
         await userGroupRelEntityService.insertRelation(client, userId, groupId, accountId)
       }))

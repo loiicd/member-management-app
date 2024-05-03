@@ -1,6 +1,11 @@
 import { ChangeEvent, FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { useAuthHeader } from 'react-auth-kit'
 import { useParams } from 'react-router-dom'
+import { GroupFormData } from '../types/group'
+import { GroupApiClient } from '../services/groupApiClient'
+import { User } from '../types/user'
+import { UserApiClient } from '../services/userApiClient'
+import { GroupFilterFormData } from '../types/groupFilter'
 import ColorPicker from './ColorPicker'
 import Modal from '@mui/joy/Modal'
 import ModalClose from '@mui/joy/ModalClose'
@@ -11,11 +16,15 @@ import Input from '@mui/joy/Input'
 import FormControl from '@mui/joy/FormControl'
 import FormLabel from '@mui/joy/FormLabel'
 import FormHelperText from '@mui/joy/FormHelperText'
-import { GroupFormData } from '../types/group'
-import { GroupApiClient } from '../services/groupApiClient'
-import { User } from '../types/user'
-import { UserApiClient } from '../services/userApiClient'
-import { Accordion, Option, AccordionDetails, AccordionGroup, AccordionSummary, Select, Autocomplete, Textarea } from '@mui/joy'
+import GroupFilterSelect from './createGroupDialog/groupFilterSelect'
+import Select from '@mui/joy/Select'
+import Option from '@mui/joy/Option'
+import Textarea from '@mui/joy/Textarea'
+import AccordionGroup from '@mui/joy/AccordionGroup'
+import Accordion from '@mui/joy/Accordion'
+import AccordionSummary from '@mui/joy/AccordionSummary'
+import AccordionDetails from '@mui/joy/AccordionDetails'
+import Autocomplete from '@mui/joy/Autocomplete'
 
 interface CreateGroupDialogProps {
   open: boolean
@@ -26,26 +35,29 @@ interface CreateGroupDialogProps {
 const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, handleClose, addAlert }) => {
   const { accountId } = useParams<{ accountId: string }>()
   const authToken = useAuthHeader()()
-  const [loading, setLoading] = useState<boolean>(false)
-  const [formData, setFormData] = useState<GroupFormData>({ name: undefined, color: '#FF3B30', users: [] })
-  const [nameInputError, setNameInputError] = useState<boolean>(false)
 
   if (!accountId) throw new Error('Account ID required!')
 
   const userApiClient = useMemo(() => new UserApiClient('http://localhost:3002', authToken, accountId), [accountId, authToken]) 
+  const groupApiClient = useMemo(() => new GroupApiClient('http://localhost:3002', authToken, accountId), [accountId, authToken])
 
+  const [loading, setLoading] = useState<boolean>(false)
+  const [formData, setFormData] = useState<GroupFormData>({ name: undefined, color: '#FF3B30', users: [], type: 'standard' })
+  const [nameInputError, setNameInputError] = useState<boolean>(false)
   const [users, setUsers] = useState<User[]>([])
-  const [searchTerm, setSearchTerm] = useState<string | null>(null)
+  const [rules, setRules] = useState<GroupFilterFormData[]>([]) 
 
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
-
-  const [groupType, setGroupType] = useState<'standard' | 'intelligent'>('standard')
+  const [accordionIndex, setAccordionIndex] = useState<number | null>(0)
 
   useEffect(() => {
-    userApiClient.getUsers(searchTerm, null, null, null, null)
+    userApiClient.getUsers(null, null, null, null, null)
       .then(response => setUsers(response.data))
       .catch(error => alert(error))
-  }, [userApiClient, searchTerm])
+  }, [userApiClient, accountId])
+
+  useEffect(() => {
+    setAccordionIndex(null)
+  }, [formData.type])
 
   const handleChange = (field: keyof GroupFormData) => (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -64,7 +76,10 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
   const handleSave = () => {
     if (formData.name) {
       setLoading(true)
-      const groupApiClient = new GroupApiClient('http://localhost:3002', authToken, accountId)
+      if (formData.type === 'intelligent') {
+        formData.rules = rules
+        
+      }
       groupApiClient.postGroup(formData)
         .then(() => {
           addAlert('success', 'Gruppe erstellt', 3000)
@@ -105,7 +120,7 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
               </FormControl>
               <FormControl>
                 <FormLabel>Typ</FormLabel>
-                <Select value={groupType} onChange={(event, value) => setGroupType(value ? value : 'standard')}>
+                <Select value={formData.type} onChange={(event, value) => setFormData({ ...formData, type: value ? value : 'standard', rules: [], users: [] })}>
                   <Option value='standard'>Standard</Option>
                   <Option value='intelligent'>Intelligent</Option>
                 </Select>
@@ -117,38 +132,38 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
             </FormControl>
             <ColorPicker color={formData.color} handleColorChange={handleColorChange} />
             <AccordionGroup>
-              <Accordion disabled={groupType === 'intelligent'}>
+              <Accordion 
+                disabled={formData.type === 'intelligent'} 
+                expanded={accordionIndex === 0}
+                onChange={(event, expanded) => {
+                  setAccordionIndex(expanded ? 0 : null);
+                }}
+              >
                 <AccordionSummary>Mitglieder</AccordionSummary>
-                <AccordionDetails>
-                  <Autocomplete
-                    multiple
-                    disableCloseOnSelect
-                    disableClearable
-                    options={users}
-                    getOptionLabel={(option) => `${option.firstname} ${option.lastname}`}
-                    onChange={(event, value) => setFormData({ ...formData, users: value.map((item) => item.id) })}
-                  />
-                </AccordionDetails>
+                {formData.type === 'standard' ? 
+                  <AccordionDetails>
+                    <Autocomplete
+                      multiple
+                      disableCloseOnSelect
+                      disableClearable
+                      options={users}
+                      getOptionLabel={(option) => `${option.firstname} ${option.lastname}`}
+                      onChange={(event, value) => setFormData({ ...formData, users: value.map((item) => item.id) })}
+                    />
+                  </AccordionDetails>
+                  : null
+                }
               </Accordion>
-              <Accordion disabled={groupType === 'standard'}>
+              <Accordion 
+                disabled={formData.type === 'standard'} 
+                expanded={accordionIndex === 1}
+                onChange={(event, expanded) => {
+                  setAccordionIndex(expanded ? 1 : null);
+                }}
+              >
                 <AccordionSummary>Filter</AccordionSummary>
                 <AccordionDetails>
-                  <div className='flex justify-between gap-2'>
-                    <Select defaultValue={0} className='flex-grow'>
-                      <Option value={0}>Qualifikation</Option>
-                      <Option value={1}>Rolle</Option>
-                    </Select>
-                    <Select defaultValue={0} className='flex-grow'>
-                      <Option value={0}>ist</Option>
-                      <Option value={1}>ist nicht</Option>
-                      <Option value={2}>enthält</Option>
-                    </Select>
-                    <Select defaultValue={0} className='flex-grow'>
-                      <Option value={0}>Gruppenführer</Option>
-                      <Option value={1}>Maschinist</Option>
-                      <Option value={2}>Truppmann</Option>
-                    </Select>
-                  </div>
+                  <GroupFilterSelect rules={rules} handleRulesChange={setRules} />
                 </AccordionDetails>
               </Accordion>
             </AccordionGroup>
