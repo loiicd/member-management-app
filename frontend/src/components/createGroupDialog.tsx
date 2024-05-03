@@ -15,9 +15,7 @@ import { GroupFormData } from '../types/group'
 import { GroupApiClient } from '../services/groupApiClient'
 import { User } from '../types/user'
 import { UserApiClient } from '../services/userApiClient'
-import { Accordion, Option, AccordionDetails, AccordionGroup, AccordionSummary, Checkbox, Select, Avatar, ListItemContent, List, ListItem, IconButton, Autocomplete } from '@mui/joy'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { Accordion, Option, AccordionDetails, AccordionGroup, AccordionSummary, Select, Autocomplete, Textarea } from '@mui/joy'
 
 interface CreateGroupDialogProps {
   open: boolean
@@ -39,7 +37,9 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
   const [users, setUsers] = useState<User[]>([])
   const [searchTerm, setSearchTerm] = useState<string | null>(null)
 
-  const [test, setTest] = useState<User | undefined>(undefined)
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
+
+  const [groupType, setGroupType] = useState<'standard' | 'intelligent'>('standard')
 
   useEffect(() => {
     userApiClient.getUsers(searchTerm, null, null, null, null)
@@ -77,20 +77,6 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
     }
   }
 
-  const handleChangeSearchTerm = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value)
-  }
-
-  const handleAddUser = (user: User) => {
-    if (!formData.users.some(data => data.id === user.id)) {
-      setFormData({ ...formData, users: [...formData.users, user] })
-    }
-  }
-
-  const handleRemoveUser = (user: User) => {
-    setFormData({ ...formData, users: formData.users.filter(data => data.id !== user.id) })
-  }
-
   return (
     <>
       <Modal 
@@ -98,7 +84,7 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
         onClose={handleClose}
         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
-        <Sheet sx={{ maxWidth: 600, borderRadius: 'md', p: 3, boxShadow: 'lg' }}>
+        <Sheet sx={{ maxWidth: 600, width: 520, borderRadius: 'md', p: 3, boxShadow: 'lg' }}>
           <ModalClose variant="plain" sx={{ m: 1 }} />
           <Typography
             component="h2"
@@ -110,96 +96,60 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
           >
             Gruppe erstellen
           </Typography>
-          <div className='grid grid-cols-2 gap-2'>
-            <FormControl error={nameInputError}>
-              <FormLabel>Name</FormLabel>
-              <Input variant='outlined' value={formData.name} required onChange={handleChange('name')} />
-              {nameInputError ? <FormHelperText>Name muss ausgefüllt sein!</FormHelperText> : null}
+          <div className='flex flex-col gap-4 mb-8'>
+            <div className='grid grid-cols-2 gap-2'>
+              <FormControl error={nameInputError}>
+                <FormLabel>Name</FormLabel>
+                <Input value={formData.name} required onChange={handleChange('name')} />
+                {nameInputError ? <FormHelperText>Name muss ausgefüllt sein!</FormHelperText> : null}
+              </FormControl>
+              <FormControl>
+                <FormLabel>Typ</FormLabel>
+                <Select value={groupType} onChange={(event, value) => setGroupType(value ? value : 'standard')}>
+                  <Option value='standard'>Standard</Option>
+                  <Option value='intelligent'>Intelligent</Option>
+                </Select>
+              </FormControl>
+            </div>
+            <FormControl>
+              <FormLabel>Beschreibung</FormLabel>
+              <Textarea minRows={3} />
             </FormControl>
-            <FormControl disabled>
-              <FormLabel>Typ</FormLabel>
-              <Select defaultValue='standard'>
-                <Option value='standard'>Standard</Option>
-                <Option value='intelligent'>Intelligent</Option>
-              </Select>
-            </FormControl>
-          </div>
-          <div className='my-4'>
             <ColorPicker color={formData.color} handleColorChange={handleColorChange} />
-          </div>
-          <div className='my-4'>
             <AccordionGroup>
-              <Accordion>
-                <AccordionSummary>
-                  <Avatar color='primary'>
-                    <FontAwesomeIcon icon={icon({ name: 'users', style: 'solid' })} className='w-4 h-4' />
-                  </Avatar>
-                  <ListItemContent>
-                    <Typography level="title-md">Mitglieder</Typography>
-                    <Typography level="body-sm">
-                      Wähle die Mitglieder aus
-                    </Typography>
-                  </ListItemContent>
-                </AccordionSummary>
+              <Accordion disabled={groupType === 'intelligent'}>
+                <AccordionSummary>Mitglieder</AccordionSummary>
                 <AccordionDetails>
-                  {/* <Input 
-                    placeholder='Suche ...'
-                    startDecorator={<FontAwesomeIcon icon={icon({ name: 'magnifying-glass', style: 'solid' })} className='w-4 h-4' />}
-                    value={searchTerm ? searchTerm : undefined} 
-                    onChange={handleChangeSearchTerm} 
-                    className='my-2' 
-                  /> */}
                   <Autocomplete
-                    value={test}
-                    variant='soft'
-                    placeholder='Suche ...'
+                    multiple
+                    disableCloseOnSelect
                     disableClearable
                     options={users}
                     getOptionLabel={(option) => `${option.firstname} ${option.lastname}`}
-                    onChange={(event, value) => { 
-                      if (value) {
-                        handleAddUser(value)
-                        setTest(undefined)
-                      }
-                    }}
-                    endDecorator={
-                      <Button>
-                        Submit
-                      </Button>
-                    }
+                    onChange={(event, value) => setFormData({ ...formData, users: value.map((item) => item.id) })}
                   />
-                  <List>
-                    {formData.users.map((user) => (
-                      <ListItem
-                        endAction={
-                          <IconButton size="sm" onClick={() => handleRemoveUser(user)}>
-                            <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} />
-                          </IconButton>
-                        }
-                      >
-                        <Avatar>{user.firstname[0]}{user.lastname[0]}</Avatar>
-                        <ListItemContent>
-                          <Typography level="title-md">{user.firstname} {user.lastname}</Typography>
-                          <Typography level="body-sm">{user.email}</Typography>
-                        </ListItemContent>
-                      </ListItem>
-                    ))}
-                  </List>
                 </AccordionDetails>
               </Accordion>
-              <Accordion disabled>
-                <AccordionSummary>
-                  <Avatar color='danger'>
-                    <FontAwesomeIcon icon={icon({ name: 'user-graduate', style: 'solid' })} className='w-4 h-4' />
-                  </Avatar>
-                  <ListItemContent>
-                    <Typography level="title-md">Qualifikationen</Typography>
-                    <Typography level="body-sm">
-                      Wähle die Qualifikationen aus
-                    </Typography>
-                  </ListItemContent>
-                </AccordionSummary>
-                <AccordionDetails>Content</AccordionDetails>
+              <Accordion disabled={groupType === 'standard'}>
+                <AccordionSummary>Filter</AccordionSummary>
+                <AccordionDetails>
+                  <div className='flex justify-between gap-2'>
+                    <Select defaultValue={0} className='flex-grow'>
+                      <Option value={0}>Qualifikation</Option>
+                      <Option value={1}>Rolle</Option>
+                    </Select>
+                    <Select defaultValue={0} className='flex-grow'>
+                      <Option value={0}>ist</Option>
+                      <Option value={1}>ist nicht</Option>
+                      <Option value={2}>enthält</Option>
+                    </Select>
+                    <Select defaultValue={0} className='flex-grow'>
+                      <Option value={0}>Gruppenführer</Option>
+                      <Option value={1}>Maschinist</Option>
+                      <Option value={2}>Truppmann</Option>
+                    </Select>
+                  </div>
+                </AccordionDetails>
               </Accordion>
             </AccordionGroup>
           </div>

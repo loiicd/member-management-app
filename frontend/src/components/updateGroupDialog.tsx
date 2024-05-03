@@ -15,9 +15,7 @@ import Option from '@mui/joy/Option'
 import { GroupApiClient } from '../services/groupApiClient'
 import { UserApiClient } from '../services/userApiClient'
 import { Group } from '../types/group'
-import { Accordion, AccordionDetails, AccordionGroup, AccordionSummary, Checkbox, Avatar, ListItemContent, Skeleton, List, ListItem, ListItemButton, ListItemDecorator, IconButton } from '@mui/joy'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { Accordion, AccordionDetails, AccordionGroup, AccordionSummary, Autocomplete, CircularProgress } from '@mui/joy'
 import { User } from '../types/user'
 
 interface ComponentProps {
@@ -80,20 +78,6 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
       .finally(() => setLoading(false))
   }
 
-  const handleChangeSearchTerm = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value)
-  }
-
-  const handleSelectUser = (user: User) => {
-    if (group) {
-      if (group.users.some(data => data.id === user.id)) {
-        setGroup({ ...group, users: group.users.filter(data => data.id !== user.id) })
-      } else {
-        setGroup({ ...group, users: [...group.users, user] })
-      }
-    }
-  }
-
   return group ? (
     <Modal 
       open={open}
@@ -130,91 +114,51 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
         </div>
         <div className='my-4'>
           <AccordionGroup>
-            <Accordion onChange={loadUser}>
-              <AccordionSummary>
-                <Avatar color='primary'>
-                  <FontAwesomeIcon icon={icon({ name: 'users', style: 'solid' })} className='w-4 h-4' />
-                </Avatar>
-                <ListItemContent>
-                  <Typography level="title-md">Mitglieder</Typography>
-                  <Typography level="body-sm">
-                    Wähle die Mitglieder aus
-                  </Typography>
-                </ListItemContent>
-              </AccordionSummary>
+            <Accordion>
+              <AccordionSummary>Mitglieder</AccordionSummary>
               <AccordionDetails>
-                <Input 
-                  disabled={loadingUsers}
-                  placeholder='Suche ...'
-                  startDecorator={<FontAwesomeIcon icon={icon({ name: 'magnifying-glass', style: 'solid' })} className='w-4 h-4' />}
-                  value={searchTerm ? searchTerm : undefined} 
-                  onChange={handleChangeSearchTerm} 
-                  className='my-2' 
-                />
-                <div className='grid grid-cols-2 gap-1'>
-                  {users.map((user) => (
-                    <div>
-                      <Checkbox checked={group.users.some(data => data.id === user.id)} label={user.firstname + ' ' + user.lastname} onChange={() => handleSelectUser(user)}/>
-                    </div>
-                  ))}
-                  {loadingUsers ? 
-                    <>
-                      <Skeleton animation="wave" variant="text" sx={{ width: '100%' }} />
-                      <Skeleton animation="wave" variant="text" sx={{ width: '100%' }} />
-                      <Skeleton animation="wave" variant="text" sx={{ width: '100%' }} />
-                      <Skeleton animation="wave" variant="text" sx={{ width: '100%' }} />
-                      <Skeleton animation="wave" variant="text" sx={{ width: '100%' }} />
-                      <Skeleton animation="wave" variant="text" sx={{ width: '100%' }} />
-                      <Skeleton animation="wave" variant="text" sx={{ width: '100%' }} />
-                      <Skeleton animation="wave" variant="text" sx={{ width: '100%' }} />
-                    </>
-                    : null
+                <Autocomplete
+                  multiple
+                  disableCloseOnSelect
+                  disableClearable
+                  value={group.users}
+                  options={users}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                  getOptionLabel={(option) => `${option.firstname} ${option.lastname}`}
+                  getOptionKey={(option) => option.id}
+                  onOpen={loadUser}
+                  onChange={(event, value) => setGroup({ ...group, users: value })}
+                  loading={loading}
+                  endDecorator={
+                    loading ? (
+                      <CircularProgress size="sm" sx={{ bgcolor: 'background.surface' }} />
+                    ) : null
                   }
+                />
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary>Filter</AccordionSummary>
+              <AccordionDetails>
+                <div className='flex justify-between gap-2'>
+                  <Select defaultValue={0} className='flex-grow'>
+                    <Option value={0}>Qualifikation</Option>
+                    <Option value={1}>Rolle</Option>
+                  </Select>
+                  <Select defaultValue={0} className='flex-grow'>
+                    <Option value={0}>ist</Option>
+                    <Option value={1}>ist nicht</Option>
+                    <Option value={2}>enthält</Option>
+                  </Select>
+                  <Select defaultValue={0} className='flex-grow'>
+                    <Option value={0}>Gruppenführer</Option>
+                    <Option value={1}>Maschinist</Option>
+                    <Option value={2}>Truppmann</Option>
+                  </Select>
                 </div>
               </AccordionDetails>
             </Accordion>
-            <Accordion disabled>
-              <AccordionSummary>
-                <Avatar color='neutral'>
-                  <FontAwesomeIcon icon={icon({ name: 'user-graduate', style: 'solid' })} className='w-4 h-4' />
-                </Avatar>
-                <ListItemContent>
-                  <Typography level="title-md" color='neutral'>Qualifikationen</Typography>
-                  <Typography level="body-sm">
-                    Wähle die Qualifikationen aus
-                  </Typography>
-                </ListItemContent>
-              </AccordionSummary>
-              <AccordionDetails>Content</AccordionDetails>
-            </Accordion>
           </AccordionGroup>
-          <List>
-            <ListItem>
-              <Avatar>FA</Avatar>
-              <ListItemContent>
-                <Typography level="title-md">Firstname Lastname</Typography>
-                <Typography level="body-sm">
-                  email@example.com
-                </Typography>
-              </ListItemContent>
-              <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} />
-            </ListItem>
-            <ListItem
-               endAction={
-                <IconButton size="sm">
-                  <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} />
-                </IconButton>
-              }
-            >
-              <Avatar>FA</Avatar>
-              <ListItemContent>
-                <Typography level="title-md">Firstname Lastname</Typography>
-                <Typography level="body-sm">
-                  email@example.com
-                </Typography>
-              </ListItemContent>
-            </ListItem>
-          </List>
         </div>
         <div className='flex justify-end gap-4'>
           <Button variant='outlined' onClick={handleClose}>Abbrechen</Button>
