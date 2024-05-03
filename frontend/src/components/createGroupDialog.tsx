@@ -15,7 +15,7 @@ import { GroupFormData } from '../types/group'
 import { GroupApiClient } from '../services/groupApiClient'
 import { User } from '../types/user'
 import { UserApiClient } from '../services/userApiClient'
-import { Accordion, Option, AccordionDetails, AccordionGroup, AccordionSummary, Checkbox, Select, Avatar, ListItemContent, accordionClasses, Divider } from '@mui/joy'
+import { Accordion, Option, AccordionDetails, AccordionGroup, AccordionSummary, Checkbox, Select, Avatar, ListItemContent, List, ListItem, IconButton, Autocomplete } from '@mui/joy'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 
@@ -38,6 +38,8 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
 
   const [users, setUsers] = useState<User[]>([])
   const [searchTerm, setSearchTerm] = useState<string | null>(null)
+
+  const [test, setTest] = useState<User | undefined>(undefined)
 
   useEffect(() => {
     userApiClient.getUsers(searchTerm, null, null, null, null)
@@ -79,12 +81,14 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
     setSearchTerm(event.target.value)
   }
 
-  const handleSelectUser = (userId: string) => {
-    if (formData.users.includes(userId)) {
-      setFormData({ ...formData, users: formData.users.filter(id => id !== userId) })
-    } else {
-      setFormData({ ...formData, users: [...formData.users, userId] })
+  const handleAddUser = (user: User) => {
+    if (!formData.users.some(data => data.id === user.id)) {
+      setFormData({ ...formData, users: [...formData.users, user] })
     }
+  }
+
+  const handleRemoveUser = (user: User) => {
+    setFormData({ ...formData, users: formData.users.filter(data => data.id !== user.id) })
   }
 
   return (
@@ -138,20 +142,49 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
                   </ListItemContent>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Input 
+                  {/* <Input 
                     placeholder='Suche ...'
                     startDecorator={<FontAwesomeIcon icon={icon({ name: 'magnifying-glass', style: 'solid' })} className='w-4 h-4' />}
                     value={searchTerm ? searchTerm : undefined} 
                     onChange={handleChangeSearchTerm} 
                     className='my-2' 
+                  /> */}
+                  <Autocomplete
+                    value={test}
+                    variant='soft'
+                    placeholder='Suche ...'
+                    disableClearable
+                    options={users}
+                    getOptionLabel={(option) => `${option.firstname} ${option.lastname}`}
+                    onChange={(event, value) => { 
+                      if (value) {
+                        handleAddUser(value)
+                        setTest(undefined)
+                      }
+                    }}
+                    endDecorator={
+                      <Button>
+                        Submit
+                      </Button>
+                    }
                   />
-                  <div className='grid grid-cols-2 gap-1'>
-                    {users.map((user) => (
-                      <div>
-                        <Checkbox checked={formData.users.includes(user.id)} label={user.firstname + ' ' + user.lastname} onChange={() => handleSelectUser(user.id)}/>
-                      </div>
+                  <List>
+                    {formData.users.map((user) => (
+                      <ListItem
+                        endAction={
+                          <IconButton size="sm" onClick={() => handleRemoveUser(user)}>
+                            <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} />
+                          </IconButton>
+                        }
+                      >
+                        <Avatar>{user.firstname[0]}{user.lastname[0]}</Avatar>
+                        <ListItemContent>
+                          <Typography level="title-md">{user.firstname} {user.lastname}</Typography>
+                          <Typography level="body-sm">{user.email}</Typography>
+                        </ListItemContent>
+                      </ListItem>
                     ))}
-                  </div>
+                  </List>
                 </AccordionDetails>
               </Accordion>
               <Accordion disabled>

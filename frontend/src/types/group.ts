@@ -11,5 +11,5 @@ export type Group = {
 export type GroupFormData = {
   name?: string
   color?: string
-  users: string[]
+  users: User[]
 }
