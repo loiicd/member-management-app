@@ -155,9 +155,9 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
                   getOptionKey={(option) => option.id}
                   onOpen={loadUser}
                   onChange={(event, value) => setGroup({ ...group, users: value })}
-                  loading={loading}
+                  loading={loadingUsers}
                   endDecorator={
-                    loading ? (
+                    loadingUsers ? (
                       <CircularProgress size="sm" sx={{ bgcolor: 'background.surface' }} />
                     ) : null
                   }
