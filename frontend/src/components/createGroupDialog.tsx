@@ -59,7 +59,7 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
     setAccordionIndex(null)
   }, [formData.type])
 
-  const handleChange = (field: keyof GroupFormData) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (field: keyof GroupFormData) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [field]: event.target.value,
@@ -127,7 +127,11 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
             </div>
             <FormControl>
               <FormLabel>Beschreibung</FormLabel>
-              <Textarea minRows={3} />
+              <Textarea 
+                minRows={3} 
+                value={formData.description} 
+                onChange={handleChange('description')} 
+              />
             </FormControl>
             <ColorPicker color={formData.color} handleColorChange={handleColorChange} />
             <AccordionGroup>

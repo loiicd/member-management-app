@@ -4,6 +4,7 @@ import { User } from './user'
 export type Group = {
   id: string
   name: string
+  description?: string
   version: number
   users: User[]
   color?: string
@@ -14,6 +15,7 @@ type StandardGroup = { type: 'standard' }
 
 export type GroupFormData = {
   name?: string
+  description?: string
   color?: string
 } & (IntelligentGroupFormData | StandardGroupFormData)
 

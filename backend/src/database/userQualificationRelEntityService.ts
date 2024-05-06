@@ -1,4 +1,6 @@
 import { Client } from 'pg'
+import { GroupFilterFormDataType } from '../models/groupFilterShema'
+import { GroupFilterType } from '../models/groupFilterShema'
 
 export class UserQualificationRelEntityService {
 
@@ -6,6 +8,12 @@ export class UserQualificationRelEntityService {
     const query = 'SELECT * FROM public."user_qualification_rel" WHERE qualification_id = $1'
     const values = [qualificationId]
     return (await client.query(query, values)).rows
+  }
+
+  async selectRelationsByRule(client: Client, rule: GroupFilterType | GroupFilterFormDataType): Promise<string[]> {
+    const query = 'SELECT user_id FROM public."user_qualification_rel" WHERE qualification_id = $1'
+    const values = [rule.value]
+    return (await client.query(query, values)).rows.map(row => row.user_id)
   }
 
   async insertRelation(client: Client, userId: string, qualificationId: string, accountId: string): Promise<void> {

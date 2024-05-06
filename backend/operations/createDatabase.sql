@@ -72,6 +72,7 @@ CREATE TABLE "group" (
   id text NOT NULL,
   account_id text NOT NULL,
   name text NOT NULL,
+  description text,
   type text NOT NULL,
   color text,
   version integer NOT NULL DEFAULT 0,
