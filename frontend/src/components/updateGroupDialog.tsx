@@ -1,6 +1,11 @@
 import { ChangeEvent, FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAuthHeader } from 'react-auth-kit'
+import { GroupApiClient } from '../services/groupApiClient'
+import { UserApiClient } from '../services/userApiClient'
+import { Group } from '../types/group'
+import { User } from '../types/user'
+import { GroupFilter } from '../types/groupFilter'
 import ColorPicker from './ColorPicker'
 import Input from '@mui/joy/Input'
 import Modal from '@mui/joy/Modal'
@@ -12,11 +17,13 @@ import FormLabel from '@mui/joy/FormLabel'
 import Button from '@mui/joy/Button'
 import Select from '@mui/joy/Select'
 import Option from '@mui/joy/Option'
-import { GroupApiClient } from '../services/groupApiClient'
-import { UserApiClient } from '../services/userApiClient'
-import { Group } from '../types/group'
-import { Accordion, AccordionDetails, AccordionGroup, AccordionSummary, Autocomplete, CircularProgress } from '@mui/joy'
-import { User } from '../types/user'
+import GroupFilterSelect from './createGroupDialog/groupFilterSelect'
+import AccordionGroup from '@mui/joy/AccordionGroup'
+import Accordion from '@mui/joy/Accordion'
+import AccordionSummary from '@mui/joy/AccordionSummary'
+import AccordionDetails from '@mui/joy/AccordionDetails'
+import Autocomplete from '@mui/joy/Autocomplete'
+import CircularProgress from '@mui/joy/CircularProgress'
 
 interface ComponentProps {
   open: boolean
@@ -32,7 +39,9 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
   const [group, setGroup] = useState<Group | undefined>(undefined)
   const [loading, setLoading] = useState<boolean>(false)
   const [loadingUsers, setLoadingUsers] = useState<boolean>(false)
-  const [searchTerm, setSearchTerm] = useState<string | null>(null)
+  const [accordionIndex, setAccordionIndex] = useState<number | null>(0)
+
+  const [rules, setRules] = useState<GroupFilter[]>([])
 
   if (!accountId) throw new Error('AccountID required!')
 
@@ -41,16 +50,25 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
 
   useEffect(() => {
     groupApiClient.getGroup(groupId)
-      .then((group) => setGroup(group))
+      .then((group) => {
+        setGroup(group)
+        if (group.type === 'intelligent') {
+          setRules(group.rules)
+        }
+      })
       .catch((error) => {
         handleClose()
         addAlert('danger', error.response.data.message, 3000)
       })
   }, [groupApiClient, groupId, addAlert, handleClose])
 
+  useEffect(() => {
+    setAccordionIndex(null)
+  }, [group?.type])
+
   const loadUser = () => {
     setLoadingUsers(true)
-    userApiClient.getUsers(searchTerm, null, null, null, null)
+    userApiClient.getUsers(null, null, null, null, null)
       .then(response => setUsers(response.data))
       .catch(error => alert(error))
       .finally(() => setLoadingUsers(false))
@@ -72,6 +90,9 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
 
   const handleUpdate = () => {
     setLoading(true)
+    if (group?.type === 'intelligent') {
+      group.rules = rules
+    }
     groupApiClient.putGroup(group!)
       .then(handleClose)
       .catch((error) => alert(error))
@@ -101,9 +122,9 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
             <FormLabel>Name</FormLabel>
             <Input variant='outlined' value={group?.name} required onChange={handleChange('name')} />
           </FormControl>
-          <FormControl disabled>
+          <FormControl>
             <FormLabel>Typ</FormLabel>
-            <Select defaultValue='standard'>
+            <Select value={group?.type} onChange={(event, value) => setGroup({ ...group, type: value ? value : 'standard', rules: [], users: [] })}>
               <Option value='standard'>Standard</Option>
               <Option value='intelligent'>Intelligent</Option>
             </Select>
@@ -114,7 +135,13 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
         </div>
         <div className='my-4'>
           <AccordionGroup>
-            <Accordion>
+            <Accordion 
+              disabled={group.type === 'intelligent'} 
+              expanded={accordionIndex === 0}
+              onChange={(event, expanded) => {
+                setAccordionIndex(expanded ? 0 : null);
+              }}
+            >
               <AccordionSummary>Mitglieder</AccordionSummary>
               <AccordionDetails>
                 <Autocomplete
@@ -137,25 +164,16 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
                 />
               </AccordionDetails>
             </Accordion>
-            <Accordion>
+            <Accordion
+              disabled={group.type === 'standard'} 
+              expanded={accordionIndex === 1}
+              onChange={(event, expanded) => {
+                setAccordionIndex(expanded ? 1 : null);
+              }}
+            >
               <AccordionSummary>Filter</AccordionSummary>
               <AccordionDetails>
-                <div className='flex justify-between gap-2'>
-                  <Select defaultValue={0} className='flex-grow'>
-                    <Option value={0}>Qualifikation</Option>
-                    <Option value={1}>Rolle</Option>
-                  </Select>
-                  <Select defaultValue={0} className='flex-grow'>
-                    <Option value={0}>ist</Option>
-                    <Option value={1}>ist nicht</Option>
-                    <Option value={2}>enthält</Option>
-                  </Select>
-                  <Select defaultValue={0} className='flex-grow'>
-                    <Option value={0}>Gruppenführer</Option>
-                    <Option value={1}>Maschinist</Option>
-                    <Option value={2}>Truppmann</Option>
-                  </Select>
-                </div>
+                <GroupFilterSelect<GroupFilter> rules={rules} handleRulesChange={setRules} />
               </AccordionDetails>
             </Accordion>
           </AccordionGroup>

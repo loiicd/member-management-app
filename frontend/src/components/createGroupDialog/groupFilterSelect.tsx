@@ -1,5 +1,5 @@
-import { FunctionComponent, useEffect, useMemo, useState } from 'react'
-import { GroupFilterFormData } from '../../types/groupFilter'
+import { useEffect, useMemo, useState } from 'react'
+import { GroupFilter, GroupFilterFormData } from '../../types/groupFilter'
 import { Qualification } from '../../types/qualification'
 import { QualificationApiClient } from '../../services/qualificationApiClient'
 import { useParams } from 'react-router-dom'
@@ -12,20 +12,20 @@ import Option from '@mui/joy/Option'
 import Button from '@mui/joy/Button'
 import IconButton from '@mui/joy/IconButton'
 
-interface GroupFilterSelectProps {
-  rules: GroupFilterFormData[]
-  handleRulesChange: (updatedRules: GroupFilterFormData[]) => void
+interface GroupFilterSelectProps<T extends GroupFilter | GroupFilterFormData> {
+  rules: T[]
+  handleRulesChange: (updatedRules: T[]) => void
 }
 
-const GroupFilterSelect: FunctionComponent<GroupFilterSelectProps> = ({ rules, handleRulesChange }) => {
+const GroupFilterSelect = <T extends GroupFilter | GroupFilterFormData>({ rules, handleRulesChange }: GroupFilterSelectProps<T>) => {
   const { accountId } = useParams<{ accountId: string }>()
   const authToken = useAuthHeader()()
 
   if (!accountId) throw new Error('Account ID required!')
 
   const qualificationApiClient = useMemo(() => new QualificationApiClient('http://localhost:3002', authToken, accountId), [accountId, authToken]) 
-  const [qualifications, setQualifications] = useState<Qualification[] | undefined>(undefined)
   const [loadingQualifications, setLoadingQualifications] = useState<boolean>(false)
+  const [qualifications, setQualifications] = useState<Qualification[] | undefined>(undefined)
 
   useEffect(() => {
     setLoadingQualifications(true)
@@ -35,7 +35,7 @@ const GroupFilterSelect: FunctionComponent<GroupFilterSelectProps> = ({ rules, h
       .finally(() => setLoadingQualifications(false))
   }, [qualificationApiClient, accountId])
 
-  const handleChange = (field: keyof GroupFilterFormData, ruleIndex: number, value: string | null) => {
+  const handleChange = (field: keyof T, ruleIndex: number, value: string | null) => {
     const updatedRules = [...rules]
     updatedRules[ruleIndex] = { ...updatedRules[ruleIndex], [field]: value }
     handleRulesChange(updatedRules)
@@ -43,7 +43,7 @@ const GroupFilterSelect: FunctionComponent<GroupFilterSelectProps> = ({ rules, h
 
   const handleAddRule = () => {
     const updatedRules = [...rules]
-    updatedRules[updatedRules.length] = { entity: null, rule: null, value: null }
+    updatedRules[updatedRules.length] = { ...updatedRules[updatedRules.length], entity: null, rule: null, value: null }
     handleRulesChange(updatedRules)
   }
 
@@ -75,11 +75,11 @@ const GroupFilterSelect: FunctionComponent<GroupFilterSelectProps> = ({ rules, h
             }
           >
             {qualifications ? qualifications.map((qualification) => (
-              <Option value={qualification.id}>{qualification.name}</Option>))
+              <Option key={qualification.id} value={qualification.id} disabled={rules.some((rule) => rule.value === qualification.id)}>{qualification.name}</Option>))
               : <Option value='0' disabled>Fehler beim laden!</Option>  
             }
           </Select>
-          <IconButton onClick={() => handleRemoveRule(ruleIndex)}>
+          <IconButton color='danger' onClick={() => handleRemoveRule(ruleIndex)}>
             <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} />
           </IconButton>
         </div>

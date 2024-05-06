@@ -19,6 +19,7 @@ const resetDatabase = async () => {
     DROP TABLE IF EXISTS "user_session" CASCADE;
     DROP TABLE IF EXISTS "group" CASCADE;
     DROP TABLE IF EXISTS "user_group_rel" CASCADE;
+    DROP TABLE IF EXISTS "group_filter" CASCADE;
     
     CREATE EXTENSION IF NOT EXISTS pg_trgm;
     

@@ -25,6 +25,7 @@ import Accordion from '@mui/joy/Accordion'
 import AccordionSummary from '@mui/joy/AccordionSummary'
 import AccordionDetails from '@mui/joy/AccordionDetails'
 import Autocomplete from '@mui/joy/Autocomplete'
+import Chip from '@mui/joy/Chip'
 
 interface CreateGroupDialogProps {
   open: boolean
@@ -46,7 +47,6 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
   const [nameInputError, setNameInputError] = useState<boolean>(false)
   const [users, setUsers] = useState<User[]>([])
   const [rules, setRules] = useState<GroupFilterFormData[]>([]) 
-
   const [accordionIndex, setAccordionIndex] = useState<number | null>(0)
 
   useEffect(() => {
@@ -78,7 +78,6 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
       setLoading(true)
       if (formData.type === 'intelligent') {
         formData.rules = rules
-        
       }
       groupApiClient.postGroup(formData)
         .then(() => {
@@ -139,7 +138,16 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
                   setAccordionIndex(expanded ? 0 : null);
                 }}
               >
-                <AccordionSummary>Mitglieder</AccordionSummary>
+                <AccordionSummary>
+                  <div className='flex justify-between w-full'>
+                    <span>Mitglieder</span>
+                    <Chip 
+                      disabled={formData.type === 'intelligent'}
+                    >
+                      {formData.type === 'intelligent' ? '-' : formData.users.length}
+                    </Chip>
+                  </div>
+                </AccordionSummary>
                 {formData.type === 'standard' ? 
                   <AccordionDetails>
                     <Autocomplete
@@ -161,9 +169,14 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
                   setAccordionIndex(expanded ? 1 : null);
                 }}
               >
-                <AccordionSummary>Filter</AccordionSummary>
+                <AccordionSummary>
+                  <div className='flex justify-between w-full'>
+                    <span>Filter</span>
+                    <Chip disabled={formData.type === 'standard'}>{formData.type === 'standard' ? '-' : rules.length}</Chip>
+                  </div>
+                </AccordionSummary>
                 <AccordionDetails>
-                  <GroupFilterSelect rules={rules} handleRulesChange={setRules} />
+                  <GroupFilterSelect<GroupFilterFormData> rules={rules} handleRulesChange={setRules} />
                 </AccordionDetails>
               </Accordion>
             </AccordionGroup>
