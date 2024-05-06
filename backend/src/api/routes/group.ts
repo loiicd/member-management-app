@@ -34,8 +34,9 @@ router.put('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Res
 }))
 
 router.delete('/', authMiddleware, tryCatchMiddleware(async (req: Request, res: Response) => {
+  const accountId = validateUUID(req.headers.accountid)
   const groupId = validateUUID(req.query.groupId)
-  await groupService.deleteGroup(groupId)
+  await groupService.deleteGroup(groupId, accountId)
   res.sendStatus(201)
 }))
 

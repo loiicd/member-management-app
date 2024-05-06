@@ -4,8 +4,10 @@ import { GroupEntityService } from '../database/groupEntityService'
 import { UserGroupRelEntityService } from '../database/userGroupRelEntityService'
 import { UserEntityService } from '../database/userEntityService'
 import { GroupFilterEntityService } from '../database/groupFilterEntityService'
-import { UserType } from '../models/userShema'
 import { UserQualificationRelEntityService } from '../database/userQualificationRelEntityService'
+import { Client } from 'pg'
+import { GroupFilterType } from '../models/groupFilterShema'
+import { GroupFilterFormDataType } from '../models/groupFilterShema'
 
 const groupEntityService = new GroupEntityService
 const groupFilterEntityService = new GroupFilterEntityService
@@ -39,31 +41,34 @@ export class GroupService extends BaseService {
       const groupId = await groupEntityService.insertGroup(client, accountId, group)
       switch (group.type) {
         case 'standard':
-          await Promise.all(group.users.map(async (userId) => {
-            await userGroupRelEntityService.insertRelation(client, userId, groupId, accountId)
-          }))
+          this.insertStandardGroupRelations(client, group.users, groupId, accountId)
           break
         case 'intelligent':
-
-          await Promise.all(group.rules.map(async (groupFilter) => {
-            await groupFilterEntityService.insertGroupFilter(client, groupId, groupFilter)
-          }))
-
-          const users: Set<string> = new Set()
-
-          await Promise.all(group.rules.map(async (rule) => {
-            const ruleUsers = await userQualificationRelEntityService.selectRelationsByRule(client, rule)
-            ruleUsers.forEach((user) => users.add(user))
-          }))
-  
-          const uniqueUsers: string[] = Array.from(users)
-
-          uniqueUsers.forEach((userId) => {
-            userGroupRelEntityService.insertRelation(client, userId, groupId, accountId)
-          })
+          this. insertIntelligentGroupRelations(client, group.rules, groupId, accountId)
           break
       }
     })
+  }
+
+  private async insertStandardGroupRelations(client: Client, userIds: string[], groupId: string, accountId: string): Promise<void> {
+    await Promise.all(userIds.map(async (userId) => {
+      await userGroupRelEntityService.insertRelation(client, userId, groupId, accountId)
+    }))
+  }
+
+  private async insertIntelligentGroupRelations(client: Client, rules: GroupFilterType[] | GroupFilterFormDataType[], groupId: string, accountId: string): Promise<void> {
+    const users: Set<string> = new Set()
+  
+    await Promise.all(rules.map(async (groupFilter) => {
+      await groupFilterEntityService.insertGroupFilter(client, groupId, groupFilter)
+      const ruleUsers = await userQualificationRelEntityService.selectRelationsByRule(client, groupFilter)
+      ruleUsers.forEach((user) => users.add(user))
+    }))
+  
+    const uniqueUsers: string[] = Array.from(users)
+    await Promise.all(uniqueUsers.map(async (userId) => {
+      await userGroupRelEntityService.insertRelation(client, userId, groupId, accountId)
+    }))
   }
 
   async updateGroup(group: GroupType): Promise<void> {
@@ -72,15 +77,21 @@ export class GroupService extends BaseService {
     })
   }
 
-  async deleteGroup(groupId: string): Promise<void> {
+  async deleteGroup(groupId: string, accountId: string): Promise<void> {
     return this.performTransaction(async (client) => {
-      // const relations = await groupEntityService.selectUserRelations(client, groupId)
+      const userRelations = await userGroupRelEntityService.getRelations(client, groupId)
 
-      // if (relations.length != 0) {
-      //   throw new Error('Kann nicht gelöscht werden da noch relation!')
-      // } else {
-        await groupEntityService.deleteGroup(client, groupId) 
-      // }
+      await Promise.all(userRelations.map(async userId => {
+        await userGroupRelEntityService.deleteRelation(client, userId, groupId, accountId)
+      }))
+
+      const ruleRelations = await groupFilterEntityService.selectGroupFilters(client, groupId)
+
+      await Promise.all(ruleRelations.map(async rule => {
+        await groupFilterEntityService.deleteGroupFilter(client, rule.id)
+      }))
+
+      await groupEntityService.deleteGroup(client, groupId) 
     })
   }
 }
