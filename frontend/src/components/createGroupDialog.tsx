@@ -47,7 +47,7 @@ const CreateGroupDialog: FunctionComponent<CreateGroupDialogProps> = ({ open, ha
   const [nameInputError, setNameInputError] = useState<boolean>(false)
   const [users, setUsers] = useState<User[]>([])
   const [rules, setRules] = useState<GroupFilterFormData[]>([]) 
-  const [accordionIndex, setAccordionIndex] = useState<number | null>(0)
+  const [accordionIndex, setAccordionIndex] = useState<number | null>(null)
 
   useEffect(() => {
     userApiClient.getUsers(null, null, null, null, null)

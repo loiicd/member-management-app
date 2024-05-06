@@ -35,9 +35,11 @@ export class UserService extends BaseService {
         }
         await userEntityService.insertUser(client, userId, userFormData)
 
-        userFormData.qualifications.map(async qualificationId => {
-          await userQualificationRelEntityService.insertRelation(client, userId, qualificationId, accountId)
-        })
+        if (userFormData.qualifications) {
+          Promise.all(userFormData.qualifications.map(async qualificationId => {
+            await userQualificationRelEntityService.insertRelation(client, userId, qualificationId, accountId)
+          }))
+        }
 
         if (accountId) {
           await userAccountRelEntityService.insertRelation(client, userId, accountId)

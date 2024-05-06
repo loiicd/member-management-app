@@ -11,6 +11,10 @@ import { useAuthHeader } from "react-auth-kit"
 import CreateGroupDialog from "./createGroupDialog"
 import UpdateGroupDialog from "./updateGroupDialog"
 
+// @ts-ignore
+import emptyStatePicture from "../assets/empty-box.png"
+import { CircularProgress, Typography } from "@mui/joy"
+
 interface GroupsTabProps {
   addAlert: (color: string, message: string, timeout: number) => void
 }
@@ -24,6 +28,7 @@ const GroupsTab: FunctionComponent<GroupsTabProps> = ({ addAlert }) => {
 
   const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false)
   const [openUpdateDialog, setOpenUpdateDialog] = useState<false | string>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   if (!accountId) throw new Error('Account ID is required')
 
@@ -34,9 +39,11 @@ const GroupsTab: FunctionComponent<GroupsTabProps> = ({ addAlert }) => {
   }, [addAlert, groupApiClient])
 
   useEffect(() => {
+    setLoading(true)
     groupApiClient.getGroups(accountId)
       .then((data) => setGroups(data))
       .catch(error => alert(error))
+      .finally(() => setLoading(false))
   }, [accountId, groupApiClient, openCreateDialog, openUpdateDialog, handleDelete])
 
   return (
@@ -71,6 +78,36 @@ const GroupsTab: FunctionComponent<GroupsTabProps> = ({ addAlert }) => {
               </td>
             </tr>
           ))}
+          {groups.length === 0 && !loading ?
+            <tr>
+              <td colSpan={4}>
+                <div className='flex justify-center my-16'>
+                  <div className='flex flex-col justify-center w-60 text-center'>
+                    <img src={emptyStatePicture} alt='Empty State' className="w-60 h-60" />
+                    <Typography level='title-md' className='py-4'>Keine Gruppen gefunden</Typography>
+                    <Button 
+                      variant='soft'
+                      startDecorator={<FontAwesomeIcon icon={icon({ name: 'add', style: 'solid' })} />}
+                      onClick={() => setOpenCreateDialog(true)}
+                    >
+                      Neue Gruppe
+                    </Button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            : null
+          }
+          {loading ? 
+           <tr>
+            <td colSpan={4}>
+              <div className='flex justify-center my-40'>
+                <CircularProgress size='lg' />
+              </div>
+            </td>
+          </tr> 
+          : null
+        }
         </tbody>
       </Table>
       {openCreateDialog ? <CreateGroupDialog open={openCreateDialog} handleClose={() => setOpenCreateDialog(false)} addAlert={addAlert} /> : null}

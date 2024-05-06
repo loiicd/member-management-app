@@ -19,6 +19,10 @@ import Tab from '@mui/joy/Tab'
 import TabPanel from '@mui/joy/TabPanel'
 import GroupsTab from "../components/groupsTab"
 
+// @ts-ignore
+import emptyStatePicture from "../assets/empty-box.png"
+import Typography from "@mui/joy/Typography"
+
 const SettingsPage = () => {
   const [qualifications, setqualifications] = useState<Qualification[]>([])
   const { accountId } = useParams()
@@ -115,6 +119,26 @@ const SettingsPage = () => {
                   </td>
                 </tr>
               ))}
+              {qualifications.length === 0 ?
+                <tr>
+                  <td colSpan={4}>
+                    <div className='flex justify-center my-16'>
+                      <div className='flex flex-col justify-center w-60 text-center'>
+                        <img src={emptyStatePicture} alt='Empty State' className="w-60 h-60" />
+                        <Typography level='title-md' className='py-4'>Keine Qualifikationen gefunden</Typography>
+                        <Button 
+                          variant='soft'
+                          startDecorator={<FontAwesomeIcon icon={icon({ name: 'add', style: 'solid' })} />}
+                          onClick={() => setOpenAddQualificationDialog(true)}
+                        >
+                          Neue Qualifikation
+                        </Button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                : null
+              }
             </tbody>
           </Table>
         </TabPanel>
