@@ -26,6 +26,7 @@ import Autocomplete from '@mui/joy/Autocomplete'
 import CircularProgress from '@mui/joy/CircularProgress'
 import Textarea from '@mui/joy/Textarea'
 import isEqual from 'lodash/isEqual'
+import Chip from '@mui/joy/Chip'
 
 interface ComponentProps {
   open: boolean
@@ -179,7 +180,16 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
                 setAccordionIndex(expanded ? 0 : null);
               }}
             >
-              <AccordionSummary>Mitglieder</AccordionSummary>
+              <AccordionSummary>
+                <div className='flex justify-between w-full'>
+                  <span>Mitglieder</span>
+                  <Chip 
+                    disabled={group.type === 'intelligent'}
+                  >
+                    {group.users.length}
+                  </Chip>
+                </div>
+              </AccordionSummary>
               <AccordionDetails>
                 <Autocomplete
                   multiple
@@ -208,7 +218,12 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
                 setAccordionIndex(expanded ? 1 : null);
               }}
             >
-              <AccordionSummary>Filter</AccordionSummary>
+              <AccordionSummary>
+                <div className='flex justify-between w-full'>
+                  <span>Filter</span>
+                  <Chip disabled={group.type === 'standard'}>{group.type === 'standard' ? '-' : rules.length}</Chip>
+                </div>
+              </AccordionSummary>
               <AccordionDetails>
                 <GroupFilterSelect<GroupFilter> rules={rules} handleRulesChange={setRules} />
               </AccordionDetails>

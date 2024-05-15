@@ -4,7 +4,7 @@ import { GroupFilterType } from '../models/groupFilterShema'
 
 export class GroupFilterEntityService {
 
-  async selectGroupFilters(client: Client, groupId: string) {
+  async selectGroupFilters(client: Client, groupId: string): Promise<GroupFilterType[]> {
     const query = 'SELECT * FROM public."group_filter" WHERE group_id = $1'
     const values = [groupId]
     return (await client.query(query, values)).rows

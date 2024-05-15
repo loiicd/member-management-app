@@ -11,7 +11,13 @@ export class UserQualificationRelEntityService {
   }
 
   async selectRelationsByRule(client: Client, rule: GroupFilterType | GroupFilterFormDataType): Promise<string[]> {
-    const query = 'SELECT user_id FROM public."user_qualification_rel" WHERE qualification_id = $1'
+    let query: string
+
+    switch (rule.entity) {
+      case 'qualification':
+        query = `SELECT user_id FROM public."user_qualification_rel" ${rule.rule === 'include' ? 'WHERE' : 'WHERE NOT'} qualification_id = $1`
+    }
+
     const values = [rule.value]
     return (await client.query(query, values)).rows.map(row => row.user_id)
   }
