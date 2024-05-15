@@ -4,6 +4,7 @@ import { GroupFilterFormDataShema, GroupFilterShema } from './groupFilterShema'
 
 export const GroupShema = z.object({
   id:           z.string(),
+  accountId:    z.string(),
   name:         z.string(),
   description:  z.string().optional(),
   type:         z.enum(['standard', 'intelligent']),
