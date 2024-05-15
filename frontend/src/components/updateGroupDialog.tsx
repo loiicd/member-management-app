@@ -25,6 +25,7 @@ import AccordionDetails from '@mui/joy/AccordionDetails'
 import Autocomplete from '@mui/joy/Autocomplete'
 import CircularProgress from '@mui/joy/CircularProgress'
 import Textarea from '@mui/joy/Textarea'
+import isEqual from 'lodash/isEqual'
 
 interface ComponentProps {
   open: boolean
@@ -38,11 +39,13 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
   const authToken = useAuthHeader()()
   const groupApiClient = useMemo(() => new GroupApiClient('http://localhost:3002', authToken, accountId), [authToken, accountId])
   const [group, setGroup] = useState<Group | undefined>(undefined)
+  const [initialGroup, setInitialGroup] = useState<Group | undefined>(undefined)
   const [loading, setLoading] = useState<boolean>(false)
   const [loadingUsers, setLoadingUsers] = useState<boolean>(false)
   const [accordionIndex, setAccordionIndex] = useState<number | null>(0)
 
   const [rules, setRules] = useState<GroupFilter[]>([])
+  const [isDirty, setIsDirty] = useState<boolean>(false)
 
   if (!accountId) throw new Error('AccountID required!')
 
@@ -53,6 +56,7 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
     groupApiClient.getGroup(groupId)
       .then((group) => {
         setGroup(group)
+        setInitialGroup(group)
         if (group.type === 'intelligent') {
           setRules(group.rules)
         }
@@ -66,6 +70,32 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
   useEffect(() => {
     setAccordionIndex(null)
   }, [group?.type])
+
+  useEffect(() => {
+    if (group && initialGroup) {
+      const isNameChanged = group.name !== initialGroup.name
+      const isTypeChanged = group.type !== initialGroup.type
+      const isDescriptionChanged = group.description !== initialGroup.description
+      const isColorChanged = group.color !== initialGroup.color
+
+      let areRulesChanged = false
+
+      if (initialGroup.type === 'intelligent') { 
+        areRulesChanged = !isEqual(rules, initialGroup.rules)
+      }
+
+      const areUsersChanged = !isEqual(group.users, initialGroup.users)
+
+      setIsDirty(
+        isNameChanged ||
+        isTypeChanged ||
+        isDescriptionChanged ||
+        isColorChanged ||
+        areUsersChanged ||
+        areRulesChanged
+      );
+    }
+  }, [group, initialGroup, rules])
 
   const loadUser = () => {
     setLoadingUsers(true)
@@ -187,7 +217,7 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
         </div>
         <div className='flex justify-end gap-4'>
           <Button variant='outlined' onClick={handleClose}>Abbrechen</Button>
-          <Button variant='solid' loading={loading} onClick={handleUpdate}>Speichern</Button>
+          <Button variant='solid' loading={loading} onClick={handleUpdate} disabled={!isDirty}>Speichern</Button>
         </div>
       </Sheet>
     </Modal>
