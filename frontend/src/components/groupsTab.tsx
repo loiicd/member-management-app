@@ -67,7 +67,7 @@ const GroupsTab: FunctionComponent<GroupsTabProps> = ({ addAlert }) => {
             <tr>
               <td style={{ width: '5%' }}><div className='h-4 w-4 rounded-full' style={{ backgroundColor: group.color}}></div></td>
               <td>{group.name}</td>
-              <td>x</td>
+              <td>{group.users?.length}</td>
               <td>
                 <IconButton onClick={() => handleDelete(group.id)}>
                   <FontAwesomeIcon icon={icon({ name: 'trash', style: 'solid' })} className='text-gray-500' />

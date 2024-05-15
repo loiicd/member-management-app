@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid'
 import { connect } from './db'
 import { AccountType } from '../models/accountShema'
 import { UserType, UserFormDataType } from '../models/userShema'
-import { GroupFilterFormDataType } from '../models/groupFilterShema'
 
 export type SortAttribute = 'firstname' | 'lastname' | 'birthdate' | 'address' | 'webaccess'
 export type SortDirection = 'ASC' | 'DESC'

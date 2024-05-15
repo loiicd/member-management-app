@@ -8,6 +8,7 @@ import { UserQualificationRelEntityService } from '../database/userQualification
 import { Client } from 'pg'
 import { GroupFilterType } from '../models/groupFilterShema'
 import { GroupFilterFormDataType } from '../models/groupFilterShema'
+import { UserType } from '../models/userShema'
 
 const groupEntityService = new GroupEntityService
 const groupFilterEntityService = new GroupFilterEntityService
@@ -120,6 +121,20 @@ export class GroupService extends BaseService {
       }
 
       await groupEntityService.deleteGroup(client, groupId) 
+    })
+  }
+
+  async curateGroupUsers(groupId: string): Promise<void> {
+    return this.performTransaction(async (client) => {
+      const rules = await groupFilterEntityService.selectGroupFilters(client, groupId)
+
+      const users: Set<string> = new Set()
+
+      await Promise.all(rules.map(async (rule) => {
+        const test = await userQualificationRelEntityService.selectRelationsByRule(client, rule)
+        test.map((www) => users.add(www))
+      }))
+
     })
   }
 }
