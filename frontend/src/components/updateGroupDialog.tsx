@@ -24,6 +24,7 @@ import AccordionSummary from '@mui/joy/AccordionSummary'
 import AccordionDetails from '@mui/joy/AccordionDetails'
 import Autocomplete from '@mui/joy/Autocomplete'
 import CircularProgress from '@mui/joy/CircularProgress'
+import Textarea from '@mui/joy/Textarea'
 
 interface ComponentProps {
   open: boolean
@@ -74,7 +75,7 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
       .finally(() => setLoadingUsers(false))
   }
 
-  const handleChange = (field: keyof Group) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (field: keyof Group) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setGroup({
       ...group!,
       [field]: event.target.value,
@@ -117,23 +118,29 @@ const UpdateGroupDialog: FunctionComponent<ComponentProps> = ({ open, groupId, a
         >
           Gruppe bearbeiten
         </Typography>
-        <div className='grid grid-cols-2 gap-2'>
+        <div className='flex flex-col gap-4 mb-8'>
+          <div className='grid grid-cols-2 gap-2'>
+            <FormControl>
+              <FormLabel>Name</FormLabel>
+              <Input variant='outlined' value={group?.name} required onChange={handleChange('name')} />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Typ</FormLabel>
+              <Select value={group?.type} onChange={(event, value) => setGroup({ ...group, type: value ? value : 'standard', rules: [], users: [] })}>
+                <Option value='standard'>Standard</Option>
+                <Option value='intelligent'>Intelligent</Option>
+              </Select>
+            </FormControl>
+          </div>
           <FormControl>
-            <FormLabel>Name</FormLabel>
-            <Input variant='outlined' value={group?.name} required onChange={handleChange('name')} />
+            <FormLabel>Beschreibung</FormLabel>
+            <Textarea 
+              minRows={3} 
+              value={group?.description} 
+              onChange={handleChange('description')} 
+            />
           </FormControl>
-          <FormControl>
-            <FormLabel>Typ</FormLabel>
-            <Select value={group?.type} onChange={(event, value) => setGroup({ ...group, type: value ? value : 'standard', rules: [], users: [] })}>
-              <Option value='standard'>Standard</Option>
-              <Option value='intelligent'>Intelligent</Option>
-            </Select>
-          </FormControl>
-        </div>
-        <div className='my-4'>
           <ColorPicker color={group?.color} handleColorChange={handleColorChange} />
-        </div>
-        <div className='my-4'>
           <AccordionGroup>
             <Accordion 
               disabled={group.type === 'intelligent'} 

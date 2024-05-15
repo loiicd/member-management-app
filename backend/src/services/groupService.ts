@@ -80,11 +80,11 @@ export class GroupService extends BaseService {
           const userIds = await userGroupRelEntityService.getRelations(client, group.id)
           const addedUsers = group.users.filter((user) => !userIds.includes(user.id))
           await Promise.all(addedUsers.map(async user => {
-            await userGroupRelEntityService.insertRelation(client, user.id, group.id, group.accountId)
+            await userGroupRelEntityService.insertRelation(client, user.id, group.id, group.account_id)
           }))
           const removedUsers = userIds.filter((userId) => !group.users.map((user) => user.id).includes(userId))
           await Promise.all(removedUsers.map(async userId => {
-            await userGroupRelEntityService.deleteRelation(client, userId, group.id, group.accountId)
+            await userGroupRelEntityService.deleteRelation(client, userId, group.id, group.account_id)
           }))
           break
         case 'intelligent':

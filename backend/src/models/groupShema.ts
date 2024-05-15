@@ -4,14 +4,14 @@ import { GroupFilterFormDataShema, GroupFilterShema } from './groupFilterShema'
 
 export const GroupShema = z.object({
   id:           z.string(),
-  accountId:    z.string(),
+  account_id:   z.string(),
   name:         z.string(),
   description:  z.string().optional(),
   type:         z.enum(['standard', 'intelligent']),
   color:        z.string().optional(),
   version:      z.number(),
-  users:        z.array(UserShema),
-  rules:        z.array(GroupFilterShema)
+  users:        z.array(UserShema).optional(),
+  rules:        z.array(GroupFilterShema).optional()
 })
 export type GroupType = z.infer<typeof GroupShema>
 
