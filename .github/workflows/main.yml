@@ -107,6 +107,9 @@ jobs:
     needs: [backend-build, frontend-build]
 
     steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
@@ -119,9 +122,6 @@ jobs:
     - name: Build
       run: npm run build
       working-directory: frontend
-
-    - name: Checkout Repository
-      uses: actions/checkout@v2
     
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
