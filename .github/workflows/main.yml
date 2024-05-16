@@ -119,8 +119,13 @@ jobs:
 
     - name: Create S3 Bucket
       run: |
-        aws s3api create-bucket --bucket 023450234-frontend-bucket-test --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
+        if aws s3api head-bucket --bucket 023450234-frontend-bucket-test 2>/dev/null; then
+          echo "Bucket exists"
+        else
+          echo "Bucket does not exist"
+          aws s3api create-bucket --bucket 023450234-frontend-bucket-test --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
+        fi
 
     - name: Deploy to S3
       run: |
-        aws s3 sync ./frontend s3://023450234-frontend-bucket-test --delete
+        aws s3 sync ./frontend/build s3://023450234-frontend-bucket-test --delete
