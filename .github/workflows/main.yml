@@ -119,7 +119,7 @@ jobs:
 
     - name: Create S3 Bucket
       run: |
-        aws s3api create-bucket --bucket 023450234-frontend-bucket-${{ github.ref_slug }} --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
+        aws s3api create-bucket --bucket 023450234-frontend-bucket-test --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
 
     - name: Deploy to S3
       run: |
