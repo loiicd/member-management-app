@@ -123,4 +123,4 @@ jobs:
 
     - name: Deploy to S3
       run: |
-        aws s3 sync ./frontend s3://023450234-frontend-bucket-${{ github.ref_slug }} --delete
+        aws s3 sync ./frontend s3://023450234-frontend-bucket-test --delete
