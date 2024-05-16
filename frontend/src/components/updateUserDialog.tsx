@@ -1,5 +1,5 @@
-import { ChangeEvent, FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
-import { AxiosError } from 'axios'
+import { ChangeEvent, FunctionComponent, useEffect, useMemo, useState } from 'react'
+// import { AxiosError } from 'axios'
 import { UserApiClient } from '../services/userApiClient'
 import { User, UserFormData } from '../types/user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -19,7 +19,7 @@ import Autocomplete from '@mui/joy/Autocomplete'
 import CircularProgress from '@mui/joy/CircularProgress'
 import { QualificationApiClient } from '../services/qualificationApiClient'
 import { Qualification } from '../types/qualification'
-import Snackbar from '@mui/joy/Snackbar'
+// import Snackbar from '@mui/joy/Snackbar'
 
 type InputErrorObject = {
   firstname: boolean
@@ -40,9 +40,9 @@ const UpdateUserDialog: FunctionComponent<UpdateUserDialogProps> = ({ isOpen, ac
 
   // const [inputError, setInputError] = useState<InputErrorObject>({ firstname: false, lastname: false })
   // const [emailStatus, setEmailStatus] = useState<EmailStatus>('initial')
-  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null)
+  // const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null)
   // const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
-  const [alerts, setAlerts] = useState<{id: number, color: any, message: string, timeout: number}[]>([])
+  // const [alerts, setAlerts] = useState<{id: number, color: any, message: string, timeout: number}[]>([])
 
   const [isCreatingUser, setIsCreatingUser] = useState<boolean>(false)
 
@@ -277,7 +277,7 @@ const UpdateUserDialog: FunctionComponent<UpdateUserDialogProps> = ({ isOpen, ac
           </div>
         </Sheet>
       </Modal>
-      {alerts.map((alert) => (
+      {/* {alerts.map((alert) => (
         <Snackbar 
           open 
           variant='soft' 
@@ -286,7 +286,7 @@ const UpdateUserDialog: FunctionComponent<UpdateUserDialogProps> = ({ isOpen, ac
         >
           {alert.message}
         </Snackbar>
-      ))}
+      ))} */}
     </>
   ) : null
 }

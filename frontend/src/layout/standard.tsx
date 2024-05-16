@@ -1,5 +1,5 @@
 import { FunctionComponent, useState } from 'react'
-import Footer from '../components/footer'
+// import Footer from '../components/footer'
 import Header from '../components/header'
 import Sidebar from '../components/sidebar'
 import Box from '@mui/joy/Box'

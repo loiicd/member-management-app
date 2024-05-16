@@ -1,5 +1,5 @@
 import { ChangeEvent, FunctionComponent, useMemo, useState } from 'react'
-import { AxiosError } from 'axios'
+// import { AxiosError } from 'axios'
 import { UserApiClient } from '../services/userApiClient'
 import { UserFormData } from '../types/user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -26,7 +26,7 @@ type InputErrorObject = {
   lastname: boolean
 }
 
-type EmailStatus = 'initial' | 'loading' | 'success' | 'error'
+// type EmailStatus = 'initial' | 'loading' | 'success' | 'error'
 
 interface CreateUserDialogProps {
   isOpen: boolean
@@ -40,9 +40,9 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
   const qualifcationApiClient = useMemo(() => new QualificationApiClient('http://localhost:3002', authToken, accountId), [accountId, authToken])
 
   const [inputError, setInputError] = useState<InputErrorObject>({ firstname: false, lastname: false })
-  const [emailStatus, setEmailStatus] = useState<EmailStatus>('initial')
-  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
+  // const [emailStatus, setEmailStatus] = useState<EmailStatus>('initial')
+  // const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null)
+  // const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
   const [alerts, setAlerts] = useState<{id: number, color: any, message: string, timeout: number}[]>([])
 
   const [isCreatingUser, setIsCreatingUser] = useState<boolean>(false)
@@ -103,8 +103,8 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
 
   const resetErrors = () => {
     setInputError({ firstname: false, lastname: false })
-    setEmailStatus('initial')
-    setErrorMessage(undefined)
+    // setEmailStatus('initial')
+    // setErrorMessage(undefined)
   }
 
   const handleChange = (field: keyof UserFormData) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -147,32 +147,32 @@ const CreateUserDialog: FunctionComponent<CreateUserDialogProps> = ({ isOpen, cl
     setIsCreatingUser(false)
   }
 
-  const handleCheckEmail = (event: ChangeEvent<HTMLInputElement>) => {
-    if (typingTimeout) clearTimeout(typingTimeout)
-    const timeout = setTimeout(() => {
-      setEmailStatus('loading')
-      if (event.target.value) {
-        userApiClient.checkEMail(event.target.value)
-          .then((emailExists) => {
-            if (!emailExists) {
-              setErrorMessage(undefined)  
-              setEmailStatus('success')
-            } else {
-              setErrorMessage('E-Mail exestiert bereits!')
-              setEmailStatus('error')  
-            }
-          })
-          .catch((error: AxiosError) => {
-            setErrorMessage(error.response?.statusText)
-            setEmailStatus('error')
-          })
-      } else {
-        setErrorMessage(undefined)
-        setEmailStatus('initial')
-      }
-    }, 500)
-    setTypingTimeout(timeout)
-  }
+  // const handleCheckEmail = (event: ChangeEvent<HTMLInputElement>) => {
+  //   if (typingTimeout) clearTimeout(typingTimeout)
+  //   const timeout = setTimeout(() => {
+  //     setEmailStatus('loading')
+  //     if (event.target.value) {
+  //       userApiClient.checkEMail(event.target.value)
+  //         .then((emailExists) => {
+  //           if (!emailExists) {
+  //             setErrorMessage(undefined)  
+  //             setEmailStatus('success')
+  //           } else {
+  //             setErrorMessage('E-Mail exestiert bereits!')
+  //             setEmailStatus('error')  
+  //           }
+  //         })
+  //         .catch((error: AxiosError) => {
+  //           setErrorMessage(error.response?.statusText)
+  //           setEmailStatus('error')
+  //         })
+  //     } else {
+  //       setErrorMessage(undefined)
+  //       setEmailStatus('initial')
+  //     }
+  //   }, 500)
+  //   setTypingTimeout(timeout)
+  // }
 
 
   return (

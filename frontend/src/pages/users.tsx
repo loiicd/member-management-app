@@ -41,7 +41,7 @@ const UsersPage: FunctionComponent = () => {
   const [openCreateUserDialog, setOpenCreateUserDialog] = useState<boolean>(false)
   const [openInviteUserDialog, setOpenInviteUserDialog] = useState<boolean>(false)
   const [loadingUsers, setLoadingUsers] = useState<boolean>(true)
-  const [alerts, setAlerts] = useState<{id: number, color: any, message: string, timeout: number}[]>([])
+  // const [alerts, setAlerts] = useState<{id: number, color: any, message: string, timeout: number}[]>([])
 
   const sortAttribute = urlParams.get('sortAttribute')
   const sortDirection = urlParams.get('sortDirection')
